@@ -2,7 +2,7 @@
   "records": {
     "2026-11-10": {
       "effectiveDate": "2026-11-10",
-      "retrievedAt": "2026-11-10T07:33:15.519Z",
+      "retrievedAt": "2026-11-10T07:37:26.711Z",
       "sourceUrl": "https://doe.gov.ph/doe-announces-major-fuel-price-rollback-of-up-to-p16-80-per-liter",
       "announcementTitle": "DOE Announces Major Fuel Price Rollback of Up to P16.80 per Liter",
       "selectionRule": "Median of company-reported values per fuel; minimum 3 companies. DOE headline maxima/minima are reference-only.",
@@ -21,7 +21,7 @@
     },
     "2026-10-06": {
       "effectiveDate": "2026-10-06",
-      "retrievedAt": "2026-11-10T07:33:15.519Z",
+      "retrievedAt": "2026-11-10T07:37:26.711Z",
       "sourceUrl": "https://doe.gov.ph/liquid-fuels-and-lpg-price-adjustments-for-6-13-october-2026",
       "announcementTitle": "Liquid Fuels and LPG Price Adjustments for 6-13 October 2026",
       "selectionRule": "Median of company-reported values per fuel; minimum 3 companies. DOE headline maxima/minima are reference-only.",
