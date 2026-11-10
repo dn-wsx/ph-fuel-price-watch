@@ -1,6 +1,6 @@
 {
   "sample": false,
-  "generatedAt": "2026-11-10T06:55:18.624Z",
+  "generatedAt": "2026-11-10T07:29:01.718Z",
   "asOf": "2026-11-10",
   "target": "2026-11-17",
   "window": {
@@ -16,46 +16,64 @@
   "confidence": "low",
   "fuels": {
     "gasoline": {
-      "raw": -3.61,
-      "value": -3.61,
-      "low": -4.21,
-      "high": -3.01,
+      "raw": -3.46,
+      "value": -3.46,
+      "low": -4.06,
+      "high": -2.86,
       "direction": "decrease",
       "withinError": false,
       "blended": false,
       "proxy": "RB=F",
       "daysOfData": 2,
-      "calibrationWeeks": 0,
+      "calibrationWeeks": 1,
       "scale": 1
     },
     "diesel": {
-      "raw": -3.79,
-      "value": -3.79,
-      "low": -4.39,
-      "high": -3.19,
+      "raw": -3.77,
+      "value": -3.77,
+      "low": -4.37,
+      "high": -3.17,
       "direction": "decrease",
       "withinError": false,
       "blended": false,
       "proxy": "HO=F",
       "daysOfData": 2,
-      "calibrationWeeks": 0,
+      "calibrationWeeks": 1,
       "scale": 1
     },
     "kerosene": {
-      "raw": -3.79,
-      "value": -3.79,
-      "low": -4.39,
-      "high": -3.19,
+      "raw": -3.77,
+      "value": -3.77,
+      "low": -4.37,
+      "high": -3.17,
       "direction": "decrease",
       "withinError": false,
       "blended": false,
       "proxy": "HO=F",
       "daysOfData": 2,
-      "calibrationWeeks": 0,
+      "calibrationWeeks": 1,
       "scale": 1
     }
   },
   "history": [
+    {
+      "date": "2026-11-10",
+      "fuels": {
+        "gasoline": {
+          "actual": -16.8,
+          "forecast": -7.73
+        },
+        "diesel": {
+          "actual": -4.1,
+          "forecast": -8.59
+        },
+        "kerosene": {
+          "actual": -3.7,
+          "forecast": -8.59
+        }
+      },
+      "backtest": true
+    },
     {
       "date": "2026-11-03",
       "fuels": {
@@ -262,22 +280,22 @@
     "gasoline": {
       "label": "US RBOB gasoline futures (gasoline proxy)",
       "unit": "USD/gal",
-      "pct": -6.64,
-      "last": 2.6164,
+      "pct": -6.35,
+      "last": 2.6325,
       "lastDate": "2026-11-10"
     },
     "diesel": {
       "label": "US ULSD futures (diesel and kerosene proxy)",
       "unit": "USD/gal",
-      "pct": -4.43,
-      "last": 4.135,
+      "pct": -4.4,
+      "last": 4.1375,
       "lastDate": "2026-11-10"
     },
     "brent": {
       "label": "Brent crude (context only)",
       "unit": "USD/bbl",
-      "pct": -8.2,
-      "last": 90.88,
+      "pct": -7.97,
+      "last": 91.34,
       "lastDate": "2026-11-10"
     },
     "fx": {
