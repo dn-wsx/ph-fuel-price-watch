@@ -1,26 +1,25 @@
 {
-<<<<<<< HEAD
-  "sample": true,
-  "generatedAt": "2026-11-10T00:00:00.000Z",
-=======
   "sample": false,
-  "generatedAt": "2026-11-10T06:43:05.533Z",
->>>>>>> 6376102074d7f276f854f571c8774e7798baedf9
+  "generatedAt": "2026-11-10T06:46:54.400Z",
   "asOf": "2026-11-10",
   "target": "2026-11-17",
-  "window": { "current": ["2026-11-09", "2026-11-13"], "previous": ["2026-11-02", "2026-11-06"] },
+  "window": {
+    "current": [
+      "2026-11-09",
+      "2026-11-13"
+    ],
+    "previous": [
+      "2026-11-02",
+      "2026-11-06"
+    ]
+  },
   "confidence": "low",
   "fuels": {
-<<<<<<< HEAD
-    "gasoline": { "raw": -0.45, "value": -0.45, "low": -1.05, "high": 0.15, "direction": "decrease", "withinError": true, "blended": false, "proxy": "RB=F", "daysOfData": 1, "calibrationWeeks": 0, "scale": 1 },
-    "diesel": { "raw": 0.8, "value": 0.8, "low": 0.2, "high": 1.4, "direction": "increase", "withinError": false, "blended": false, "proxy": "HO=F", "daysOfData": 1, "calibrationWeeks": 0, "scale": 1 },
-    "kerosene": { "raw": -0.2, "value": -0.2, "low": -0.8, "high": 0.4, "direction": "decrease", "withinError": true, "blended": false, "proxy": "HO=F", "daysOfData": 1, "calibrationWeeks": 0, "scale": 1 }
-=======
     "gasoline": {
-      "raw": -3.54,
-      "value": -3.54,
-      "low": -4.14,
-      "high": -2.94,
+      "raw": -3.55,
+      "value": -3.55,
+      "low": -4.15,
+      "high": -2.95,
       "direction": "decrease",
       "withinError": false,
       "blended": false,
@@ -30,10 +29,10 @@
       "scale": 1
     },
     "diesel": {
-      "raw": -3.62,
-      "value": -3.62,
-      "low": -4.22,
-      "high": -3.02,
+      "raw": -3.6,
+      "value": -3.6,
+      "low": -4.2,
+      "high": -3,
       "direction": "decrease",
       "withinError": false,
       "blended": false,
@@ -43,10 +42,10 @@
       "scale": 1
     },
     "kerosene": {
-      "raw": -3.62,
-      "value": -3.62,
-      "low": -4.22,
-      "high": -3.02,
+      "raw": -3.6,
+      "value": -3.6,
+      "low": -4.2,
+      "high": -3,
       "direction": "decrease",
       "withinError": false,
       "blended": false,
@@ -55,37 +54,30 @@
       "calibrationWeeks": 0,
       "scale": 1
     }
->>>>>>> 6376102074d7f276f854f571c8774e7798baedf9
   },
   "history": [],
   "errors": [],
   "industry": null,
   "market": {
-<<<<<<< HEAD
-    "gasoline": { "label": "US RBOB gasoline futures (gasoline proxy)", "unit": "USD/gal", "pct": -1.2, "last": 2.1, "lastDate": "2026-11-09" },
-    "diesel": { "label": "US ULSD futures (diesel and kerosene proxy)", "unit": "USD/gal", "pct": 1.5, "last": 2.4, "lastDate": "2026-11-09" },
-    "brent": { "label": "Brent crude (context only)", "unit": "USD/bbl", "pct": 0.4, "last": 70, "lastDate": "2026-11-09" },
-    "fx": { "label": "USD/PHP", "unit": "PHP", "pct": 0.3, "last": 58.5, "lastDate": "2026-11-09" }
-=======
     "gasoline": {
       "label": "US RBOB gasoline futures (gasoline proxy)",
       "unit": "USD/gal",
-      "pct": -6.5,
-      "last": 2.6241,
+      "pct": -6.52,
+      "last": 2.6231,
       "lastDate": "2026-11-10"
     },
     "diesel": {
       "label": "US ULSD futures (diesel and kerosene proxy)",
       "unit": "USD/gal",
-      "pct": -4.22,
-      "last": 4.153,
+      "pct": -4.2,
+      "last": 4.1548,
       "lastDate": "2026-11-10"
     },
     "brent": {
       "label": "Brent crude (context only)",
       "unit": "USD/bbl",
-      "pct": -8.09,
-      "last": 91.1,
+      "pct": -8.07,
+      "last": 91.14,
       "lastDate": "2026-11-10"
     },
     "fx": {
@@ -95,6 +87,5 @@
       "last": 63.175,
       "lastDate": "2026-11-09"
     }
->>>>>>> 6376102074d7f276f854f571c8774e7798baedf9
   }
 }
