@@ -1,0 +1,3 @@
+{
+  "_help": "Optional. Add an entry keyed by the Tuesday date, with [low, high] PHP/L ranges from a published industry estimate, e.g. \"2026-11-17\": { \"gasoline\": [0.8, 1.1], \"diesel\": [-0.7, -0.4], \"kerosene\": [0.2, 0.5], \"source\": \"News outlet name\", \"url\": \"https://...\" }. The forecast then blends it 50/50 with the market model."
+}
