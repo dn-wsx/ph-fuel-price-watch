@@ -1,27 +1,23 @@
-<<<<<<< Updated upstream
 {
   "2026-11-17": {
-    "generatedAt": "2026-11-10T06:50:49.446Z",
+    "generatedAt": "2026-11-10T06:55:18.623Z",
     "gasoline": {
-      "raw": -3.55,
-      "value": -3.55,
-      "low": -4.15,
-      "high": -2.95
+      "raw": -3.61,
+      "value": -3.61,
+      "low": -4.21,
+      "high": -3.01
     },
     "diesel": {
-      "raw": -3.62,
-      "value": -3.62,
-      "low": -4.22,
-      "high": -3.02
+      "raw": -3.79,
+      "value": -3.79,
+      "low": -4.39,
+      "high": -3.19
     },
     "kerosene": {
-      "raw": -3.62,
-      "value": -3.62,
-      "low": -4.22,
-      "high": -3.02
+      "raw": -3.79,
+      "value": -3.79,
+      "low": -4.39,
+      "high": -3.19
     }
   }
 }
-=======
-{}
->>>>>>> Stashed changes
