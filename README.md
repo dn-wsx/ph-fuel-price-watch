@@ -1,20 +1,17 @@
 # PH Fuel Price Watch
 
-https://dn-wsx.github.io/ph-fuel-price-watch/
-
 A free, no-build static site that estimates the next Tuesday's pump price change (gasoline, diesel, kerosene) in the Philippines.
 GitHub Actions fetches free market data, writes `data/forecast.json`, and publishes the site to GitHub Pages.
 
 ## How the estimate works
-
 1. Takes daily closes of US RBOB (gasoline) and ULSD (diesel, kerosene) futures from Yahoo Finance, and USD/PHP from Frankfurter (ECB rates).
 2. Converts each day to PHP per liter, averages Mon–Fri for the driving week and the week before, takes the difference, and adds 12% VAT.
-3. Once 6+ actual DOE adjustments are known (back-tested from the DOE's reports), it fits a correction factor and sizes the range from its real past error.
+3. Once 6+ actual DOE adjustments are recorded, it fits a correction factor and sizes the range from its real past error.
 4. Optional: add a published industry estimate in `data/industry.json` and it is blended 50/50 with the model.
 
 Singapore (MOPS) prices are what the Philippines actually follows, and they are not free. US futures are a proxy, so expect misses, especially at first.
 
-<!-- ## Deploy to GitHub Pages
+## Deploy to GitHub Pages
 1. Create a new **public** repository on GitHub (e.g. `ph-fuel-price-watch`).
 2. Upload everything in this folder (keep `.github/workflows/update.yml`), or:
    `git init && git add . && git commit -m "Initial commit" && git branch -M main && git remote add origin https://github.com/YOUR-USER/ph-fuel-price-watch.git && git push -u origin main`
@@ -23,32 +20,36 @@ Singapore (MOPS) prices are what the Philippines actually follows, and they are 
 5. Repo **Actions** tab → **Update forecast and deploy** → **Run workflow**. Wait for both jobs to turn green.
 6. Open `https://YOUR-USER.github.io/ph-fuel-price-watch/`.
 
-After that it refreshes itself Monday to Saturday at 06:30 PHT. If GitHub pauses the schedule after a quiet stretch, press **Enable workflow** in the Actions tab. -->
+After that it refreshes itself Monday to Saturday at 06:30 PHT. If GitHub pauses the schedule after a quiet stretch, press **Enable workflow** in the Actions tab.
 
-## Actual adjustments are recorded automatically
+## Automatic DOE actual retrieval
+The scheduled GitHub Actions workflow now runs `scripts/fetch-doe-actuals.mjs` before recalculating the forecast. It checks the DOE press-release listing and the DOE search page for prior-notice documents, extracts effective dates, and looks for company-by-company adjustment tables.
 
-Each run reads the DOE's weekly **Oil Monitor** PDFs (https://doe.gov.ph/data-and-prices/liquid-fuels/oil-monitor). Every report states the year-to-date net change (for example "The 44th price movement this year resulted in a total net increase of P72.05/liter for gasoline, ..."). This week's total minus last week's total is the actual adjustment, whatever the rest of the report says.
+**Selection rule:** for each fuel, use the median of the reported oil-company values only when at least 3 companies are found. The median reduces the effect of one unusual company value. DOE press-release headline maxima/minima are stored as reference information, not treated as a nationwide actual. If the individual company data is missing, ambiguous, or outside validation limits, the record is marked `review-required` and `actuals.json` is not populated automatically.
 
-- The first run backfills the recent weeks and back-tests the model on them, so calibration starts immediately instead of after 6 weeks of waiting. Back-tested rows are marked with `*` on the page.
-- If a report can't be read, or its numbers don't line up with the previous week, that week is skipped rather than guessed, and the page shows a note.
-<!-- - Values you enter by hand are never overwritten.
+Automatically retrieved source URLs, retrieval timestamps, company values, selected medians, and review status are stored in `data/actuals-meta.json`. The existing `data/actuals.json` numeric format stays compatible with the forecasting model. Existing manually entered values are protected from automatic replacement.
 
-**Optional manual override** (for a skipped week or a correction): repo **Actions** tab → **Update forecast and deploy** → **Run workflow**, fill in the fuels you have (rollback is negative, e.g. `-0.50`; leave `date` as `auto` for the most recent Tuesday). Or edit `data/actuals.json` directly.
+You can run the fetcher locally with `npm run fetch-doe`. The DOE website may change its page structure; if that happens, the script fails safely and leaves existing actuals unchanged.
+
+## Record or correct an actual adjustment manually
+On Tuesday or Wednesday, add the verified DOE/oil-company adjustment (negative = rollback):
+
+    node scripts/add-actual.mjs 2026-11-17 gasoline=1.20 diesel=-0.50 kerosene=-0.30
+
+Or edit `data/actuals.json` directly on github.com. Commit, and the next run picks it up. No local setup is needed if you use the web editor.
 
 ## Local use
-
     npm test          # model tests
-    npm run update    # fetch data and regenerate data/*.json (needs pdftotext: apt install poppler-utils / brew install poppler)
+    npm run update    # fetch data and regenerate data/*.json
     npm run serve     # preview at http://localhost:3000
 
 ## Files
-
 - `index.html`, `assets/` – the page
 - `data/forecast.json` – what the page reads (generated)
 - `data/market.json` – cached price series, used if a source is down (generated)
 - `data/forecast-log.json` – every forecast made, so it can be compared with actuals (generated)
-- `data/actuals.json` – actual adjustments (filled automatically from DOE; you can edit)
-- `data/ytd.json` – DOE year-to-date totals already read (generated)
+- `data/actuals.json` – numeric actual adjustments used for calibration
+- `data/actuals-meta.json` – DOE source records, individual company values, selection details, and manual override markers
 - `data/industry.json` – optional industry estimates (you maintain)
-- `scripts/model.mjs` – forecasting math · `scripts/update.mjs` – data + forecast · `scripts/doe.mjs` – DOE Oil Monitor reader · `scripts/add-actual.mjs` – helper · `scripts/test.mjs`
-- `.github/workflows/update.yml` – schedule + deploy -->
+- `scripts/model.mjs` – forecasting math · `scripts/update.mjs` – data + forecast · `scripts/add-actual.mjs` – manual-entry helper · `scripts/fetch-doe-actuals.mjs` – DOE retrieval · `scripts/test.mjs` / `scripts/test-doe.mjs` – tests
+- `.github/workflows/update.yml` – schedule + deploy

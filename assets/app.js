@@ -13,7 +13,6 @@ function render(d) {
   const notes = [];
   if (d.sample) notes.push('These are sample numbers. The first scheduled run replaces them with real estimates.');
   if (d.errors?.length) notes.push('Some data could not be refreshed, so older saved data may be in use.');
-  if (d.actualsNote) notes.push(esc(d.actualsNote));
   if (d.industry) notes.push(`Blended with an industry estimate${d.industry.source ? ` from ${esc(d.industry.source)}` : ''}.`);
   const banner = $('#banner');
   banner.hidden = !notes.length;
@@ -42,9 +41,8 @@ function render(d) {
   const rows = d.history ?? [];
   $('#history').innerHTML = rows.length
     ? `<tr><th>Tuesday</th>${Object.values(NAMES).map((n) => `<th class="num">${n}<br>forecast / actual</th>`).join('')}</tr>` +
-      rows.map((r) => `<tr><td>${fmtDate(r.date, { month: 'short', day: 'numeric', year: 'numeric' })}</td>${Object.keys(NAMES).map((k) => `<td class="num">${php(r.fuels[k].forecast)}${r.backtest && r.fuels[k].forecast != null ? '*' : ''} / ${php(r.fuels[k].actual)}</td>`).join('')}</tr>`).join('')
-    : '<tr><td>No actual adjustments yet. They are read from the DOE\'s weekly Oil Monitor automatically.</td></tr>';
-  $('#histNote').hidden = !rows.some((r) => r.backtest);
+      rows.map((r) => `<tr><td>${fmtDate(r.date, { month: 'short', day: 'numeric', year: 'numeric' })}</td>${Object.keys(NAMES).map((k) => `<td class="num">${php(r.fuels[k].forecast)} / ${php(r.fuels[k].actual)}</td>`).join('')}</tr>`).join('')
+    : '<tr><td>No actual adjustments recorded yet. Add one with <code>node scripts/add-actual.mjs</code> or by editing <code>data/actuals.json</code>.</td></tr>';
 }
 
 fetch(`data/forecast.json?t=${Date.now()}`)
