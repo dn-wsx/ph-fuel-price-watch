@@ -16,7 +16,7 @@ export const addDays = (iso, n) => new Date(Date.parse(iso) + n * DAY).toISOStri
 export const manilaToday = (now = Date.now()) => new Date(now + 8 * 3600e3).toISOString().slice(0, 10);
 const mean = (a) => a.reduce((s, x) => s + x, 0) / a.length;
 const inRange = (d, [a, b]) => d >= a && d <= b;
-const r2 = (x) => Math.round(x * 100) / 100;
+export const r2 = (x) => Math.round(x * 100) / 100;
 
 // Next Tuesday strictly after `today`, and the two Mon-Fri weeks that drive it.
 export function windows(today) {

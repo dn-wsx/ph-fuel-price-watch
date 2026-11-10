@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 {
   "series": {
     "RB=F": {
@@ -262,3 +263,6 @@
   },
   "updatedAt": "2026-11-10T06:50:49.443Z"
 }
+=======
+{ "series": {} }
+>>>>>>> Stashed changes

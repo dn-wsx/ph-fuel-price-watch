@@ -39,7 +39,9 @@ jobs:
       - uses: actions/setup-node@v7
         with: { node-version: 24 }
       - run: node scripts/test.mjs
-      - name: Record actual adjustment (only when you filled in the form)
+      - name: Install PDF text tool (to read DOE's Oil Monitor)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq --no-install-recommends poppler-utils
+      - name: Record actual adjustment by hand (optional override, only when you filled in the form)
         if: github.event_name == 'workflow_dispatch'
         env:
           DATE: ${{ inputs.date }}

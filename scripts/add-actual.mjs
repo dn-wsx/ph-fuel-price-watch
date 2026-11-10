@@ -16,7 +16,7 @@ const values = {};
 for (const p of pairs) {
   const [k, v] = p.split('=');
   const n = Number(v);
-  if (!['gasoline', 'diesel', 'kerosene'].includes(k) || v === '' || !Number.isFinite(n) || Math.abs(n) > 15) fail(`bad value "${p}" (expected e.g. diesel=-0.50, within +/-15)`);
+  if (!['gasoline', 'diesel', 'kerosene'].includes(k) || v === '' || !Number.isFinite(n) || Math.abs(n) > 30) fail(`bad value "${p}" (expected e.g. diesel=-0.50, within +/-30)`);
   values[k] = n;
 }
 const file = new URL('../data/actuals.json', import.meta.url);
