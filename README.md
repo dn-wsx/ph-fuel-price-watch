@@ -23,11 +23,14 @@ Singapore (MOPS) prices are what the Philippines actually follows, and they are 
 After that it refreshes itself Monday to Saturday at 06:30 PHT. If GitHub pauses the schedule after a quiet stretch, press **Enable workflow** in the Actions tab.
 
 ## Record the actual Tuesday adjustment (this is what makes it accurate)
-On Tuesday or Wednesday, add what the DOE/oil companies announced (negative = rollback):
+After the DOE/oil companies announce it, on Tuesday or Wednesday:
 
-    node scripts/add-actual.mjs 2026-11-17 gasoline=1.20 diesel=-0.50 kerosene=-0.30
+1. Repo **Actions** tab → **Update forecast and deploy** → **Run workflow**.
+2. Fill in only the fuels you have (rollback is negative, e.g. `-0.50`). Leave `date` as `auto` for the most recent Tuesday.
+3. Click **Run workflow**. It saves the values, recalculates, and redeploys the site in about a minute.
 
-Or edit `data/actuals.json` directly on github.com. Commit, and the next run picks it up. No local setup is needed if you use the web editor.
+This works from the GitHub mobile app or browser, with no local setup. Locally, the equivalent is
+`node scripts/add-actual.mjs auto gasoline=1.20 diesel=-0.50 kerosene=-0.30`, or edit `data/actuals.json` directly.
 
 ## Local use
     npm test          # model tests
