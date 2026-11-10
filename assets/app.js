@@ -39,36 +39,13 @@ function render(d) {
     Object.values(m).map((x) => `<tr><td>${esc(x.label)}</td><td class="num">${x.last ?? '—'} ${esc(x.unit)}</td><td class="num">${pct(x.pct)}</td></tr>`).join('');
 
   const rows = d.history ?? [];
-  const fuelKeys = Object.keys(NAMES);
-  const historyHead = `
-    <thead>
-      <tr class="group-head">
-        <th rowspan="2" class="date-head">Tuesday</th>
-        <th colspan="2">Gasoline</th>
-        <th colspan="2">Diesel</th>
-        <th colspan="2">Kerosene</th>
-      </tr>
-      <tr class="sub-head">
-        ${fuelKeys.map(() => '<th class="estimate-head">Estimate</th><th class="actual-head">Actual</th>').join('')}
-      </tr>
-    </thead>`;
-  const historyBody = rows.length
-    ? `<tbody>${rows.map((r) => `
-      <tr>
-        <td class="history-date">${fmtDate(r.date, { month: 'short', day: 'numeric', year: 'numeric' })}</td>
-        ${fuelKeys.map((k) => {
-          const item = r.fuels?.[k] ?? {};
-          return `
-            <td class="history-value estimate-cell">${item.forecast == null ? '<span class="missing">—</span>' : `<span class="value-pill estimate-pill">${php(item.forecast)}</span>`}</td>
-            <td class="history-value actual-cell">${item.actual == null ? '<span class="missing">—</span>' : `<span class="value-pill actual-pill">${php(item.actual)}</span>`}</td>`;
-        }).join('')}
-      </tr>`).join('')}</tbody>`
-    : '<tbody><tr><td colspan="7" class="empty-history">No saved forecast or DOE actual history yet.</td></tr></tbody>';
-  $('#history').innerHTML = historyHead + historyBody;
-
+  $('#history').innerHTML = rows.length
+    ? `<tr><th>Tuesday</th>${Object.values(NAMES).map((n) => `<th class="num">${n}<br>forecast / actual</th>`).join('')}</tr>` +
+      rows.map((r) => `<tr><td>${fmtDate(r.date, { month: 'short', day: 'numeric', year: 'numeric' })}</td>${Object.keys(NAMES).map((k) => `<td class="num">${php(r.fuels?.[k]?.forecast)} / ${php(r.fuels?.[k]?.actual)}</td>`).join('')}</tr>`).join('')
+    : '<tr><td>No saved forecast or DOE actual history yet. New weekly forecasts will appear here automatically; DOE actuals will be added when verified.</td></tr>';
 }
 
 fetch(`data/forecast.json?t=${Date.now()}`)
   .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
   .then(render)
-  .catch(() => { $('#sub').textContent = 'The forecast could not be loaded. Refresh the page, or check that data/forecast.json exists.'; });
+  .catch((error) => { console.error('Unable to load data/forecast.json:', error); $('#sub').textContent = 'The forecast could not be loaded. Check that data/forecast.json is deployed and valid JSON.'; $('#board').innerHTML = '<div class="row"><div class="name">Forecast unavailable</div></div>'; $('#history').innerHTML = '<tr><td>History is unavailable until forecast data loads.</td></tr>'; });

@@ -1,6 +1,6 @@
 // Fetches free market data, computes the forecast, writes JSON into /data.
 import fs from 'node:fs/promises';
-import { CONFIG, windows, manilaToday, addDays, rawChange, avgChange, calibrate, forecast, confidence, buildHistory } from './model.mjs';
+import { CONFIG, windows, manilaToday, addDays, rawChange, avgChange, calibrate, forecast, confidence } from './model.mjs';
 
 const D = new URL('../data/', import.meta.url);
 const read = async (f, fallback) => { try { return JSON.parse(await fs.readFile(new URL(f, D), 'utf8')); } catch { return fallback; } };
@@ -74,7 +74,10 @@ for (const [fuel, symbol] of Object.entries(CONFIG.proxies)) {
 log[win.target] = { generatedAt: new Date().toISOString(), ...Object.fromEntries(Object.entries(fuels).map(([k, f]) => [k, { raw: f.raw, value: f.value, low: f.low, high: f.high }])) };
 await write('forecast-log.json', log);
 
-const history = buildHistory(log, actuals, 52);
+const history = Object.keys(actuals).sort().reverse().slice(0, 26).map((date) => ({
+  date,
+  fuels: Object.fromEntries(Object.keys(CONFIG.proxies).map((k) => [k, { actual: actuals[date][k] ?? null, forecast: log[date]?.[k]?.value ?? null }])),
+}));
 
 const S = market.series;
 await write('forecast.json', {
