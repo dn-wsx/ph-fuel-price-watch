@@ -1,6 +1,6 @@
 {
   "sample": false,
-  "generatedAt": "2026-11-10T06:50:00.977Z",
+  "generatedAt": "2026-11-10T06:50:49.446Z",
   "asOf": "2026-11-10",
   "target": "2026-11-17",
   "window": {
@@ -76,8 +76,8 @@
     "brent": {
       "label": "Brent crude (context only)",
       "unit": "USD/bbl",
-      "pct": -8.1,
-      "last": 91.09,
+      "pct": -8.11,
+      "last": 91.06,
       "lastDate": "2026-11-10"
     },
     "fx": {
