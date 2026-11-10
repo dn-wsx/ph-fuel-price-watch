@@ -41,11 +41,11 @@ function render(d) {
   const rows = d.history ?? [];
   $('#history').innerHTML = rows.length
     ? `<tr><th>Tuesday</th>${Object.values(NAMES).map((n) => `<th class="num">${n}<br>forecast / actual</th>`).join('')}</tr>` +
-      rows.map((r) => `<tr><td>${fmtDate(r.date, { month: 'short', day: 'numeric', year: 'numeric' })}</td>${Object.keys(NAMES).map((k) => `<td class="num">${php(r.fuels[k].forecast)} / ${php(r.fuels[k].actual)}</td>`).join('')}</tr>`).join('')
-    : '<tr><td>No actual adjustments recorded yet. Add one with <code>node scripts/add-actual.mjs</code> or by editing <code>data/actuals.json</code>.</td></tr>';
+      rows.map((r) => `<tr><td>${fmtDate(r.date, { month: 'short', day: 'numeric', year: 'numeric' })}</td>${Object.keys(NAMES).map((k) => `<td class="num">${php(r.fuels?.[k]?.forecast)} / ${php(r.fuels?.[k]?.actual)}</td>`).join('')}</tr>`).join('')
+    : '<tr><td>No saved forecast or DOE actual history yet. New weekly forecasts will appear here automatically; DOE actuals will be added when verified.</td></tr>';
 }
 
 fetch(`data/forecast.json?t=${Date.now()}`)
   .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
   .then(render)
-  .catch(() => { $('#sub').textContent = 'The forecast could not be loaded. Refresh the page, or check that data/forecast.json exists.'; });
+  .catch((error) => { console.error('Unable to load data/forecast.json:', error); $('#sub').textContent = 'The forecast could not be loaded. Check that data/forecast.json is deployed and valid JSON.'; $('#board').innerHTML = '<div class="row"><div class="name">Forecast unavailable</div></div>'; $('#history').innerHTML = '<tr><td>History is unavailable until forecast data loads.</td></tr>'; });

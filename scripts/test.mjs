@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { windows, rawChange, calibrate, forecast, confidence } from './model.mjs';
+import { windows, rawChange, calibrate, forecast, confidence, buildHistory } from './model.mjs';
 
 // Window logic: a Tuesday looks ahead to the following Tuesday.
 assert.deepEqual(windows('2026-11-10').cur, ['2026-11-09', '2026-11-13']);
@@ -28,6 +28,17 @@ const f = forecast(1.0, { scale: 1, rmse: 0.6 }, null);
 assert.deepEqual([f.direction, f.low, f.high], ['increase', 0.4, 1.6]);
 assert.equal(forecast(1.0, { scale: 1, rmse: 0.6 }, [0, 0]).value, 0.5); // 50/50 blend
 assert.equal(confidence(5, 10), 'high'); assert.equal(confidence(2, 10), 'low');
+
+// History must retain forecast-only dates and merge DOE actuals when available.
+const history = buildHistory({
+  '2026-11-10': { gasoline: { value: -1.2 } },
+  '2026-11-03': { diesel: { value: 0.8 } },
+}, { '2026-11-10': { gasoline: -1.5, diesel: -0.4 } }, 52);
+assert.equal(history.length, 2);
+assert.equal(history[0].fuels.gasoline.forecast, -1.2);
+assert.equal(history[0].fuels.gasoline.actual, -1.5);
+assert.equal(history[1].fuels.diesel.forecast, 0.8);
+assert.equal(history[1].fuels.diesel.actual, null);
 console.log('All tests passed');
 
 // DOE announcement and company-table parsing.

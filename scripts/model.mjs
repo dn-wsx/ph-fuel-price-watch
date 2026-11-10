@@ -81,3 +81,20 @@ export function confidence(days, calibratedWeeks) {
   if (days < 3) return 'low';
   return days >= 5 && calibratedWeeks >= 8 ? 'high' : 'medium';
 }
+
+// Build a history from BOTH saved forecast runs and DOE actuals. Missing values
+// remain null so forecast-only weeks are not silently dropped.
+export function buildHistory(log = {}, actuals = {}, limit = 26) {
+  const dates = [...new Set([...Object.keys(log), ...Object.keys(actuals)])]
+    .filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d))
+    .sort().reverse().slice(0, limit);
+  return dates.map((date) => ({
+    date,
+    fuels: Object.fromEntries(Object.keys(CONFIG.proxies).map((fuel) => ({
+      [fuel]: {
+        forecast: Number.isFinite(log[date]?.[fuel]?.value) ? log[date][fuel].value : null,
+        actual: Number.isFinite(actuals[date]?.[fuel]) ? actuals[date][fuel] : null,
+      },
+    })).map((x) => Object.entries(x)[0])) ,
+  }));
+}
