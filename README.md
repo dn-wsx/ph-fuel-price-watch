@@ -1,5 +1,7 @@
 # PH Fuel Price Watch
 
+https://dn-wsx.github.io/ph-fuel-price-watch/
+
 A free, no-build static site that estimates the next Tuesday's pump price change (gasoline, diesel, kerosene) in the Philippines.
 GitHub Actions fetches free market data, writes `data/forecast.json`, and publishes the site to GitHub Pages.
 
