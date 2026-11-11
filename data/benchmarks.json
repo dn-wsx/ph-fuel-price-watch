@@ -1,0 +1,137 @@
+{
+  "2026-11-03": {
+    "current": [
+      "2026-10-26",
+      "2026-10-30"
+    ],
+    "changes": {
+      "gasoline": 2.8,
+      "diesel": -4
+    },
+    "source": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2003%20November.pdf?prefix=dev%2Fmedia",
+    "sha256": "84a4fccbd5d4c1f402989e984cb5f122a34f6f3876317ef8fee1516041144d79",
+    "checkedOn": "2026-11-11"
+  },
+  "2026-10-27": {
+    "current": [
+      "2026-10-27",
+      "2026-11-02"
+    ],
+    "changes": {
+      "gasoline": -2.45,
+      "diesel": 6.4
+    },
+    "source": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2027%20October.pdf?prefix=dev%2Fmedia",
+    "sha256": "912573f53fd54bd29e97b4a324cf1bcf887d646243f454f86b4c132dc8675b3d",
+    "checkedOn": "2026-11-11"
+  },
+  "2026-10-20": {
+    "current": [
+      "2026-10-12",
+      "2026-10-16"
+    ],
+    "changes": {
+      "gasoline": -10,
+      "diesel": 1
+    },
+    "source": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2020%20October.pdf?prefix=dev%2Fmedia",
+    "sha256": "8cd477200ce79322fcf822b4572122ef22c521b7ef9c33cf5451b36c4d591f74",
+    "checkedOn": "2026-11-11"
+  },
+  "2026-10-13": {
+    "current": [
+      "2026-10-05",
+      "2026-10-09"
+    ],
+    "changes": {
+      "gasoline": 2,
+      "diesel": -4.2
+    },
+    "source": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2013%20October.pdf?prefix=dev%2Fmedia",
+    "sha256": "e85dc409f7f7303c7698d1be65ee3d1098c0c130bc0af4a0fa24cd2b8c1236c4",
+    "checkedOn": "2026-11-11"
+  },
+  "2026-10-06": {
+    "current": [
+      "2026-09-28",
+      "2026-10-02"
+    ],
+    "changes": {
+      "gasoline": 4.3,
+      "diesel": -2.5
+    },
+    "source": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2006%20October.pdf?prefix=dev%2Fmedia",
+    "sha256": "9bb07565a17cfb36dfbb9df481575ebfe5059a6d3df9dd3d36aa9805afa045e8",
+    "checkedOn": "2026-11-11"
+  },
+  "2026-09-29": {
+    "current": [
+      "2026-09-21",
+      "2026-09-25"
+    ],
+    "changes": {},
+    "source": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2029%20September.pdf?prefix=dev%2Fmedia",
+    "sha256": "734ed4affea758ff9e0d405a7cc47bd35b44b25a09f3e57871c9ca4d852448cf",
+    "checkedOn": "2026-11-11"
+  },
+  "2026-09-22": {
+    "current": [
+      "2026-09-14",
+      "2026-09-18"
+    ],
+    "changes": {},
+    "source": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2022%20September.pdf?prefix=dev%2Fmedia",
+    "sha256": "414aab384faa0215ba8e6b952bae6290b5805203f7457e5b1a085141000d033e",
+    "checkedOn": "2026-11-11"
+  },
+  "2026-09-15": {
+    "current": [
+      "2026-09-07",
+      "2026-09-11"
+    ],
+    "changes": {},
+    "source": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2015%20September%202026.pdf?prefix=dev%2Fmedia",
+    "sha256": "4b5f2df63ad69bc13424da5ac2c3038e272a032cbbf86f125960d45d59e3baeb",
+    "checkedOn": "2026-11-11"
+  },
+  "2026-09-08": {
+    "current": [
+      "2026-08-31",
+      "2026-09-04"
+    ],
+    "changes": {},
+    "source": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2008%20September%202026.pdf?prefix=dev%2Fmedia",
+    "sha256": "7823b5427d5bf613826ee4d6ab8c507c27e10fd9ecc915284a70e0b65e341c81",
+    "checkedOn": "2026-11-11"
+  },
+  "2026-09-01": {
+    "current": [
+      "2026-08-24",
+      "2026-08-28"
+    ],
+    "changes": {},
+    "source": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2001%20September%202026-1.pdf?prefix=dev%2Fmedia",
+    "sha256": "925fabdbc9786cef0a2604ae6ce04eca5148d1503057a46fc9b8aa117734ef43",
+    "checkedOn": "2026-11-11"
+  },
+  "2026-08-25": {
+    "current": [
+      "2026-08-17",
+      "2026-08-21"
+    ],
+    "changes": {},
+    "source": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2025%20August%202026.pdf?prefix=dev%2Fmedia",
+    "sha256": "2008c952e26b5dfd18e9570c2a7bcf337b35c08d783ce7c726cd2246ebdb488f",
+    "checkedOn": "2026-11-11"
+  },
+  "2026-08-18": {
+    "current": [
+      "2026-08-10",
+      "2026-08-14"
+    ],
+    "changes": {},
+    "source": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2018%20August-1.pdf?prefix=dev%2Fmedia",
+    "sha256": "502ff36e2bab39cfc75b8619e851f8797104a287064604809eb174a2b3f5655b",
+    "checkedOn": "2026-11-11"
+  }
+}
