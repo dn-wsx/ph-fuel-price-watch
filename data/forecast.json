@@ -1,7 +1,7 @@
 {
   "sample": false,
   "model": 2,
-  "generatedAt": "2026-11-11T09:02:16.839Z",
+  "generatedAt": "2026-11-11T13:19:31.190Z",
   "asOf": "2026-11-11",
   "target": "2026-11-17",
   "window": {
@@ -492,7 +492,7 @@
     ],
     "stages": []
   },
-  "publicationNote": "The public page has no matching saved forecast to verify yet.",
+  "publicationNote": "",
   "walkForward": {
     "gasoline": {
       "n": 11,
@@ -719,7 +719,7 @@
   "actualsProblems": [],
   "newsNote": "",
   "benchmark": {
-    "checkedAt": "2026-11-11T09:02:16.839Z",
+    "checkedAt": "2026-11-11T13:19:31.190Z",
     "checks": [
       {
         "date": "2026-11-03",
