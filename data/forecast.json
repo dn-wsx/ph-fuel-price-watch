@@ -1,7 +1,7 @@
 {
   "sample": false,
-  "generatedAt": "2026-11-10T07:51:49.265Z",
-  "asOf": "2026-11-10",
+  "generatedAt": "2026-11-11T02:00:31.387Z",
+  "asOf": "2026-11-11",
   "target": "2026-11-17",
   "window": {
     "current": [
@@ -16,10 +16,10 @@
   "confidence": "low",
   "fuels": {
     "gasoline": {
-      "raw": -3.65,
-      "value": -3.65,
-      "low": -4.25,
-      "high": -3.05,
+      "raw": -3.7,
+      "value": -3.7,
+      "low": -4.3,
+      "high": -3.1,
       "direction": "decrease",
       "withinError": false,
       "blended": false,
@@ -29,10 +29,10 @@
       "scale": 1
     },
     "diesel": {
-      "raw": -4.05,
-      "value": -4.05,
-      "low": -4.65,
-      "high": -3.45,
+      "raw": -3.94,
+      "value": -3.94,
+      "low": -4.54,
+      "high": -3.34,
       "direction": "decrease",
       "withinError": false,
       "blended": false,
@@ -42,10 +42,10 @@
       "scale": 1
     },
     "kerosene": {
-      "raw": -4.05,
-      "value": -4.05,
-      "low": -4.65,
-      "high": -3.45,
+      "raw": -3.94,
+      "value": -3.94,
+      "low": -4.54,
+      "high": -3.34,
       "direction": "decrease",
       "withinError": false,
       "blended": false,
@@ -267,30 +267,30 @@
     "gasoline": {
       "label": "US RBOB gasoline futures (gasoline proxy)",
       "unit": "USD/gal",
-      "pct": -6.71,
-      "last": 2.6124,
+      "pct": -6.6,
+      "last": 2.6186,
       "lastDate": "2026-11-10"
     },
     "diesel": {
       "label": "US ULSD futures (diesel and kerosene proxy)",
       "unit": "USD/gal",
-      "pct": -4.75,
-      "last": 4.1067,
+      "pct": -4.4,
+      "last": 4.1371,
       "lastDate": "2026-11-10"
     },
     "brent": {
       "label": "Brent crude (context only)",
       "unit": "USD/bbl",
-      "pct": -8.32,
-      "last": 90.65,
+      "pct": -7.7,
+      "last": 91.88,
       "lastDate": "2026-11-10"
     },
     "fx": {
       "label": "USD/PHP",
       "unit": "PHP",
-      "pct": -0.21,
-      "last": 63.175,
-      "lastDate": "2026-11-09"
+      "pct": -0.43,
+      "last": 62.904,
+      "lastDate": "2026-11-10"
     }
   }
 }
