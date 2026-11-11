@@ -230,7 +230,7 @@ assert.equal(fc('Pump price rollbacks of up to P14 per liter seen next week - GM
 assert.equal(fc('Gasoline rebound erases rollback gains - Daily Tribune', '2026-10-31T07:00:00Z'), null);
 
 const rss = `<?xml version="1.0"?><rss><channel><item><title><![CDATA[Gasoline may plunge by P14/L &amp; more - ABS-CBN]]></title><link>https://x.example/a</link><pubDate>Sat, 07 Nov 2026 04:14:00 GMT</pubDate><source url="https://abs-cbn.com">ABS-CBN</source></item><item><title>No date here</title></item></channel></rss>`;
-assert.deepEqual(parseRss(rss), [{ title: 'Gasoline may plunge by P14/L & more', source: 'ABS-CBN', published: '2026-11-07T04:14:00.000Z', link: 'https://x.example/a' }]);
+assert.deepEqual(parseRss(rss), [{ title: 'Gasoline may plunge by P14/L & more', source: 'ABS-CBN', sourceUrl: 'https://abs-cbn.com', published: '2026-11-07T04:14:00.000Z', link: 'https://x.example/a' }]);
 
 const item = (title, published) => ({ title, published, source: 'x', link: 'l' });
 const news = estimatesFromNews([
@@ -329,4 +329,10 @@ assert.deepEqual(healthProblems({ ...healthy, asOf: '2026-11-18', singaporeThrou
 assert.match(healthProblems({ ...healthy, asOf: '2026-11-19', singaporeThrough: '2026-11-13' })[0], /2026-11-13/);
 assert.match(healthProblems({ ...healthy, actualsNote: "Could not read the DOE's price reports" })[0], /DOE/);
 assert.equal(healthProblems(null).length, 1);
+await import('./test-http.mjs');
+await import('./test-actuals.mjs');
+await import('./test-records.mjs');
+await import('./test-reliability.mjs');
+await import('./test-pipeline.mjs');
+await import('./test-ui.mjs');
 console.log('All tests passed');

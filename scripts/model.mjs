@@ -10,10 +10,7 @@ export const CONFIG = {
   minHalfRangePhp: 0.5,      // never show a range tighter than +/- this
   flatThresholdPhp: 0.05,    // |value| below this is shown as "no change"
   // What stands in for the Singapore (MOPS) price, best source first: [symbol, weight] baskets. The first basket with data is used.
-  // 1. Singapore prices from Opinet (USD/bbl): gasoline RON 92, diesel 0.001%S, kerosene. These are the products the DOE's weekly
-  //    "international price" change follows (within US$0.1/bbl). Over the 12 weeks of actual DOE adjustments from Aug to Nov 2026 the
-  //    average miss (PHP/L) was gasoline 0.86, diesel 0.65, kerosene 0.61, direction right 12/12.
-  // 2. US futures if Opinet cannot be read (gasoline 3.0, diesel 1.3, kerosene 1.9; Brent/RBOB mixed because RBOB alone is poorer).
+  // Singapore product prices lead; US futures are a separately calibrated fallback.
   proxies: {
     gasoline: [[['MOPS92', 1]], [['BZ=F', 0.5], ['RB=F', 0.5]]],
     diesel: [[['MOPSD', 1]], [['HO=F', 1]]],

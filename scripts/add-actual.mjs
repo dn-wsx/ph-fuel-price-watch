@@ -2,6 +2,7 @@
 // "auto" = the most recent Tuesday (Manila time). Negative = rollback.
 import fs from 'node:fs/promises';
 import { addDays, manilaToday } from './model.mjs';
+import { mergeActual } from './actuals.mjs';
 
 const fail = (m) => { console.error(`Error: ${m}`); process.exit(1); };
 let [date, ...pairs] = process.argv.slice(2);
@@ -20,7 +21,9 @@ for (const p of pairs) {
   values[k] = n;
 }
 const file = new URL('../data/actuals.json', import.meta.url);
-const all = JSON.parse(await fs.readFile(file, 'utf8').catch(() => '{}'));
-all[date] = { ...all[date], ...values };
+let all;
+try { all = JSON.parse(await fs.readFile(file, 'utf8')); }
+catch (e) { if (e.code !== 'ENOENT') throw e; all = {}; }
+all[date] = mergeActual(all[date], values, { kind: 'manual', source: 'Manual override', provisional: false });
 await fs.writeFile(file, JSON.stringify(Object.fromEntries(Object.entries(all).sort()), null, 2) + '\n');
 console.log('Saved', date, all[date]);

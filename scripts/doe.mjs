@@ -6,7 +6,10 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { addDays, manilaToday } from './model.mjs';
+import { createHash } from 'node:crypto';
+import { addDays, manilaToday, windows } from './model.mjs';
+import { readUrl } from './http.mjs';
+import { mergeActual, sourceFor } from './actuals.mjs';
 
 export const NOTICES = 'https://doe.gov.ph/data-and-prices/liquid-fuels/retail-pump-prices/price-adjustments';
 export const LISTING = 'https://doe.gov.ph/data-and-prices/liquid-fuels/oil-monitor';
@@ -49,37 +52,87 @@ export function parseYtd(text) {
   return { n: n ? +n[1] : null, gasoline: v(m[2]), diesel: v(m[3]), kerosene: v(m[4]) };
 }
 
+export function parseBenchmarks(text) {
+  const t = text.split(/\n\s*Crude Oil Prices\s*(?:\n|$)/i)[0].replace(/\s+/g, ' ');
+  const months = MONTHS.join('|');
+  const period = t.match(new RegExp(`(${months})\\s+(\\d{1,2})\\s*[-–]\\s*(?:(${months})\\s+)?(\\d{1,2}),?\\s+(\\d{4}),?\\s+Trading Days`, 'i'));
+  if (!period) return null;
+  const current = [iso(+period[5], MONTHS.indexOf(period[1].toLowerCase()) + 1, +period[2]), iso(+period[5], MONTHS.indexOf((period[3] ?? period[1]).toLowerCase()) + 1, +period[4])];
+  if (current[0] > current[1]) current[0] = iso(+period[5] - 1, MONTHS.indexOf(period[1].toLowerCase()) + 1, +period[2]);
+  if (current.some((d) => !Number.isFinite(Date.parse(d)) || new Date(d).toISOString().slice(0, 10) !== d)) return null;
+  const intro = t.slice(period.index + period[0].length);
+  const changes = {};
+  const products = String.raw`(?:gasoline|diesel|kerosene)`;
+  const amounts = String.raw`US\$\s*\d+(?:\.\d+)?`;
+  const re = new RegExp(`\\b(${products}(?:(?:\\s*,\\s*|\\s+and\\s+)${products})*)\\s+prices?\\s+(increased|decreased|declined|rose|fell)\\s+by\\s+(?:(?:approximately|around|about)\\s+)?(${amounts}(?:(?:\\s*,\\s*|\\s+and\\s+)${amounts})*)(?![\\d.\\-–])`, 'gi');
+  for (const m of intro.matchAll(re)) {
+    const fuels = m[1].toLowerCase().match(/gasoline|diesel|kerosene/g);
+    const values = [...m[3].matchAll(/US\$\s*(\d+(?:\.\d+)?)/g)].map((a) => Number(a[1]));
+    const tail = intro.slice(m.index + m[0].length, m.index + m[0].length + 60);
+    if (/^\s*(?:to\b|[-–/])/i.test(tail)) continue;
+    if (fuels.length !== values.length || (fuels.length > 1 && !/^[^.]*respectively/i.test(tail))) continue;
+    const sign = /increased|rose/i.test(m[2]) ? 1 : -1;
+    fuels.forEach((f, i) => { changes[f] = sign * values[i]; });
+  }
+  return { current, changes };
+}
+
+// USD/barrel checks deliberately exclude FX, VAT and pump-price pass-through.
+export function benchmarkChecks(benchmarks, series, tolerance = 0.15) {
+  return Object.entries(benchmarks).sort(([a], [b]) => b.localeCompare(a)).slice(0, 12).map(([date, report]) => {
+    const win = windows(addDays(date, -1));
+    const base = { date, source: report.source, current: report.current ?? null, previous: win.prev, tolerance, fuels: {} };
+    if (!report.current || !Object.keys(report.changes ?? {}).length) return { ...base, status: 'unavailable' };
+    if (report.current.some((d, i) => d !== win.cur[i])) return { ...base, status: 'report-window-mismatch' };
+    let incomplete = false;
+    for (const [fuel, symbol] of Object.entries({ gasoline: 'MOPS92', diesel: 'MOPSD', kerosene: 'MOPSK' })) {
+      if (!Number.isFinite(report.changes[fuel])) continue;
+      const averages = [win.prev, win.cur].map(([from, to]) => Object.entries(series[symbol] ?? {}).filter(([d, p]) => d >= from && d <= to && Number.isFinite(p) && p > 0).map(([, p]) => p));
+      if (averages.some((a) => a.length < 3)) { incomplete = true; continue; }
+      const observed = r2(averages[1].reduce((a, b) => a + b, 0) / averages[1].length - averages[0].reduce((a, b) => a + b, 0) / averages[0].length);
+      base.fuels[fuel] = { doe: report.changes[fuel], opinet: observed, difference: r2(observed - report.changes[fuel]) };
+    }
+    const mismatch = Object.values(base.fuels).some((f) => Math.abs(f.difference) > tolerance);
+    return { ...base, status: mismatch ? 'mismatch' : incomplete ? 'insufficient-data' : 'matched' };
+  });
+}
+
 export function pdfToText(buf) {
   const file = path.join(os.tmpdir(), `oilmonitor-${process.pid}-${Math.random().toString(36).slice(2)}.pdf`);
   fs.writeFileSync(file, buf);
-  try { return execFileSync('pdftotext', [file, '-'], { encoding: 'utf8', maxBuffer: 20e6 }); }
+  try { return execFileSync('pdftotext', [file, '-'], { encoding: 'utf8', maxBuffer: 20e6, timeout: 15_000, killSignal: 'SIGKILL' }); }
   finally { fs.rmSync(file, { force: true }); }
 }
 
-const get = async (fetchImpl, url) => {
-  const res = await fetchImpl(url, { headers: { 'User-Agent': 'Mozilla/5.0 ph-fuel-price-watch' } });
-  if (!res.ok) throw new Error(`HTTP ${res.status} for ${url.slice(0, 80)}`);
-  return res;
-};
+const get = (fetchImpl, url, format = 'text', signal) => readUrl(url, { fetchImpl, signal, format, timeoutMs: format === 'arrayBuffer' ? 45_000 : 25_000, headers: { 'User-Agent': 'Mozilla/5.0 ph-fuel-price-watch' } });
 
 // Mutates `actuals` and `ytd` (a cache of parsed totals). Never overwrites a complete existing entry.
-export async function recordFromDoe({ actuals, ytd, today = manilaToday(), fetchImpl = fetch, pdfText = pdfToText, maxReports = 12 }) {
-  const reports = listReports(await (await get(fetchImpl, LISTING)).text(), today).slice(0, maxReports);
+export async function recordFromDoe({ actuals, ytd, benchmarks = {}, today = manilaToday(), fetchImpl = fetch, pdfText = pdfToText, maxReports = 12, signal }) {
+  const reports = listReports((await get(fetchImpl, LISTING, 'text', signal)).body, today).slice(0, maxReports);
   if (!reports.length) throw new Error('no Oil Monitor links found on the DOE page');
 
   const problems = [];
-  for (const r of reports) {
-    if (ytd[r.date]) continue;
+  for (const [index, r] of reports.entries()) {
+    if (signal?.aborted) { problems.push('DOE time budget exhausted; keeping cached reports.'); break; }
+    const cached = benchmarks[r.date];
+    if (ytd[r.date] && cached && (index >= 2 || cached.checkedOn === today)) continue;
     try {
-      const parsed = parseYtd(await pdfText(Buffer.from(await (await get(fetchImpl, r.url)).arrayBuffer())));
-      if (parsed) ytd[r.date] = parsed; else problems.push(`${r.date}: year-to-date line not found`);
+      const response = await get(fetchImpl, r.url, 'arrayBuffer', signal);
+      const bytes = Buffer.from(response.body);
+      const sha256 = createHash('sha256').update(bytes).digest('hex');
+      if (cached?.sha256 === sha256 && ytd[r.date]) { cached.checkedOn = today; continue; }
+      const text = await pdfText(bytes);
+      const parsed = parseYtd(text);
+      if (!parsed) { problems.push(`${r.date}: year-to-date line not found; keeping cached values`); continue; }
+      ytd[r.date] = parsed;
+      benchmarks[r.date] = { ...(parseBenchmarks(text) ?? { current: null, changes: {} }), source: r.url, sha256, checkedOn: today };
     } catch (e) { problems.push(`${r.date}: ${e.message}`); }
   }
 
   const added = [];
   for (const r of reports) {
     const have = actuals[r.date];
-    if (have && !have.provisional && FUELS.every((f) => typeof have[f] === 'number')) continue;
+    if (have && FUELS.every((f) => Number.isFinite(have[f]) && sourceFor(have, f).kind === 'manual')) continue;
     const cur = ytd[r.date];
     if (!cur) continue;
     if (new Date(r.date + 'T00:00:00Z').getUTCDay() !== 2) { problems.push(`${r.date}: not a Tuesday, skipped`); continue; }
@@ -93,11 +146,9 @@ export async function recordFromDoe({ actuals, ytd, today = manilaToday(), fetch
     }
     const diff = Object.fromEntries(FUELS.map((f) => [f, r2(cur[f] - base[f])]));
     if (FUELS.some((f) => Math.abs(diff[f]) > 30)) { problems.push(`${r.date}: implausible change ${JSON.stringify(diff)}, skipped`); continue; }
-    if (have?.provisional) {
-      if (FUELS.some((f) => typeof have[f] === 'number' && Math.abs(have[f] - diff[f]) > 0.05)) problems.push(`${r.date}: Prior Notice and Oil Monitor differ; using the Oil Monitor`);
-      actuals[r.date] = { ...diff, source: 'DOE Oil Monitor (year-to-date difference)' };
-    } else actuals[r.date] = { ...diff, source: 'DOE Oil Monitor (year-to-date difference)', ...have }; // existing manual values win
-    added.push(r.date);
+    if (have?.provisional && FUELS.some((f) => typeof have[f] === 'number' && Math.abs(have[f] - diff[f]) > 0.05)) problems.push(`${r.date}: provisional announcement and Oil Monitor differ; using the Oil Monitor`);
+    const entry = mergeActual(have, diff, { kind: 'official', source: 'DOE Oil Monitor (year-to-date difference)', sourceUrl: r.url, provisional: false });
+    if (JSON.stringify(entry) !== JSON.stringify(have)) { actuals[r.date] = entry; added.push(r.date); }
   }
   return { added, latest: reports[0].date, problems };
 }
@@ -131,24 +182,25 @@ export function parseNotice(text, today = manilaToday()) {
 }
 
 // Fills in provisional actuals as soon as companies have filed. The Oil Monitor later replaces them with the official figure.
-export async function recordFromNotices({ actuals, notices, today = manilaToday(), fetchImpl = fetch, pdfText = pdfToText, maxReports = 6 }) {
-  const urls = pdfUrls(await (await get(fetchImpl, NOTICES)).text()).slice(0, maxReports);
+export async function recordFromNotices({ actuals, notices, today = manilaToday(), fetchImpl = fetch, pdfText = pdfToText, maxReports = 6, signal }) {
+  const urls = pdfUrls((await get(fetchImpl, NOTICES, 'text', signal)).body).slice(0, maxReports);
   if (!urls.length) throw new Error('no Prior Notice links found on the DOE page');
   const added = [], problems = [];
   for (const url of urls) {
+    if (signal?.aborted) { problems.push('DOE time budget exhausted; keeping cached notices.'); break; }
     if (!notices[url]) {
       try {
-        const parsed = parseNotice(await pdfText(Buffer.from(await (await get(fetchImpl, url)).arrayBuffer())), today);
+        const parsed = parseNotice(await pdfText(Buffer.from((await get(fetchImpl, url, 'arrayBuffer', signal)).body)), today);
         if (parsed) notices[url] = parsed; else problems.push(`notice ${decodeURIComponent(url.split('?')[0].split('/').pop())}: no clear agreement among companies`);
       } catch (e) { problems.push(`notice: ${e.message}`); }
     }
     const p = notices[url];
     if (!p) continue;
     const have = actuals[p.date] ?? {};
-    const fill = Object.fromEntries(FUELS.filter((f) => typeof p[f] === 'number' && typeof have[f] !== 'number').map((f) => [f, p[f]]));
+    const fill = Object.fromEntries(FUELS.filter((f) => typeof p[f] === 'number').map((f) => [f, p[f]]));
     if (!Object.keys(fill).length) continue;
-    actuals[p.date] = Object.keys(have).length ? { ...have, ...fill } : { ...fill, source: 'DOE Prior Notice (company filings)', provisional: true };
-    added.push(p.date);
+    const entry = mergeActual(have, fill, { kind: 'notice', source: 'DOE Prior Notice (company filings)', sourceUrl: url, provisional: true });
+    if (JSON.stringify(entry) !== JSON.stringify(have)) { actuals[p.date] = entry; added.push(p.date); }
   }
   return { added, problems };
 }

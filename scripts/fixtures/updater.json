@@ -1,0 +1,24 @@
+{
+  "asOf": "2026-11-11",
+  "now": "2026-11-11T08:00:00Z",
+  "weeks": [
+    { "monday": "2026-10-19", "days": 5, "gasoline": 100, "diesel": 154, "kerosene": 140 },
+    { "monday": "2026-10-26", "days": 5, "gasoline": 110, "diesel": 150, "kerosene": 145 },
+    { "monday": "2026-11-02", "days": 5, "gasoline": 110, "diesel": 150, "kerosene": 145 },
+    { "monday": "2026-11-09", "days": 2, "gasoline": 100, "diesel": 140, "kerosene": 135 }
+  ],
+  "fx": 58,
+  "reports": {
+    "2026-11-03": {
+      "name": "Oil Monitor 03 November 2026",
+      "text": "WORLD OIL PRICES\nOctober 26 - 30, 2026, Trading Days\nInternational gasoline prices increased by US$10.00 per barrel, while diesel prices decreased by US$4.00 per barrel.\nCrude Oil Prices\nThe 44th price movement resulted in a total net increase of P13.50/liter for gasoline, P19.00/liter for diesel and P28.10/liter for kerosene."
+    },
+    "2026-10-27": {
+      "name": "Oil Monitor 27 October 2026",
+      "text": "The 43rd price movement resulted in a total net increase of P10.00/liter for gasoline, P20.00/liter for diesel and P30.00/liter for kerosene."
+    }
+  },
+  "notice": "For the week November 3-9, 2026\nShell November 3 3.50 -1.00 -1.90\nSeaoil November 3 3.50 -1.00 -1.90\nCaltex November 3 3.50 -1.00 -1.90",
+  "announcement": "Gasoline down P4.70, diesel down P6.40, kerosene down P6.90 effective Tuesday, November 10",
+  "promotion": "The 45th price movement resulted in a total net increase of P8.80/liter for gasoline, P12.60/liter for diesel and P21.20/liter for kerosene."
+}

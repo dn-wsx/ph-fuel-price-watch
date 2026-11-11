@@ -25,6 +25,7 @@
       <h2 id="h-why">What is driving it</h2>
       <div id="why"></div>
       <div class="scroll"><table id="market"></table></div>
+      <details><summary>Singapore prices alongside DOE international-price reports</summary><div id="benchmark"></div></details>
     </section>
 
     <section aria-labelledby="h-src">
@@ -36,17 +37,27 @@
     <section aria-labelledby="h-hist">
       <h2 id="h-hist">Forecast vs. actual</h2>
       <div class="scroll"><table id="history"></table></div>
-      <p class="note legend"><span>All figures are pesos per liter. <strong>Forecast</strong>: our estimate. <strong>Actual</strong>: what the DOE announced (green rollback, red hike). <strong>Miss</strong> = forecast − actual:</span>
+      <p class="note legend"><span>All figures are pesos per liter. <strong>Forecast</strong>: our estimate. <strong>Actual</strong>: the announced adjustment (green rollback, red hike). <strong>Miss</strong> = forecast − actual:</span>
         <span class="miss good">within ₱1</span><span class="miss ok">₱1 to ₱2.50</span><span class="miss bad">over ₱2.50</span>
         <span>A plus means the forecast was too high (too little rollback or too big a hike).</span></p>
+      <p class="note">† Provisional actuals await Oil Monitor confirmation and are excluded from average misses and calibration. Follow a linked actual for that fuel's source. Manually entered corrections are protected.</p>
+      <div id="actualsStatus"></div>
       <p id="accuracy" class="note"></p>
       <h3 id="h-live">How the live forecasts did</h3>
       <div id="live"></div>
-      <p id="histNote" class="note" hidden>* Rebuilt: what the model says from that week's finished Singapore prices, not a forecast made at the time. Actual adjustments come from the DOE's weekly Oil Monitor.</p>
+      <p id="histNote" class="note" hidden>* Rebuilt: what the model says from that week's finished Singapore prices, not a forecast made at the time.</p>
     </section>
 
     <footer>
-      <p>This is an estimate from public market data, not an official figure. Pump prices follow Singapore (MOPS) product prices, which are not free to access, so this site reads the daily Singapore prices that Korea's Opinet publishes a day later, and corrects for them as actual adjustments are recorded. Always check announcements from the DOE and your oil company.</p>
+      <p>This is an estimate from public market data, not an official figure or a licensed MOPS feed. Opinet publishes Singapore product prices with a delay. Always check announcements from the DOE and your oil company.</p>
+      <p>Data sources:
+        <a href="https://www.opinet.co.kr/glopopdSelect.do" rel="noopener">Opinet (Singapore prices)</a> ·
+        <a href="https://doe.gov.ph/data-and-prices/liquid-fuels/oil-monitor" rel="noopener">DOE Oil Monitor</a> ·
+        <a href="https://doe.gov.ph/data-and-prices/liquid-fuels/retail-pump-prices/price-adjustments" rel="noopener">DOE company filings</a> ·
+        <a href="https://frankfurter.dev/" rel="noopener">Frankfurter (FX)</a> ·
+        <a href="https://finance.yahoo.com/markets/commodities/" rel="noopener">Yahoo Finance (fallback futures)</a> ·
+        <a href="https://news.google.com/search?q=Philippines%20fuel%20price%20adjustment" rel="noopener">Google News (headlines)</a>.
+      </p>
     </footer>
   </main>
   <script type="module" src="assets/app.js"></script>

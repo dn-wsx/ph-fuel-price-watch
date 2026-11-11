@@ -2,7 +2,7 @@ name: Update forecast and deploy
 
 on:
   schedule:
-    # Odd minutes on purpose: GitHub delays or drops scheduled runs that start at the top of an hour or on :30 (high load).
+    # Avoid the top of the hour; keep all slots until Opinet publication observations justify trimming.
     - cron: '17 22 * * 0-5'   # 06:17 PHT Mon-Sat, after US futures settle
     - cron: '43 3 * * 2-6'    # 11:43 PHT Tue-Sat, once Opinet has posted the previous Singapore trading day
     - cron: '17 7 * * 2-6'    # 15:17 PHT Tue-Sat, another look at Opinet and the news
@@ -38,6 +38,7 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -59,6 +60,7 @@ jobs:
           if [ -n "$K" ]; then args+=("kerosene=$K"); fi
           if [ ${#args[@]} -gt 0 ]; then node scripts/add-actual.mjs "${DATE:-auto}" "${args[@]}"; else echo "No values entered, skipping."; fi
       - run: node scripts/update.mjs
+        timeout-minutes: 5
       - name: Commit data changes
         run: |
           git config user.name "github-actions[bot]"
@@ -73,6 +75,7 @@ jobs:
   deploy:
     needs: update
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -84,6 +87,7 @@ jobs:
   health:
     needs: update
     runs-on: ubuntu-latest
+    timeout-minutes: 3
     steps:
       - uses: actions/checkout@v7
         with: { ref: main }

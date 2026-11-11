@@ -1,9 +1,11 @@
 // Published estimates of the next Tuesday's pump price change, read from news headlines (Google News RSS).
 // Outlets repeat the same industry estimate (Jetti, Unioil, Petron sources, DOE) every Thursday to Saturday.
 // A headline is used only if it names a fuel and an amount; an estimate is used only if two headlines agree.
-import { windows, r2, median } from './model.mjs';
+import { windows, r2, median, addDays } from './model.mjs';
+import { readUrl } from './http.mjs';
 
 export const NEWS_URL = `https://news.google.com/rss/search?q=${encodeURIComponent('oil price rollback OR hike next week Philippines diesel gasoline when:10d')}&hl=en-PH&gl=PH&ceid=PH:en`;
+export const ANNOUNCEMENTS_URL = `https://news.google.com/rss/search?q=${encodeURIComponent('Philippines fuel gasoline diesel kerosene prices effective Tuesday announced when:10d')}&hl=en-PH&gl=PH&ceid=PH:en`;
 
 const FUEL_WORDS = { gasoline: /gasoline|\bgas\b|unleaded/i, diesel: /diesel/i, kerosene: /kerosene/i };
 const AMOUNT = /(?<![A-Za-z])(?:₱|PHP\s?|P)\s?(\d+(?:\.\d+)?)(?:\s*(?:to|-|–)\s*(?:₱|PHP\s?|P)?\s?(\d+(?:\.\d+)?))?/i;
@@ -22,7 +24,8 @@ export function parseRss(xml) {
     let title = pick('title') ? decode(pick('title')) : '';
     if (source && title.endsWith(` - ${source}`)) title = title.slice(0, -(source.length + 3));
     const published = new Date(pick('pubDate') ?? NaN);
-    if (title && !Number.isNaN(published.getTime())) items.push({ title, source, published: published.toISOString(), link: pick('link') ? decode(pick('link')) : '' });
+    const sourceUrl = body.match(/<source\s+[^>]*url="([^"]+)"/)?.[1];
+    if (title && !Number.isNaN(published.getTime())) items.push({ title, source, ...(sourceUrl && { sourceUrl: decode(sourceUrl) }), published: published.toISOString(), link: pick('link') ? decode(pick('link')) : '' });
   }
   return items;
 }
@@ -33,9 +36,15 @@ const manilaDate = (iso) => new Date(Date.parse(iso) + 8 * 3600e3).toISOString()
 export function parseEstimate(title, publishedIso) {
   const dow = new Date(manilaDate(publishedIso) + 'T00:00:00Z').getUTCDay(); // 4=Thu .. 0=Sun carry forecasts; Mon to Wed headlines are about the adjustment already announced
   if (ACTUAL.test(title) || !(CUE.test(title) || [4, 5, 6, 0].includes(dow))) return null;
+  return parseChanges(title);
+}
+
+function parseChanges(title, exact = false) {
+  if (exact && [...title.matchAll(new RegExp(AMOUNT, 'gi'))].some((m) => m[2] != null)) return null;
   const clean = title.split(/\bLink to\b|\|/)[0].replace(/\bup to\b/gi, ' ').replace(/\bover\b/gi, ' ');
   const out = {};
   const clauses = clean.split(/[,;]|\bwhile\b|\bbut\b|\band\b/i).map((text) => ({ text, down: DOWN.test(text), up: UP.test(text) })); // one amount per fuel; "gasoline and diesel fall P4" keeps only the fuel next to the amount
+  if (exact && clauses.some((c) => Object.values(FUEL_WORDS).some((re) => re.test(c.text)) && !AMOUNT.test(c.text))) return null;
   const own = clauses.map((c) => (c.down === c.up ? 0 : c.down ? -1 : 1));
   // A clause with no direction word takes it from the clause before ("P13 for gas, P4 for diesel") or after ("Diesel P6.40 and gasoline P4.70 rollback").
   let last = 0, next = 0;
@@ -45,6 +54,7 @@ export function parseEstimate(title, publishedIso) {
     const amount = c.text.match(AMOUNT);
     const fuels = Object.keys(FUEL_WORDS).filter((f) => FUEL_WORDS[f].test(c.text));
     if (!amount || !dir || !fuels.length) return;
+    if (exact && (fuels.length !== 1 || amount[2] != null || [...c.text.matchAll(new RegExp(AMOUNT, 'gi'))].length !== 1)) return;
     const lo = Number(amount[1]), hi = amount[2] != null ? Number(amount[2]) : lo;
     if (!(lo > 0 && hi >= lo && hi <= 30)) return;
     const value = lo === hi ? dir * lo : [dir * lo, dir * hi].sort((a, b) => a - b);
@@ -83,8 +93,52 @@ export function estimatesFromNews(items) {
   return out;
 }
 
-export async function fetchNews(fetchImpl = fetch) {
-  const res = await fetchImpl(NEWS_URL, { headers: { 'User-Agent': 'Mozilla/5.0 ph-fuel-price-watch' } });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return parseRss(await res.text());
+const PUBLISHERS = ['gmanetwork.com', 'philstar.com', 'inquirer.net', 'abs-cbn.com', 'abs-cbnnews.com', 'mb.com.ph', 'pna.gov.ph', 'manilatimes.net', 'tribune.net.ph'];
+const MONTH_NAMES = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+
+// Exact Monday/Tuesday announcements need two distinct publishers; conflicting values stay unrecorded.
+export function announcementsFromNews(items, today, problems = []) {
+  const grouped = {};
+  for (const it of items) {
+    let host;
+    try { host = new URL(it.sourceUrl).hostname.toLowerCase(); } catch { continue; }
+    const publisher = PUBLISHERS.find((p) => host === p || host.endsWith(`.${p}`));
+    if (!publisher || !Number.isFinite(Date.parse(it.published))) continue;
+    const date = manilaDate(it.published), dow = new Date(date).getUTCDay();
+    if (![1, 2].includes(dow) || date > today) continue;
+    const target = dow === 1 ? addDays(date, 1) : date;
+    if (target > today || target < addDays(today, -8)) continue;
+    const title = it.title;
+    const explicit = title.match(/\b(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\.?\s+(\d{1,2})(?:,?\s+(\d{4}))?/i);
+    const context = explicit ? title.replace(explicit[0], '') : title;
+    if (/\bmay\b|could|expected|forecast|seen|next week|projected|up to|\bover\b|at least|\bbetween\b/i.test(context)) continue;
+    if (!/(?:effective|starting|from|on|this)\s+(?:\w+\s+)?Tuesday|starting tomorrow/i.test(title)) continue;
+    if (explicit) {
+      const month = MONTH_NAMES.findIndex((m) => m.startsWith(explicit[1].toLowerCase())) + 1;
+      const stated = `${explicit[3] ?? target.slice(0, 4)}-${String(month).padStart(2, '0')}-${explicit[2].padStart(2, '0')}`;
+      if (stated !== target) continue;
+    }
+    const values = parseChanges(title, true);
+    if (values) (grouped[target] ??= []).push({ ...it, publisher, values });
+  }
+  const out = {};
+  for (const [date, rows] of Object.entries(grouped)) {
+    const values = {};
+    for (const fuel of Object.keys(FUEL_WORDS)) {
+      const candidates = rows.filter((r) => typeof r.values[fuel] === 'number');
+      if (new Set(candidates.map((r) => r.publisher)).size < 2) continue;
+      if (new Set(candidates.map((r) => r.values[fuel])).size === 1) values[fuel] = candidates[0].values[fuel];
+      else problems.push(`${date} ${fuel}: conflicting announcement amounts; not recorded from news.`);
+    }
+    if (Object.keys(values).length) out[date] = {
+      ...values, provisional: true, source: 'Corroborated news announcements',
+      items: rows.filter((r) => Object.keys(values).some((f) => r.values[f] === values[f])).map(({ title, source, sourceUrl, published, link }) => ({ title, source, sourceUrl, published, link })),
+    };
+  }
+  return out;
+}
+
+export async function fetchNews(fetchImpl = fetch, url = NEWS_URL, signal) {
+  const response = await readUrl(url, { fetchImpl, signal, headers: { 'User-Agent': 'Mozilla/5.0 ph-fuel-price-watch' } });
+  return parseRss(response.body);
 }
