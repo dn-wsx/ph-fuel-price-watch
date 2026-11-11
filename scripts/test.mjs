@@ -25,7 +25,8 @@ assert.equal(rawChange({ ...days('2026-11-02', 2, 2.0), ...days('2026-11-09', 5,
 const wk = (mon, vals) => Object.fromEntries(vals.map((v, i) => [addDays(mon, i), v])); // Mon-Fri prices from a Monday
 
 // The unfinished week is projected at the latest price instead of averaging only the days seen so far.
-const partial = rawChange({ ...days('2026-11-02', 5, 2.0), '2026-11-09': 2.0, '2026-11-10': 2.4 }, fx, w);
+const wTue = windows('2026-11-10'); // the same two weeks, looked at on the Tuesday itself
+const partial = rawChange({ ...days('2026-11-02', 5, 2.0), '2026-11-09': 2.0, '2026-11-10': 2.4 }, fx, wTue);
 assert.equal(partial.days, 2);
 assert.ok(Math.abs(partial.raw - ((2.0 + 4 * 2.4) / 5 - 2.0) / 3.78541 * 58 * 1.12) < 1e-9);
 assert.ok(rawChange(up, fx, w).dailySd >= 0);
@@ -258,7 +259,20 @@ assert.throws(() => parseOpinet('<html>maintenance</html>'), /Opinet/);
 const holiday = rawChange({ ...wk('2026-11-02', [2, 2, 2, 2, 2]), '2026-11-10': 2.1, '2026-11-11': 2.1, '2026-11-12': 2.1, '2026-11-13': 2.1 }, fx, w);
 assert.equal(holiday.unseen, 0);
 assert.ok(Math.abs(holiday.raw - (0.1 / 3.78541) * 58 * 1.12) < 1e-9);
-assert.equal(rawChange({ ...wk('2026-11-02', [2, 2, 2, 2, 2]), '2026-11-10': 2.1 }, fx, w).unseen, 3); // Day 1 was Tuesday; Wed-Fri still to come
+assert.equal(rawChange({ ...wk('2026-11-02', [2, 2, 2, 2, 2]), '2026-11-10': 2.1 }, fx, wTue).unseen, 3);
+// A Singapore holiday on the last day (Friday 25 Dec 2026, Friday 1 Jan 2027): Friday is awaited for a while because Opinet posts a
+// day late, then the week is averaged over the four days that traded. Holding Thursday as a fifth day was wrong by up to P0.9/L.
+const fridayOff = { ...wk('2026-11-02', [2, 2, 2, 2, 2]), ...wk('2026-11-09', [2.1, 2.1, 2.1, 2.1]) };
+assert.equal(windows('2026-11-14').asOf, '2026-11-14');
+assert.equal(rawChange(fridayOff, fx, windows('2026-11-14')).unseen, 1); // Saturday: Friday's price may still be posted
+assert.equal(rawChange(fridayOff, fx, windows('2026-11-15')).unseen, 1); // Sunday: still allowed a day more
+const monday = rawChange(fridayOff, fx, windows('2026-11-16'));        // Monday, the last run before the Tuesday adjustment
+assert.equal(monday.unseen, 0);
+assert.ok(Math.abs(monday.raw - (0.1 / 3.78541) * 58 * 1.12) < 1e-9);  // four days at 2.1 against 2.0, not Thursday counted twice
+// With Thursday held as a fifth day the result would be the same here only because the days are flat; use a moving week to tell them apart.
+const moving = { ...wk('2026-11-02', [2, 2, 2, 2, 2]), ...wk('2026-11-09', [2, 2, 2.4, 2.6]) };
+assert.ok(Math.abs(rawChange(moving, fx, windows('2026-11-16')).raw - ((2 + 2 + 2.4 + 2.6) / 4 - 2) / 3.78541 * 58 * 1.12) < 1e-9);
+assert.ok(rawChange(moving, fx, windows('2026-11-15')).raw > rawChange(moving, fx, windows('2026-11-16')).raw); // still awaiting Friday: Thursday held, so higher // Day 1 was Tuesday; Wed-Fri still to come
 
 // The Singapore prices lead; the US futures take over only if they are missing.
 const op = { ...wk('2026-11-02', [110, 110, 110, 110, 110]), ...wk('2026-11-09', [100, 100, 100, 100, 100]) };

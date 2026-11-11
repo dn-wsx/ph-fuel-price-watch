@@ -48,6 +48,7 @@ export function windows(today) {
   const target = addDays(today, ((2 - dow + 7) % 7) || 7);
   return {
     target,
+    asOf: today,
     cur: [addDays(target, -8), addDays(target, -4)],
     prev: [addDays(target, -15), addDays(target, -11)],
   };
@@ -69,15 +70,16 @@ export function partialSd(dailySd, remainingDays) {
 }
 
 // Week-on-week change in the average PHP/liter product cost, VAT included. Days of the current week still to come are
-// held at the latest price (the unbiased guess for a random walk). A market holiday inside the week is not a day to come:
-// the week is averaged over the days that traded.
+// held at the latest price (the unbiased guess for a random walk). A market holiday is not a day to come: the week is
+// averaged over the days that traded. Prices post a day late, so a missing weekday counts as a holiday once it is more
+// than 3 days behind us (a Friday holiday is settled by the Monday before the Tuesday adjustment).
 export function rawChange(prices, fx, win, cfg = CONFIG, liters = cfg.litersPerGallon) {
   const levels = Object.entries(prices).sort().map(([d, p]) => [d, fxOn(fx, d) ? (p / liters) * fxOn(fx, d) : null]).filter(([, v]) => v != null);
   const within = (range) => levels.filter(([d]) => inRange(d, range)).map(([, v]) => v);
   const cur = within(win.cur), prev = within(win.prev);
   if (!cur.length || prev.length < 3) return null;
   const lastDate = levels.at(-1)[0];
-  const unseen = Array.from({ length: 5 }, (_, i) => addDays(win.cur[0], i)).filter((d) => d > lastDate).length;
+  const unseen = Array.from({ length: 5 }, (_, i) => addDays(win.cur[0], i)).filter((d) => d > lastDate && (!win.asOf || d > addDays(win.asOf, -3))).length;
   const projected = [...cur, ...Array(unseen).fill(cur.at(-1))];
   const recent = levels.slice(-21), moves = []; // day-to-day moves, skipping the jump across a month-end (that is a contract roll)
   for (let i = 1; i < recent.length; i++) if (recent[i][0].slice(0, 7) === recent[i - 1][0].slice(0, 7)) moves.push(recent[i][1] - recent[i - 1][1]);
