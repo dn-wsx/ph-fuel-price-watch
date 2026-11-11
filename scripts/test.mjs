@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { CONFIG, addDays, windows, rawChange, calibrate, forecast, confidence, barDate, frontContract, spansRoll, seriesFor, fuelChange, partialSd } from './model.mjs';
+import { CONFIG, addDays, windows, rawChange, calibrate, forecast, confidence, barDate, frontContract, spansRoll, seriesFor, fuelChange, partialSd, basisOf } from './model.mjs';
 import { listReports, parseYtd, recordFromDoe, parseNotice, recordFromNotices } from './doe.mjs';
 import { settledBars, intradayClose, latestSettleDate, parseOpinet } from './market.mjs';
 import { parseRss, parseEstimate, estimatesFromNews } from './news.mjs';
@@ -267,5 +267,22 @@ const usGal = { ...wk('2026-11-02', [4, 4, 4, 4, 4]), ...wk('2026-11-09', [3.9, 
 const us = fuelChange('diesel', { 'HO=F': usGal }, { '2026-10-01': 63 }, windows('2026-11-14'));
 assert.ok(us.source === 'us' && Math.abs(us.raw - (-0.1 / 3.78541) * 63 * 1.12) < 1e-9);
 assert.equal(fuelChange('diesel', {}, { '2026-10-01': 63 }, windows('2026-11-14')), null);
+
+// A source can be asked for by name, so the calibration for the fallback is fitted on the fallback's own history.
+const brent = { ...wk('2026-11-02', [90, 90, 90, 90, 90]), ...wk('2026-11-09', [85, 85, 85, 85, 85]) };
+const both = { MOPS92: op, 'BZ=F': brent, 'RB=F': usGal };
+const f63 = { '2026-10-01': 63 }, w14 = windows('2026-11-14');
+assert.equal(fuelChange('gasoline', both, f63, w14).source, 'singapore'); // best source by default
+assert.equal(fuelChange('gasoline', both, f63, w14, CONFIG, 'us').source, 'us'); // forced to the fallback
+assert.ok(Math.abs(fuelChange('gasoline', both, f63, w14, CONFIG, 'us').raw - (0.5 * (-5 / 158.987) + 0.5 * (-0.1 / 3.78541)) * 63 * 1.12) < 1e-9);
+assert.equal(fuelChange('gasoline', { 'BZ=F': brent, 'RB=F': usGal }, f63, w14, CONFIG, 'singapore'), null); // that source has no data
+assert.equal(fuelChange('gasoline', both, f63, w14, CONFIG, 'nope'), null);
+
+// Why the page is not on Singapore prices decides what it tells the reader; anything but Singapore is low confidence.
+assert.equal(basisOf(['singapore', 'singapore'], false), 'singapore');
+assert.equal(basisOf(['singapore', 'us'], false), 'us-waiting'); // Opinet answered, this week's first day is just not posted yet
+assert.equal(basisOf(['us', 'us'], true), 'us-unreadable');     // Opinet itself failed
+assert.equal(confidence(5, 10, 'us-waiting'), 'low');
+assert.equal(confidence(5, 10, 'singapore'), 'high');
 
 console.log('All tests passed');

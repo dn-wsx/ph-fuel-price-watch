@@ -46,7 +46,8 @@ function render(d) {
   if (d.sample) notes.push('These are sample numbers. The first scheduled run replaces them with real estimates.');
   if (d.errors?.length) notes.push('Some data could not be refreshed, so older saved data may be in use.');
   if (d.actualsNote) notes.push(esc(d.actualsNote));
-  if (d.singaporeData === false) notes.push('Singapore prices (Opinet) could not be read, so the model is using US futures. They miss Asian moves, so treat this as rough.');
+  if (d.basis === 'us-waiting') notes.push(`Singapore prices for this week's first trading day are not posted yet (Opinet posts each Singapore trading day the day after). This early look uses US futures, which miss Asian moves, so treat it as rough.`);
+  else if (d.basis === 'us-unreadable') notes.push('Singapore prices (Opinet) could not be read, so the model is using US futures. They miss Asian moves, so treat this as rough.');
   if (d.rollWarning) notes.push('A futures contract roll falls inside this comparison and could not be corrected. Treat it as rough.');
   const banner = $('#banner');
   banner.hidden = !notes.length;
@@ -62,7 +63,7 @@ function render(d) {
     </div>`).join('') || '<div class="row"><div class="name">No forecast yet</div></div>';
 
   const days = Math.min(...Object.values(d.fuels).map((f) => f.daysOfData ?? 0), 5);
-  $('#boardNote').textContent = `Based on ${days} of 5 trading days this week${d.singaporeThrough ? ` (Singapore through ${fmtDate(d.singaporeThrough, { month: 'short', day: 'numeric' })})` : ''}. Updated ${new Date(d.generatedAt).toLocaleString('en-PH', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Manila' })} PHT.`;
+  $('#boardNote').textContent = `${d.basis && d.basis !== 'singapore' ? 'Early look from US futures, based on' : 'Based on'} ${days} of 5 trading days this week${d.singaporeThrough ? ` (Singapore through ${fmtDate(d.singaporeThrough, { month: 'short', day: 'numeric' })})` : ''}. Updated ${new Date(d.generatedAt).toLocaleString('en-PH', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Manila' })} PHT.`;
 
   const m = d.market, fx = m.fx.pct;
   const trend = (p) => (p == null ? 'not enough data' : p > 0 ? `up ${Math.abs(p)}%` : p < 0 ? `down ${Math.abs(p)}%` : 'flat');

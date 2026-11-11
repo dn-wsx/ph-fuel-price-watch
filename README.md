@@ -20,7 +20,7 @@ Oil companies adjust pump prices every Tuesday. The change follows the average S
 - **Exchange rate:** Frankfurter (ECB reference rates). It matched the peso average quoted by the DOE to within ₱0.04.
 - **Actual adjustments:** the DOE's "Prior Notice on Price Adjustments" and weekly Oil Monitor, read automatically.
 - **News cross-check:** news headlines found through Google News.
-- **Backup:** if the Singapore data cannot be read, the page says so and uses US futures prices (Yahoo Finance) instead. They miss Asian price moves, so treat that as rough.
+- **Backup:** when the Singapore data is missing (not posted yet on Tuesday morning, or unreadable), the page says so and uses US futures prices (Yahoo Finance) instead, with a wider range fitted on how those futures have done. They miss Asian price moves, so treat that as rough.
 
 ## How accurate is it
 Checked against the 12 weeks of announced adjustments from August to November 2026, using each week's finished data:
@@ -36,12 +36,11 @@ Earlier in the week it is rougher. Against the final adjustment, the typical mis
 Some weeks the companies do not pass the Singapore change through one for one. In the week of 10 November 2026 the Singapore price implied a gasoline rollback of about ₱11.90, but ₱16.80 was announced. Those weeks cannot be predicted from public data. Twelve weeks in one volatile period is also a short track record, so treat these figures as a good sign, not a guarantee.
 
 ## When it updates
-Automatically, three times a day (Philippine time):
-- **6:30 AM**, Monday to Saturday
-- **12:00 noon**, Tuesday to Saturday
-- **6:30 PM**, Tuesday to Saturday
+Automatically, four times a day (Philippine time, give or take a few minutes):
+- **About 6:15 AM**, Monday to Saturday
+- **About 11:45 AM, 3:15 PM and 6:45 PM**, Tuesday to Saturday
 
-The updates can start a few hours late. Singapore prices appear on Opinet a day late, so the estimate trails same-day posts by about half a day. That costs very little accuracy, because the main uncertainty early in the week is the days still to come. If updates stop, the page shows a warning.
+GitHub can start scheduled runs hours late, so the page may lag a little behind these times. Singapore prices appear on Opinet a day late, so the estimate trails same-day posts by about half a day. That costs very little accuracy, because the main uncertainty early in the week is the days still to come. On Tuesday morning, before Opinet has posted the new week's first trading day, the page shows an early look from US futures with a wider range and says so. If updates stop, the page shows a warning.
 
 ## Limits
 - This is an estimate from public data, not an official figure. Always check announcements from the DOE and your oil company.

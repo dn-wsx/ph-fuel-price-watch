@@ -2,9 +2,11 @@ name: Update forecast and deploy
 
 on:
   schedule:
-    - cron: '30 22 * * 0-5'   # 06:30 PHT Mon-Sat, after US futures settle
-    - cron: '0 4 * * 2-6'     # 12:00 PHT Tue-Sat, once Opinet has posted the previous Singapore trading day
-    - cron: '30 10 * * 2-6'   # 18:30 PHT Tue-Sat, a second look at Opinet and the day's news estimates
+    # Odd minutes on purpose: GitHub delays or drops scheduled runs that start at the top of an hour or on :30 (high load).
+    - cron: '17 22 * * 0-5'   # 06:17 PHT Mon-Sat, after US futures settle
+    - cron: '43 3 * * 2-6'    # 11:43 PHT Tue-Sat, once Opinet has posted the previous Singapore trading day
+    - cron: '17 7 * * 2-6'    # 15:17 PHT Tue-Sat, another look at Opinet and the news
+    - cron: '43 10 * * 2-6'   # 18:43 PHT Tue-Sat, last look of the day
   push:
     branches: [main]
     paths-ignore: ['data/**']

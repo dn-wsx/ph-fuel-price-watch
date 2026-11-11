@@ -1,6 +1,6 @@
 // Fetches free market data, computes the forecast, writes JSON into /data.
 import fs from 'node:fs/promises';
-import { CONFIG, FUELS, rootOf, frontContract, windows, manilaToday, addDays, r2, fuelChange, seriesFor, avgChange, calibrate, forecast, confidence, partialSd } from './model.mjs';
+import { CONFIG, FUELS, rootOf, frontContract, windows, manilaToday, addDays, r2, fuelChange, seriesFor, avgChange, calibrate, forecast, confidence, partialSd, basisOf } from './model.mjs';
 import { yahoo, usdphp, opinet } from './market.mjs';
 import { recordFromDoe, recordFromNotices } from './doe.mjs';
 import { estimatesFromNews, fetchNews } from './news.mjs';
@@ -90,16 +90,17 @@ try {
 await write('news.json', newsCache);
 const news = newsCache.estimates[win.target];
 
-// 3. Calibration pairs: what the model says for a COMPLETE week against the actual, for every week with a known actual.
+// 3. Calibration pairs: what a source says for a COMPLETE week against the actual, for every week with a known actual.
+//    Each source is fitted on its own history, so the US-futures fallback gets its own (wider) error and scale.
 //    Weeks across a roll whose contract was not saved are skipped rather than trusted.
-const pastWeek = (date, fuel) => {
-  const rc = fuelChange(fuel, S, S.USDPHP, windows(addDays(date, -1)));
-  return rc && !rc.unresolved && rc.unseen === 0 && rc.days >= 4 ? rc.raw : null; // a finished week; one market holiday is fine
-};
-const pairsFor = Object.fromEntries(FUELS.map((fuel) => [fuel, Object.entries(actuals)
+const pairsOf = (fuel, source) => Object.entries(actuals)
   .filter(([, a]) => typeof a[fuel] === 'number')
-  .map(([date, a]) => [date, pastWeek(date, fuel), a[fuel]])
-  .filter(([, raw]) => raw != null)]));
+  .map(([date, a]) => {
+    const rc = fuelChange(fuel, S, S.USDPHP, windows(addDays(date, -1)), CONFIG, source);
+    return [date, rc && !rc.unresolved && rc.unseen === 0 && rc.days >= 4 ? rc.raw : null, a[fuel]]; // a finished week; one market holiday is fine
+  })
+  .filter(([, raw]) => raw != null);
+const pairsFor = Object.fromEntries(FUELS.map((fuel) => [fuel, pairsOf(fuel, 'singapore')]));
 // Back-test rows (what the model would have said) are rebuilt every run; forecasts that were made live are kept as history.
 for (const date of Object.keys(actuals)) {
   if (log[date] && !log[date].backtest) continue;
@@ -113,7 +114,7 @@ let minDays = 5, calibratedWeeks = 0, rolled = false, unresolved = false;
 for (const fuel of FUELS) {
   const rc = fuelChange(fuel, S, S.USDPHP, win);
   if (!rc) { errors.push(`${fuel}: not enough price data for ${win.cur[0]}..${win.cur[1]}`); continue; }
-  const cal = calibrate(pairsFor[fuel].map(([, raw, actual]) => [raw, actual]));
+  const cal = calibrate((rc.source === 'singapore' ? pairsFor[fuel] : pairsOf(fuel, rc.source)).map(([, raw, actual]) => [raw, actual]));
   fuels[fuel] = {
     ...forecast(rc.raw, cal, CONFIG, { sd: partialSd(rc.dailySd, rc.unseen) }),
     source: rc.source, proxy: CONFIG.proxies[fuel][CONFIG.sources.indexOf(rc.source)].map(([s, w], _, all) => (all.length > 1 ? `${s} ${w * 100}%` : s)).join(' + '),
@@ -124,6 +125,7 @@ for (const fuel of FUELS) {
   rolled ||= rc.rolled; unresolved ||= rc.unresolved;
 }
 
+const basis = basisOf(Object.values(fuels).map((f) => f.source), errors.some((e) => e.startsWith('Opinet')));
 log[win.target] = { generatedAt: new Date().toISOString(), model: MODEL_VERSION, ...Object.fromEntries(Object.entries(fuels).map(([k, f]) => [k, { raw: f.raw, value: f.value, low: f.low, high: f.high, }])) };
 await write('forecast-log.json', log);
 
@@ -143,8 +145,8 @@ const accuracy = Object.fromEntries(FUELS.map((fuel) => {
 const trend = (symbol) => ({ ...avgChange(S[symbol] ?? {}, win), pct: avgChange(seriesFor(symbol, S, win).prices, win).pct });
 await write('forecast.json', {
   sample: false, model: MODEL_VERSION, generatedAt: new Date().toISOString(), asOf: today, target: win.target, window: { current: win.cur, previous: win.prev },
-  confidence: Object.keys(fuels).length && !unresolved ? confidence(minDays, calibratedWeeks) : 'low',
-  rollWarning: unresolved, rollAdjusted: rolled && !unresolved, singaporeData: FUELS.every((f) => fuels[f]?.source === 'singapore'), singaporeThrough: Object.keys(S.MOPS92 ?? {}).sort().at(-1) ?? null,
+  confidence: Object.keys(fuels).length && !unresolved ? confidence(minDays, calibratedWeeks, basis) : 'low',
+  rollWarning: unresolved, rollAdjusted: rolled && !unresolved, singaporeData: basis === 'singapore', basis, singaporeThrough: Object.keys(S.MOPS92 ?? {}).sort().at(-1) ?? null,
   fuels, history, accuracy, errors, actualsNote, newsNote,
   news: news ? { updatedAt: newsCache.updatedAt, items: news.items } : null,
   market: {

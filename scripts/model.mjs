@@ -123,12 +123,21 @@ function blendChange(parts, S, fx, win, cfg) {
 }
 
 // One fuel's raw change from the best source that has data (see CONFIG.proxies), or null if none does.
-export function fuelChange(fuel, S, fx, win, cfg = CONFIG) {
+// `only` names one source ('singapore' or 'us') to use just that one, for fitting its own calibration.
+export function fuelChange(fuel, S, fx, win, cfg = CONFIG, only = null) {
   for (const [i, parts] of cfg.proxies[fuel].entries()) {
+    if (only && cfg.sources[i] !== only) continue;
     const rc = blendChange(parts, S, fx, win, cfg);
     if (rc) return { ...rc, source: cfg.sources[i] };
   }
   return null;
+}
+
+// Why the numbers are or are not on the Singapore prices, which decides what the page tells the reader. Early on Tuesday
+// Opinet has not posted the new week's first trading day yet, which is different from Opinet being unreadable.
+export function basisOf(sources, opinetFailed) {
+  if (sources.every((s) => s === 'singapore')) return 'singapore';
+  return opinetFailed ? 'us-unreadable' : 'us-waiting';
 }
 
 // Percent change of a series' weekly average, plus its latest value (for the dashboard).
@@ -167,7 +176,7 @@ export function forecast(raw, cal, cfg = CONFIG, { sd = 0 } = {}) {
   return { raw: r2(raw), value: r2(value), low: r2(value - half), high: r2(value + half), direction, withinError: Math.abs(value) < half };
 }
 
-export function confidence(days, calibratedWeeks) {
-  if (days < 3) return 'low';
+export function confidence(days, calibratedWeeks, basis = 'singapore') {
+  if (basis !== 'singapore' || days < 3) return 'low';
   return days >= 5 && calibratedWeeks >= 8 ? 'high' : 'medium';
 }
