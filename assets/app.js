@@ -13,6 +13,8 @@ function render(d) {
   const notes = [];
   if (d.sample) notes.push('These are sample numbers. The first scheduled run replaces them with real estimates.');
   if (d.errors?.length) notes.push('Some data could not be refreshed, so older saved data may be in use.');
+  if (d.actualsNote) notes.push(esc(d.actualsNote));
+  if (d.rollWarning) notes.push('A futures contract roll falls inside this comparison, which can distort the estimate. Treat it as rough.');
   if (d.industry) notes.push(`Blended with an industry estimate${d.industry.source ? ` from ${esc(d.industry.source)}` : ''}.`);
   const banner = $('#banner');
   banner.hidden = !notes.length;
@@ -23,7 +25,7 @@ function render(d) {
       <div class="name">${NAMES[k]}</div>
       <div class="val">${php(f.value)}</div>
       <div class="meta"><span class="tag">${LABEL[f.direction]}${f.withinError ? ' (within margin of error)' : ''}</span>
-      <span>Likely range ${php(f.low)} to ${php(f.high)} per liter</span></div>
+      <span>Likely range ${php(f.low)} to ${php(f.high)} per liter</span>${f.published != null ? `<span>Model ${php(f.model)} · Published ${php(f.published)} · blended</span>` : ''}</div>
     </div>`).join('') || '<div class="row"><div class="name">No forecast yet</div></div>';
 
   const days = Math.min(...Object.values(d.fuels).map((f) => f.daysOfData ?? 0), 5);
@@ -41,11 +43,12 @@ function render(d) {
   const rows = d.history ?? [];
   $('#history').innerHTML = rows.length
     ? `<tr><th>Tuesday</th>${Object.values(NAMES).map((n) => `<th class="num">${n}<br>forecast / actual</th>`).join('')}</tr>` +
-      rows.map((r) => `<tr><td>${fmtDate(r.date, { month: 'short', day: 'numeric', year: 'numeric' })}</td>${Object.keys(NAMES).map((k) => `<td class="num">${php(r.fuels?.[k]?.forecast)} / ${php(r.fuels?.[k]?.actual)}</td>`).join('')}</tr>`).join('')
-    : '<tr><td>No saved forecast or DOE actual history yet. New weekly forecasts will appear here automatically; DOE actuals will be added when verified.</td></tr>';
+      rows.map((r) => `<tr><td>${fmtDate(r.date, { month: 'short', day: 'numeric', year: 'numeric' })}</td>${Object.keys(NAMES).map((k) => `<td class="num">${php(r.fuels[k].forecast)}${r.backtest && r.fuels[k].forecast != null ? '*' : ''} / ${php(r.fuels[k].actual)}</td>`).join('')}</tr>`).join('')
+    : '<tr><td>No actual adjustments yet. They are read from the DOE\'s weekly Oil Monitor automatically.</td></tr>';
+  $('#histNote').hidden = !rows.some((r) => r.backtest);
 }
 
 fetch(`data/forecast.json?t=${Date.now()}`)
   .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
   .then(render)
-  .catch((error) => { console.error('Unable to load data/forecast.json:', error); $('#sub').textContent = 'The forecast could not be loaded. Check that data/forecast.json is deployed and valid JSON.'; $('#board').innerHTML = '<div class="row"><div class="name">Forecast unavailable</div></div>'; $('#history').innerHTML = '<tr><td>History is unavailable until forecast data loads.</td></tr>'; });
+  .catch(() => { $('#sub').textContent = 'The forecast could not be loaded. Refresh the page, or check that data/forecast.json exists.'; });

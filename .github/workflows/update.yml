@@ -3,10 +3,24 @@ name: Update forecast and deploy
 on:
   schedule:
     - cron: '30 22 * * 0-5'   # 06:30 PHT Mon-Sat, after US futures settle
-  workflow_dispatch:          # manual "Run workflow" button
   push:
     branches: [main]
     paths-ignore: ['data/**']
+  workflow_dispatch:          # "Run workflow" button; the fields below are optional
+    inputs:
+      date:
+        description: 'Tuesday the adjustment took effect (YYYY-MM-DD). "auto" = most recent Tuesday'
+        default: 'auto'
+        required: false
+      gasoline:
+        description: 'Gasoline change in PHP per liter (rollback is negative, e.g. -0.50). Blank = skip'
+        required: false
+      diesel:
+        description: 'Diesel change in PHP per liter (e.g. 1.20). Blank = skip'
+        required: false
+      kerosene:
+        description: 'Kerosene change in PHP per liter (e.g. -0.30). Blank = skip'
+        required: false
 
 permissions:
   contents: write
@@ -21,12 +35,25 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: 20 }
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with: { node-version: 24 }
       - run: node scripts/test.mjs
-      - name: Fetch DOE actual adjustments
-        run: node scripts/fetch-doe-actuals.mjs
+      - name: Install PDF text tool (to read DOE's Oil Monitor)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq --no-install-recommends poppler-utils
+      - name: Record actual adjustment by hand (optional override, only when you filled in the form)
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          DATE: ${{ inputs.date }}
+          G: ${{ inputs.gasoline }}
+          D: ${{ inputs.diesel }}
+          K: ${{ inputs.kerosene }}
+        run: |
+          args=()
+          if [ -n "$G" ]; then args+=("gasoline=$G"); fi
+          if [ -n "$D" ]; then args+=("diesel=$D"); fi
+          if [ -n "$K" ]; then args+=("kerosene=$K"); fi
+          if [ ${#args[@]} -gt 0 ]; then node scripts/add-actual.mjs "${DATE:-auto}" "${args[@]}"; else echo "No values entered, skipping."; fi
       - run: node scripts/update.mjs
       - name: Commit data changes
         run: |
@@ -36,7 +63,7 @@ jobs:
           git diff --staged --quiet || (git commit -m "Update forecast data" && git push)
       - name: Assemble site
         run: mkdir _site && cp -r index.html assets data _site/
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with: { path: _site }
 
   deploy:
@@ -47,4 +74,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

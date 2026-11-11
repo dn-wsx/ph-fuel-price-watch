@@ -3,8 +3,8 @@ export const CONFIG = {
   litersPerGallon: 3.78541,
   vat: 1.12,                 // pump prices carry 12% VAT on the cost change
   minCalibrationWeeks: 6,    // need this many (raw, actual) pairs before fitting
-  defaultErrorPhp: 0.6,      // assumed typical miss (PHP/L) until calibrated
-  minHalfRangePhp: 0.3,      // never show a range tighter than +/- this
+  defaultErrorPhp: 2.0,      // typical miss (PHP/L) until calibrated; back-tests on Sep-Nov 2026 gave 2.1 to 3.4
+  minHalfRangePhp: 0.5,      // never show a range tighter than +/- this
   industryWeight: 0.5,       // blend weight for a manual industry estimate
   flatThresholdPhp: 0.05,    // |value| below this is shown as "no change"
   // Free US futures used as proxies for Singapore (MOPS) prices, USD per gallon
@@ -12,11 +12,21 @@ export const CONFIG = {
 };
 
 const DAY = 864e5;
+// Trade date of a Yahoo daily bar. Futures bars are stamped at local midnight (or the evening session open),
+// so the date must be read in the exchange's own time zone, daylight saving included.
+export function barDate(ts, tz = 'America/New_York') {
+  const p = Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', hourCycle: 'h23' })
+    .formatToParts(new Date(ts * 1000)).map((x) => [x.type, x.value]));
+  const local = `${p.year}-${p.month}-${p.day}`;
+  const date = +p.hour >= 17 ? new Date(Date.parse(local) + DAY).toISOString().slice(0, 10) : local; // evening stamp = next trade date
+  const dow = new Date(date + 'T00:00:00Z').getUTCDay();
+  return dow === 0 || dow === 6 ? null : date;
+}
 export const addDays = (iso, n) => new Date(Date.parse(iso) + n * DAY).toISOString().slice(0, 10);
 export const manilaToday = (now = Date.now()) => new Date(now + 8 * 3600e3).toISOString().slice(0, 10);
 const mean = (a) => a.reduce((s, x) => s + x, 0) / a.length;
 const inRange = (d, [a, b]) => d >= a && d <= b;
-const r2 = (x) => Math.round(x * 100) / 100;
+export const r2 = (x) => Math.round(x * 100) / 100;
 
 // Next Tuesday strictly after `today`, and the two Mon-Fri weeks that drive it.
 export function windows(today) {
@@ -72,7 +82,8 @@ export function forecast(raw, cal, industry, cfg = CONFIG) {
   const half = Math.max(cfg.minHalfRangePhp, cal.rmse);
   const direction = value > cfg.flatThresholdPhp ? 'increase' : value < -cfg.flatThresholdPhp ? 'decrease' : 'unchanged';
   return {
-    raw: r2(raw), value: r2(value), low: r2(value - half), high: r2(value + half),
+    raw: r2(raw), model: r2(raw * cal.scale), published: industry ? r2(mean(industry)) : null,
+    value: r2(value), low: r2(value - half), high: r2(value + half),
     direction, withinError: Math.abs(value) < half, blended: Boolean(industry),
   };
 }

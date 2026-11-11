@@ -38,33 +38,3 @@ td.num, th.num { text-align: right; }
 footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .85rem; max-width: 68ch; }
 a { color: inherit; }
 a:focus-visible, :focus-visible { outline: 3px solid var(--led-flat); outline-offset: 2px; }
-
-/* Forecast history: estimates and confirmed DOE adjustments use separate columns. */
-#h-hist { margin-bottom: .35rem; }
-.history-legend { display: flex; flex-wrap: wrap; gap: .55rem 1rem; margin: 0 0 .85rem; color: var(--muted); font-size: .85rem; }
-.history-legend span { display: inline-flex; align-items: center; gap: .4rem; }
-.legend-swatch { width: .65rem; height: .65rem; display: inline-block; border-radius: 3px; }
-.legend-swatch.estimate { background: #d9a441; }
-.legend-swatch.actual { background: #249b70; }
-#history { min-width: 650px; border-collapse: separate; border-spacing: 0; font-size: .875rem; }
-#history th, #history td { padding: .58rem .48rem; text-align: center; }
-#history thead th { background: var(--panel); }
-#history .group-head th { color: var(--text); font-weight: 700; border-bottom: 0; }
-#history .group-head th:not(.date-head) { border-left: 1px solid var(--line); }
-#history .sub-head th { font-size: .76rem; font-weight: 700; padding-top: .25rem; }
-#history .sub-head .estimate-head { color: #a8791e; }
-#history .sub-head .actual-head { color: #16835c; }
-#history .date-head { text-align: left; vertical-align: middle; }
-#history .history-date { text-align: left; color: var(--text); font-weight: 600; }
-#history .history-value { border-left: 1px solid var(--line); }
-#history .estimate-cell { background: color-mix(in srgb, #d9a441 7%, transparent); }
-#history .actual-cell { background: color-mix(in srgb, #249b70 7%, transparent); }
-.value-pill { display: inline-block; min-width: 4.8rem; padding: .2rem .38rem; border-radius: 5px; font-weight: 700; white-space: nowrap; }
-.estimate-pill { color: #8a6419; background: #f8edcf; }
-.actual-pill { color: #126c4c; background: #d9f2e7; }
-.missing { color: var(--muted); opacity: .6; }
-.empty-history { text-align: left !important; color: var(--muted); padding: 1rem !important; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .estimate-pill { color: #f3d28b; background: #45371b; }
-  :root:not([data-theme="light"]) .actual-pill { color: #9ce5c5; background: #153c2f; }
-}
