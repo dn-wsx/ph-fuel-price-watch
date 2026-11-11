@@ -2,11 +2,9 @@ name: Update forecast and deploy
 
 on:
   schedule:
-    # Avoid the top of the hour; keep all slots until Opinet publication observations justify trimming.
-    - cron: '17 22 * * 0-5'   # 06:17 PHT Mon-Sat, after US futures settle
-    - cron: '43 3 * * 2-6'    # 11:43 PHT Tue-Sat, once Opinet has posted the previous Singapore trading day
-    - cron: '17 7 * * 2-6'    # 15:17 PHT Tue-Sat, another look at Opinet and the news
-    - cron: '43 10 * * 2-6'   # 18:43 PHT Tue-Sat, last look of the day
+    # Half-hourly wakeups, 06:17-20:47 PHT Mon-Sat; only overdue slots do a full update.
+    - cron: '17,47 22-23 * * 0-5'
+    - cron: '17,47 0-12 * * 1-6'
   push:
     branches: [main]
     paths-ignore: ['data/**']
@@ -36,7 +34,21 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      required: ${{ steps.schedule.outputs.required }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with: { node-version: 24 }
+      - id: schedule
+        run: node scripts/schedule.mjs
+
   update:
+    needs: check
+    if: needs.check.outputs.required == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:

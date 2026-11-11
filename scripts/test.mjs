@@ -335,4 +335,5 @@ await import('./test-records.mjs');
 await import('./test-reliability.mjs');
 await import('./test-pipeline.mjs');
 await import('./test-ui.mjs');
+await import('./test-schedule.mjs');
 console.log('All tests passed');

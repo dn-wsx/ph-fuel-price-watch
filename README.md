@@ -32,15 +32,23 @@ The site separates retrospective results rebuilt from finished data from verifie
 Public Singapore prices, exchange rates and the model's assumptions do not explain every pump adjustment. A large miss needs investigation; it is not proof of company discretion or a known source of error.
 
 ## When it updates
-Automatically, four times a day (Philippine time, give or take a few minutes):
-- **About 6:15 AM**, Monday to Saturday
-- **About 11:45 AM, 3:15 PM and 6:45 PM**, Tuesday to Saturday
+The intended update times (Philippine time) are:
+- **6:17 AM**, Monday to Saturday
+- **11:43 AM, 3:17 PM and 6:43 PM**, Tuesday to Saturday
 
-GitHub can delay or drop scheduled runs. Each run fetches available data and recalculates, but repeated runs do not necessarily bring a new trading-day observation. Opinet generally publishes the previous Singapore trading day; DOE reports and news update only when their publishers add material. Publication lag can matter during large market moves. Before the new week's Singapore prices arrive, the page may use US futures and says so. If updates stop, the page shows a warning.
+GitHub is asked to start a lightweight check every half hour, at :17 and :47, from **6:17 AM to 8:47 PM, Monday to Saturday**.
+The check reads the forecast currently visible on the public site. If its generation time covers the latest intended update
+slot, the full fetch, calculation, health check and deployment are skipped. Otherwise, one current update catches up;
+missed slots are not replayed as historical forecasts. The 11:43 AM and 6:43 PM slots normally become eligible at the :47 check.
+Manual runs and code pushes still request an immediate update.
 
-The current schedule is retained while publication-time observations accumulate. It will not be reduced based on guesses about when new prices appear.
+GitHub can delay or drop scheduled runs. Each full update fetches available data and recalculates, but repeated updates do not necessarily bring a new trading-day observation. Opinet generally publishes the previous Singapore trading day; DOE reports and news update only when their publishers add material. Publication lag can matter during large market moves. Before the new week's Singapore prices arrive, the page may use US futures and says so. If updates stop, the page shows a warning.
 
-Temporary request failures get up to three total attempts, with short waits between attempts. Time limits prevent a slow source from holding the update indefinitely. After unsuccessful attempts, usable saved data is retained and a warning is shown; the next scheduled run tries again. No additional monitoring service, server or database is used. Retries cannot recover a scheduled run that GitHub never starts.
+The four intended update slots are retained while publication-time observations accumulate. Later checks can recover an
+isolated missed run or failed deployment, but cannot wake themselves up during a GitHub scheduler outage. An unreadable or
+invalid public forecast produces a logged warning and allows a full update rather than incorrectly skipping it.
+
+Temporary request failures get up to three total attempts, with short waits between attempts. Time limits prevent a slow source from holding the update indefinitely. After unsuccessful attempts, usable saved data is retained and a warning is shown; the next full update tries again. Publishing with cached data still covers that update slot. No additional monitoring service, server or database is used. Retries cannot recover a scheduled run that GitHub never starts.
 
 ## Limits
 - This is an estimate from public data, not an official figure. Always check announcements from the DOE and your oil company.
@@ -60,8 +68,11 @@ Deploy to GitHub Pages
 6. Open https://YOUR-USER.github.io/ph-fuel-price-watch/
 
 Schedule
-The workflow runs on a cron schedule (see .github/workflows/update.yml), at odd minutes because GitHub delays or drops runs
-at the top of the hour. GitHub may also pause scheduled runs after 60 days without repository activity. If that
+The workflow requests half-hourly wakeups (see .github/workflows/update.yml), at odd minutes because GitHub delays or drops runs
+at the top of the hour. scripts/schedule.mjs compares the public forecast's generatedAt with the latest same-day PHT slot.
+The public page is the persistent checkpoint, so committing data without successfully publishing it does not satisfy a slot.
+No new state file, database, token or monitoring service is needed. Check-only runs still consume Actions resources.
+GitHub may also pause scheduled runs after 60 days without repository activity. If that
 happens, press "Enable workflow" in the Actions tab.
 data/market.json records when Opinet first showed each new Singapore day (opinetSeen: the run before it, "after", and the run
 that saw it, "by"). Once a few weeks of that exist, drop the runs that never catch anything new.
@@ -121,6 +132,7 @@ Files
   scripts/news.mjs             news cross-check
   scripts/health.mjs           fails the run when something needs a person
   scripts/update.mjs           data and forecast
+  scripts/schedule.mjs         skip covered slots and catch up overdue updates
   scripts/doe.mjs              DOE report reader
   scripts/add-actual.mjs       manual actual helper
   scripts/test.mjs             tests
