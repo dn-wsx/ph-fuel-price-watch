@@ -18,16 +18,17 @@ function render(d) {
   if (d.sample) notes.push('These are sample numbers. The first scheduled run replaces them with real estimates.');
   if (d.errors?.length) notes.push('Some data could not be refreshed, so older saved data may be in use.');
   if (d.actualsNote) notes.push(esc(d.actualsNote));
+  if (d.singaporeData === false) notes.push('Singapore prices (Opinet) could not be read, so the model is using US futures. They miss Asian moves, so treat this as rough.');
   if (d.rollWarning) notes.push('A futures contract roll falls inside this comparison and could not be corrected. Treat it as rough.');
-  if (missing.length) notes.push(`No published estimate yet for ${missing.join(', ')}, so ${missing.length === fuels.length ? 'this is the futures model alone' : 'that fuel uses the futures model alone'}. It can miss by ₱2 to ₱3 (gasoline sometimes far more) because Singapore prices can move differently from US futures. Industry estimates from the oil-price pages are built on the real Singapore prices, so they are worth adding (see below).`);
-  if (apart.length) notes.push(`The futures model and the published estimate differ by ₱2.50 or more for ${apart.join(', ')}. Singapore prices are moving differently from US futures, so the published figure carries most of the weight.`);
+  if (missing.length) notes.push(`No published estimate yet for ${missing.join(', ')}, so ${missing.length === fuels.length ? 'this is the model alone' : 'that fuel uses the model alone'}. It uses the real Singapore prices, a day behind, and usually lands within about ₱1 of the final adjustment.`);
+  if (apart.length) notes.push(`The model and the published estimate differ by ₱2.50 or more for ${apart.join(', ')}. The published figure carries most of the weight.`);
   const banner = $('#banner');
   banner.hidden = !notes.length;
   banner.innerHTML = notes.map((n) => `<p>${n}</p>`).join('');
 
   const blend = (f) => f.published == null
-    ? 'Futures model only'
-    : `${Math.round(f.estimate.weight * 100)}% ${f.estimate.kind === 'manual' ? 'published estimate' : 'news estimate'} (${php(f.published)}) · ${100 - Math.round(f.estimate.weight * 100)}% futures model (${php(f.model)})`;
+    ? 'Model only (Singapore prices)'
+    : `${Math.round(f.estimate.weight * 100)}% ${f.estimate.kind === 'manual' ? 'published estimate' : 'news estimate'} (${php(f.published)}) · ${100 - Math.round(f.estimate.weight * 100)}% model (${php(f.model)})`;
   $('#board').innerHTML = fuels.map(([k, f]) => `
     <div class="row ${f.direction}">
       <div class="name">${NAMES[k]}</div>
@@ -38,14 +39,14 @@ function render(d) {
     </div>`).join('') || '<div class="row"><div class="name">No forecast yet</div></div>';
 
   const days = Math.min(...Object.values(d.fuels).map((f) => f.daysOfData ?? 0), 5);
-  $('#boardNote').textContent = `Based on ${days} of 5 trading days this week. Updated ${new Date(d.generatedAt).toLocaleString('en-PH', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Manila' })} PHT.`;
+  $('#boardNote').textContent = `Based on ${days} of 5 trading days this week${d.singaporeThrough ? ` (Singapore through ${fmtDate(d.singaporeThrough, { month: 'short', day: 'numeric' })})` : ''}. Updated ${new Date(d.generatedAt).toLocaleString('en-PH', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Manila' })} PHT.`;
 
   const m = d.market, fx = m.fx.pct;
   const trend = (p) => (p == null ? 'not enough data' : p > 0 ? `up ${Math.abs(p)}%` : p < 0 ? `down ${Math.abs(p)}%` : 'flat');
   const f0 = Object.values(d.fuels)[0];
   $('#why').innerHTML = `
-    <p>Pump prices follow the average Singapore (MOPS) product price from Monday to Friday against the week before, converted to pesos, plus 12% VAT. Singapore data is not free, so the model reads Brent, US gasoline and US diesel futures instead. Days of the week that have not happened yet are held at the latest price.</p>
-    <p>This week so far: Brent is ${trend(m.brent.pct)}, gasoline futures ${trend(m.gasoline.pct)} and diesel futures ${trend(m.diesel.pct)}. The peso moved ${fx == null ? 'by an unknown amount' : fx > 0 ? `weaker (USD/PHP ${trend(fx)})` : fx < 0 ? `stronger (USD/PHP ${trend(fx)})` : 'not at all'} against the dollar, which ${fx > 0 ? 'pushes costs up' : fx < 0 ? 'eases costs' : 'does not change costs'}.</p>
+    <p>Pump prices follow the average Singapore (MOPS) product price from Monday to Friday against the week before, converted to pesos, plus 12% VAT. The model reads the daily Singapore prices for gasoline (RON 95), diesel (0.05%S) and kerosene from Korea's Opinet, which publishes them the day after. Days that Singapore's market is closed do not count, and days still to come are held at the latest price. That is the same arithmetic as the "trading Day N" posts on Facebook, so the numbers should match them.</p>
+    <p>Singapore prices through ${d.singaporeThrough ? fmtDate(d.singaporeThrough, { month: 'short', day: 'numeric' }) : 'an unknown date'}, against last week's average: gasoline ${trend(m.mogas?.pct)}, diesel ${trend(m.gasoil?.pct)} and kerosene ${trend(m.jet?.pct)}. The peso moved ${fx == null ? 'by an unknown amount' : fx > 0 ? `weaker (USD/PHP ${trend(fx)})` : fx < 0 ? `stronger (USD/PHP ${trend(fx)})` : 'not at all'} against the dollar, which ${fx > 0 ? 'pushes costs up' : fx < 0 ? 'eases costs' : 'does not change costs'}.</p>
     <p>${f0 && f0.calibrationWeeks >= 6 ? `The model is corrected using ${f0.calibrationWeeks} past DOE adjustments.` : 'The model is not corrected against past DOE adjustments yet, so the ranges are wide.'}${d.rollAdjusted ? ' A futures contract roll falls inside this comparison, so both weeks are read from the same contract.' : ''}</p>`;
   $('#market').innerHTML = `<tr><th>Indicator</th><th class="num">Latest</th><th class="num">Week so far vs last week</th></tr>` +
     Object.values(m).map((x) => `<tr><td>${esc(x.label)}</td><td class="num">${x.last ?? '—'} ${esc(x.unit)}</td><td class="num">${pct(x.pct)}</td></tr>`).join('');
@@ -58,7 +59,7 @@ function render(d) {
   $('#sources').innerHTML = `<ul>${src.join('')}</ul>`;
 
   const acc = Object.entries(d.accuracy ?? {}).filter(([, a]) => a.weeks);
-  $('#accuracy').textContent = acc.length ? `The futures model alone, checked against ${acc[0][1].weeks} past weeks: average miss ${acc.map(([k, a]) => `${NAMES[k].toLowerCase()} ${php(a.mae, true)} (worst ${php(a.worst, true)})`).join(', ')} per liter.` : '';
+  $('#accuracy').textContent = acc.length ? `The model alone, checked against ${acc[0][1].weeks} past weeks: average miss ${acc.map(([k, a]) => `${NAMES[k].toLowerCase()} ${php(a.mae, true)} (worst ${php(a.worst, true)})`).join(', ')} per liter.` : '';
 
   const rows = d.history ?? [];
   $('#history').innerHTML = rows.length

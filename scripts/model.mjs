@@ -12,15 +12,19 @@ export const CONFIG = {
   newsWeight: 0.7,           // weight of an estimate read from news headlines (rounded, sometimes "up to")
   industryErrorPhp: 0.7,     // typical miss of a published estimate once it is based on the full week
   flatThresholdPhp: 0.05,    // |value| below this is shown as "no change"
-  // Free futures standing in for Singapore prices: [symbol, weight]. On roll-free weeks Jul-Nov 2026 a Brent/RBOB mix beat either alone.
+  // What stands in for the Singapore (MOPS) price, best source first: [symbol, weight] baskets. The first basket with data is used.
+  // 1. Singapore prices from Opinet (USD/bbl): gasoline RON 95, diesel 0.05%S, kerosene. Over the 12 weeks of actual DOE adjustments from
+  //    Aug to Nov 2026 the average miss (PHP/L) was gasoline 1.05, diesel 0.83, kerosene 0.61, direction right 12/12.
+  // 2. US futures if Opinet cannot be read (gasoline 3.0, diesel 1.3, kerosene 1.9; Brent/RBOB mixed because RBOB alone is poorer).
   proxies: {
-    gasoline: [['BZ=F', 0.5], ['RB=F', 0.5]],
-    diesel: [['HO=F', 1]],
-    kerosene: [['HO=F', 1]],
+    gasoline: [[['MOPS95', 1]], [['BZ=F', 0.5], ['RB=F', 0.5]]],
+    diesel: [[['MOPSD', 1]], [['HO=F', 1]]],
+    kerosene: [[['MOPSK', 1]], [['HO=F', 1]]],
   },
+  sources: ['singapore', 'us'], // names of the baskets above, in order
 };
 export const FUELS = Object.keys(CONFIG.proxies);
-const UNIT_LITERS = { BZ: CONFIG.litersPerBarrel, HO: CONFIG.litersPerGallon, RB: CONFIG.litersPerGallon };
+const PER_BARREL = ['BZ=F', 'MOPS95', 'MOPSD', 'MOPSK']; // quoted in USD per barrel; the NYMEX products are USD per gallon
 export const rootOf = (symbol) => symbol.slice(0, 2);
 
 const DAY = 864e5;
@@ -59,25 +63,28 @@ function fxOn(fx, date) {
   return best;
 }
 
-// Extra uncertainty (PHP/L) from the days of the week not seen yet. Daily moves are a random walk and the unseen days
-// are projected at the latest price, so the average of the week is off by sqrt(sum(m^2))/5 daily moves.
-export function partialSd(dailySd, observedDays) {
-  const n = Math.max(0, 5 - observedDays);
+// Extra uncertainty (PHP/L) from the days of the week still to come. Daily moves are a random walk and those days are
+// projected at the latest price, so the average of the week is off by sqrt(sum(m^2))/5 daily moves.
+export function partialSd(dailySd, remainingDays) {
+  const n = remainingDays;
   return (dailySd * Math.sqrt((n * (n + 1) * (2 * n + 1)) / 6)) / 5;
 }
 
-// Week-on-week change in the average PHP/liter product cost, VAT included. Days of the current week that have not
-// happened yet are held at the latest price (the unbiased guess for a random walk), instead of being left out.
+// Week-on-week change in the average PHP/liter product cost, VAT included. Days of the current week still to come are
+// held at the latest price (the unbiased guess for a random walk). A market holiday inside the week is not a day to come:
+// the week is averaged over the days that traded.
 export function rawChange(prices, fx, win, cfg = CONFIG, liters = cfg.litersPerGallon) {
   const levels = Object.entries(prices).sort().map(([d, p]) => [d, fxOn(fx, d) ? (p / liters) * fxOn(fx, d) : null]).filter(([, v]) => v != null);
   const within = (range) => levels.filter(([d]) => inRange(d, range)).map(([, v]) => v);
   const cur = within(win.cur), prev = within(win.prev);
   if (!cur.length || prev.length < 3) return null;
-  const projected = [...cur, ...Array(Math.max(0, 5 - cur.length)).fill(cur.at(-1))];
+  const lastDate = levels.at(-1)[0];
+  const unseen = Array.from({ length: 5 }, (_, i) => addDays(win.cur[0], i)).filter((d) => d > lastDate).length;
+  const projected = [...cur, ...Array(unseen).fill(cur.at(-1))];
   const recent = levels.slice(-21), moves = []; // day-to-day moves, skipping the jump across a month-end (that is a contract roll)
   for (let i = 1; i < recent.length; i++) if (recent[i][0].slice(0, 7) === recent[i - 1][0].slice(0, 7)) moves.push(recent[i][1] - recent[i - 1][1]);
   const dailySd = moves.length > 1 ? Math.sqrt(mean(moves.map((x) => (x - mean(moves)) ** 2))) * cfg.vat : 0;
-  return { raw: (mean(projected) - mean(prev)) * cfg.vat, days: cur.length, dailySd };
+  return { raw: (mean(projected) - mean(prev)) * cfg.vat, days: cur.length, unseen, dailySd };
 }
 
 // ---- Futures contract rolls. A continuous "front month" series jumps when it moves to the next contract
@@ -93,6 +100,7 @@ const bars = (prices, win) => {
   return { first: keys.find((d) => d >= win.prev[0]), last: keys.filter((d) => d <= win.cur[1]).at(-1) };
 };
 export function spansRoll(root, prices, win) {
+  if (!(root in MONTHS_AHEAD)) return false; // swaps settle on a monthly average and have no front-month jump
   const { first, last } = bars(prices, win);
   return Boolean(first && last) && frontContract(root, first) !== frontContract(root, last);
 }
@@ -104,17 +112,25 @@ export function seriesFor(symbol, S, win) {
   return one ? { prices: one, rolled: true } : { prices: cont, rolled: true, unresolved: true };
 }
 
-// One fuel's raw change from its weighted proxies. null when any proxy lacks data.
-export function fuelChange(fuel, S, fx, win, cfg = CONFIG) {
-  let raw = 0, dailySd = 0, days = 5, rolled = false, unresolved = false;
-  for (const [symbol, weight] of cfg.proxies[fuel]) {
+function blendChange(parts, S, fx, win, cfg) {
+  let raw = 0, dailySd = 0, days = 5, unseen = 0, rolled = false, unresolved = false;
+  for (const [symbol, weight] of parts) {
     const pick = seriesFor(symbol, S, win);
-    const rc = rawChange(pick.prices, fx, win, cfg, UNIT_LITERS[rootOf(symbol)]);
+    const rc = rawChange(pick.prices, fx, win, cfg, PER_BARREL.includes(symbol) ? cfg.litersPerBarrel : cfg.litersPerGallon);
     if (!rc) return null;
-    raw += weight * rc.raw; dailySd += weight * rc.dailySd; days = Math.min(days, rc.days);
+    raw += weight * rc.raw; dailySd += weight * rc.dailySd; days = Math.min(days, rc.days); unseen = Math.max(unseen, rc.unseen);
     rolled ||= pick.rolled; unresolved ||= Boolean(pick.unresolved);
   }
-  return { raw, dailySd, days, rolled, unresolved };
+  return { raw, dailySd, days, unseen, rolled, unresolved };
+}
+
+// One fuel's raw change from the best source that has data (see CONFIG.proxies), or null if none does.
+export function fuelChange(fuel, S, fx, win, cfg = CONFIG) {
+  for (const [i, parts] of cfg.proxies[fuel].entries()) {
+    const rc = blendChange(parts, S, fx, win, cfg);
+    if (rc) return { ...rc, source: cfg.sources[i] };
+  }
+  return null;
 }
 
 // Percent change of a series' weekly average, plus its latest value (for the dashboard).

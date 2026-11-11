@@ -1,7 +1,7 @@
 // Fetches free market data, computes the forecast, writes JSON into /data.
 import fs from 'node:fs/promises';
 import { CONFIG, FUELS, rootOf, frontContract, windows, manilaToday, addDays, r2, fuelChange, seriesFor, avgChange, calibrate, forecast, confidence, partialSd, pickEstimates } from './model.mjs';
-import { yahoo, usdphp } from './market.mjs';
+import { yahoo, usdphp, opinet } from './market.mjs';
 import { recordFromDoe, recordFromNotices } from './doe.mjs';
 import { estimatesFromNews, fetchNews } from './news.mjs';
 
@@ -23,6 +23,11 @@ for (const [key, load] of Object.entries(sources)) {
   try { market.series[key] = trim(await load()); }
   catch (e) { errors.push(`${key}: ${e.message}`); }
 }
+// Singapore (Platts) prices, a day behind: Opinet's table, merged into what was saved so a bad fetch keeps the old days.
+try {
+  const sg = await opinet(addDays(today, -150), today);
+  for (const [key, days] of Object.entries(sg)) market.series[key] = trim({ ...market.series[key], ...days }, 110);
+} catch (e) { errors.push(`Opinet: ${e.message}`); }
 if (!market.series['USDPHP'] || !market.series['HO=F']) {
   console.error('Missing required market data and no cache available:', errors);
   process.exit(1);
@@ -39,7 +44,7 @@ for (const symbol of Object.keys(sources).filter((k) => k.endsWith('=F'))) {
 for (const key of Object.keys(market.series)) { // drop contracts that have been dead for months
   if (/^[A-Z]{2}[FGHJKMNQUVXZ]\d\d$/.test(key) && (Object.keys(market.series[key]).sort().at(-1) ?? '') < addDays(today, -120)) delete market.series[key];
 }
-if (!errors.some((e) => /^(RB=F|HO=F|BZ=F|USDPHP):/.test(e))) market.updatedAt = new Date().toISOString();
+if (!errors.some((e) => /^(RB=F|HO=F|BZ=F|USDPHP|Opinet):/.test(e))) market.updatedAt = new Date().toISOString();
 await write('market.json', market);
 const S = market.series;
 
@@ -85,7 +90,7 @@ const estimates = pickEstimates(manual, news);
 //    Weeks across a roll whose contract was not saved are skipped rather than trusted.
 const pastWeek = (date, fuel) => {
   const rc = fuelChange(fuel, S, S.USDPHP, windows(addDays(date, -1)));
-  return rc && !rc.unresolved && rc.days >= 5 ? rc.raw : null;
+  return rc && !rc.unresolved && rc.unseen === 0 && rc.days >= 4 ? rc.raw : null; // a finished week; one market holiday is fine
 };
 const pairsFor = Object.fromEntries(FUELS.map((fuel) => [fuel, Object.entries(actuals)
   .filter(([, a]) => typeof a[fuel] === 'number')
@@ -108,8 +113,8 @@ for (const fuel of FUELS) {
   const e = estimates[fuel];
   const weight = e?.kind === 'manual' ? CONFIG.industryWeight : CONFIG.newsWeight;
   fuels[fuel] = {
-    ...forecast(rc.raw, cal, e?.range ?? null, CONFIG, { weight, sd: partialSd(rc.dailySd, rc.days) }),
-    proxy: CONFIG.proxies[fuel].map(([s, w]) => (CONFIG.proxies[fuel].length > 1 ? `${s} ${w * 100}%` : s)).join(' + '),
+    ...forecast(rc.raw, cal, e?.range ?? null, CONFIG, { weight, sd: partialSd(rc.dailySd, rc.unseen) }),
+    source: rc.source, proxy: CONFIG.proxies[fuel][CONFIG.sources.indexOf(rc.source)].map(([s, w], _, all) => (all.length > 1 ? `${s} ${w * 100}%` : s)).join(' + '),
     daysOfData: rc.days, calibrationWeeks: cal.n, scale: +cal.scale.toFixed(3),
     ...(e && { estimate: { kind: e.kind, weight } }),
   };
@@ -137,14 +142,17 @@ const trend = (symbol) => ({ ...avgChange(S[symbol] ?? {}, win), pct: avgChange(
 await write('forecast.json', {
   sample: false, model: MODEL_VERSION, generatedAt: new Date().toISOString(), asOf: today, target: win.target, window: { current: win.cur, previous: win.prev },
   confidence: Object.keys(fuels).length && !unresolved ? (FUELS.every((f) => fuels[f]?.estimate) ? 'medium' : confidence(minDays, calibratedWeeks)) : 'low', // a published estimate for every fuel carries the Singapore view
-  rollWarning: unresolved, rollAdjusted: rolled && !unresolved,
+  rollWarning: unresolved, rollAdjusted: rolled && !unresolved, singaporeData: FUELS.every((f) => fuels[f]?.source === 'singapore'), singaporeThrough: Object.keys(S.MOPS95 ?? {}).sort().at(-1) ?? null,
   fuels, history, accuracy, errors, actualsNote, newsNote,
   industry: manual ? { source: manual.source ?? null, url: manual.url ?? null } : null,
   news: news ? { updatedAt: newsCache.updatedAt, items: news.items } : null,
   market: {
-    brent: { label: 'Brent crude (main gasoline proxy)', unit: 'USD/bbl', ...trend('BZ=F') },
-    gasoline: { label: 'US RBOB gasoline futures (minor gasoline proxy)', unit: 'USD/gal', ...trend('RB=F') },
-    diesel: { label: 'US ULSD futures (diesel and kerosene proxy)', unit: 'USD/gal', ...trend('HO=F') },
+    mogas: { label: 'Singapore gasoline RON 95 (gasoline)', unit: 'USD/bbl', ...trend('MOPS95') },
+    gasoil: { label: 'Singapore gasoil 0.05%S (diesel)', unit: 'USD/bbl', ...trend('MOPSD') },
+    jet: { label: 'Singapore kerosene (kerosene)', unit: 'USD/bbl', ...trend('MOPSK') },
+    brent: { label: 'Brent crude (context)', unit: 'USD/bbl', ...trend('BZ=F') },
+    gasoline: { label: 'US RBOB gasoline futures (fallback only)', unit: 'USD/gal', ...trend('RB=F') },
+    diesel: { label: 'US ULSD futures (fallback only)', unit: 'USD/gal', ...trend('HO=F') },
     fx: { label: 'USD/PHP', unit: 'PHP', ...avgChange(S['USDPHP'], win) },
   },
 });

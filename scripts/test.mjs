@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { CONFIG, addDays, windows, rawChange, calibrate, forecast, confidence, barDate, frontContract, spansRoll, seriesFor, fuelChange, partialSd, toRange, pickEstimates } from './model.mjs';
 import { listReports, parseYtd, recordFromDoe, parseNotice, recordFromNotices } from './doe.mjs';
-import { settledBars, intradayClose, latestSettleDate } from './market.mjs';
+import { settledBars, intradayClose, latestSettleDate, parseOpinet } from './market.mjs';
 import { parseRss, parseEstimate, estimatesFromNews } from './news.mjs';
 
 // Window logic: a Tuesday looks ahead to the following Tuesday.
@@ -29,9 +29,9 @@ assert.equal(partial.days, 2);
 assert.ok(Math.abs(partial.raw - ((2.0 + 4 * 2.4) / 5 - 2.0) / 3.78541 * 58 * 1.12) < 1e-9);
 assert.ok(rawChange(up, fx, w).dailySd >= 0);
 // Remaining days add uncertainty: nothing left -> none; more days left -> more.
-assert.equal(partialSd(1, 5), 0);
-assert.ok(partialSd(1, 2) > partialSd(1, 4) && partialSd(1, 4) > 0);
-assert.ok(Math.abs(partialSd(1, 2) - Math.sqrt(14) / 5) < 1e-9); // 3 days left: sqrt(1+4+9)/5
+assert.equal(partialSd(1, 0), 0);
+assert.ok(partialSd(1, 3) > partialSd(1, 1) && partialSd(1, 1) > 0);
+assert.ok(Math.abs(partialSd(1, 3) - Math.sqrt(14) / 5) < 1e-9); // 3 days left: sqrt(1+4+9)/5
 
 // Futures contract rolls
 assert.equal(frontContract('HO', '2026-11-09'), 'HOZ26'); assert.equal(frontContract('HO', '2026-10-30'), 'HOX26');
@@ -256,5 +256,29 @@ assert.deepEqual(Object.keys(news), ['2026-11-10']);
 assert.equal(news['2026-11-10'].gasoline, -13.25); // median of the agreeing headlines
 assert.equal(news['2026-11-10'].diesel, undefined); // a single headline is not enough
 assert.ok(news['2026-11-10'].items.length >= 4);
+
+
+// ---- Singapore (Platts) product prices from Korea's Opinet (daily, USD/bbl, published the day after) ----
+const opRow = (date, vals) => `<tr><td class="nobd_l">${date}</td>${vals.map((v) => `<td style="text-align:right">\n ${v}\n </td>`).join('')}</tr>`;
+const opinetHtml = `<table><thead><tr><th>기간</th><th>휘발유<br />(95RON)</th></tr></thead>
+<tbody id="tbody1" style="display: none">${opRow('26년11월06일', ['941.18', '927.59', '1338.33', '1366.02', '1349.22', '878.12', '839.63'])}</tbody>
+<tbody id="tbody2" style="display: none">${opRow('26년11월06일', ['111.50', '109.89', '158.55', '161.83', '159.84', '104.03', '99.47'])}${opRow('26년11월09일', ['-', '-', '-', '-', '-', '-', '-'])}${opRow('26년11월10일', ['102.89', '101.06', '145.98', '149.27', '147.28', '91.83', '92.01'])}</tbody></table>`;
+assert.deepEqual(parseOpinet(opinetHtml), { MOPS95: { '2026-11-06': 111.5, '2026-11-10': 102.89 }, MOPSD: { '2026-11-06': 159.84, '2026-11-10': 147.28 }, MOPSK: { '2026-11-06': 158.55, '2026-11-10': 145.98 } }); // USD table, not the KRW one; a Singapore holiday row is skipped
+assert.throws(() => parseOpinet('<html>maintenance</html>'), /Opinet/);
+
+// A Singapore holiday inside the week is not an unseen day: the week is averaged over the days that traded.
+const holiday = rawChange({ ...wk('2026-11-02', [2, 2, 2, 2, 2]), '2026-11-10': 2.1, '2026-11-11': 2.1, '2026-11-12': 2.1, '2026-11-13': 2.1 }, fx, w);
+assert.equal(holiday.unseen, 0);
+assert.ok(Math.abs(holiday.raw - (0.1 / 3.78541) * 58 * 1.12) < 1e-9);
+assert.equal(rawChange({ ...wk('2026-11-02', [2, 2, 2, 2, 2]), '2026-11-10': 2.1 }, fx, w).unseen, 3); // Day 1 was Tuesday; Wed-Fri still to come
+
+// The Singapore prices lead; the US futures take over only if they are missing.
+const op = { ...wk('2026-11-02', [110, 110, 110, 110, 110]), ...wk('2026-11-09', [100, 100, 100, 100, 100]) };
+const sing = fuelChange('gasoline', { MOPS95: op, 'BZ=F': {}, 'RB=F': {} }, { '2026-10-01': 63 }, windows('2026-11-14'));
+assert.ok(Math.abs(sing.raw - (-10 / 158.987) * 63 * 1.12) < 1e-9 && sing.source === 'singapore'); // USD per barrel
+const usGal = { ...wk('2026-11-02', [4, 4, 4, 4, 4]), ...wk('2026-11-09', [3.9, 3.9, 3.9, 3.9, 3.9]) };
+const us = fuelChange('diesel', { 'HO=F': usGal }, { '2026-10-01': 63 }, windows('2026-11-14'));
+assert.ok(us.source === 'us' && Math.abs(us.raw - (-0.1 / 3.78541) * 63 * 1.12) < 1e-9);
+assert.equal(fuelChange('diesel', {}, { '2026-10-01': 63 }, windows('2026-11-14')), null);
 
 console.log('All tests passed');
