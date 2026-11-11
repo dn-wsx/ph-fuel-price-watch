@@ -1,88 +1,291 @@
 {
-<<<<<<< Updated upstream
   "sample": false,
-  "generatedAt": "2026-11-11T02:00:31.387Z",
+  "generatedAt": "2026-11-11T02:41:36.664Z",
   "asOf": "2026-11-11",
-=======
-  "sample": true,
-  "generatedAt": "2026-11-10T00:00:00.000Z",
-  "asOf": "2026-11-10",
->>>>>>> Stashed changes
   "target": "2026-11-17",
-  "window": { "current": ["2026-11-09", "2026-11-13"], "previous": ["2026-11-02", "2026-11-06"] },
+  "window": {
+    "current": [
+      "2026-11-09",
+      "2026-11-13"
+    ],
+    "previous": [
+      "2026-11-02",
+      "2026-11-06"
+    ]
+  },
   "confidence": "low",
+  "rollWarning": false,
   "fuels": {
-<<<<<<< Updated upstream
     "gasoline": {
-      "raw": -3.7,
-      "value": -3.7,
-      "low": -4.3,
-      "high": -3.1,
+      "raw": -3.63,
+      "model": -1.81,
+      "published": null,
+      "value": -1.81,
+      "low": -4.71,
+      "high": 1.08,
       "direction": "decrease",
-      "withinError": false,
+      "withinError": true,
       "blended": false,
       "proxy": "RB=F",
       "daysOfData": 2,
-      "calibrationWeeks": 0,
-      "scale": 1
+      "calibrationWeeks": 10,
+      "scale": 0.5
     },
     "diesel": {
-      "raw": -3.94,
+      "raw": -3.78,
+      "model": -3.94,
+      "published": null,
       "value": -3.94,
-      "low": -4.54,
-      "high": -3.34,
+      "low": -5.48,
+      "high": -2.4,
       "direction": "decrease",
       "withinError": false,
       "blended": false,
       "proxy": "HO=F",
       "daysOfData": 2,
-      "calibrationWeeks": 0,
-      "scale": 1
+      "calibrationWeeks": 10,
+      "scale": 1.043
     },
     "kerosene": {
-      "raw": -3.94,
-      "value": -3.94,
-      "low": -4.54,
-      "high": -3.34,
+      "raw": -3.78,
+      "model": -2.77,
+      "published": null,
+      "value": -2.77,
+      "low": -5.09,
+      "high": -0.46,
       "direction": "decrease",
       "withinError": false,
       "blended": false,
       "proxy": "HO=F",
       "daysOfData": 2,
-      "calibrationWeeks": 0,
-      "scale": 1
+      "calibrationWeeks": 10,
+      "scale": 0.734
     }
-=======
-    "gasoline": { "raw": -0.45, "value": -0.45, "low": -1.05, "high": 0.15, "direction": "decrease", "withinError": true, "blended": false, "proxy": "RB=F", "daysOfData": 1, "calibrationWeeks": 0, "scale": 1 },
-    "diesel": { "raw": 0.8, "value": 0.8, "low": 0.2, "high": 1.4, "direction": "increase", "withinError": false, "blended": false, "proxy": "HO=F", "daysOfData": 1, "calibrationWeeks": 0, "scale": 1 },
-    "kerosene": { "raw": -0.2, "value": -0.2, "low": -0.8, "high": 0.4, "direction": "decrease", "withinError": true, "blended": false, "proxy": "HO=F", "daysOfData": 1, "calibrationWeeks": 0, "scale": 1 }
->>>>>>> Stashed changes
   },
-  "history": [],
+  "history": [
+    {
+      "date": "2026-11-03",
+      "fuels": {
+        "gasoline": {
+          "actual": 3.5,
+          "forecast": 1.32
+        },
+        "diesel": {
+          "actual": -1,
+          "forecast": -1.05
+        },
+        "kerosene": {
+          "actual": -1.9,
+          "forecast": -1.05
+        }
+      },
+      "backtest": true
+    },
+    {
+      "date": "2026-10-27",
+      "fuels": {
+        "gasoline": {
+          "actual": -0.3,
+          "forecast": -1.08
+        },
+        "diesel": {
+          "actual": 1.2,
+          "forecast": 1.35
+        },
+        "kerosene": {
+          "actual": 0.5,
+          "forecast": 1.35
+        }
+      },
+      "backtest": true
+    },
+    {
+      "date": "2026-10-20",
+      "fuels": {
+        "gasoline": {
+          "actual": -4.3,
+          "forecast": -0.48
+        },
+        "diesel": {
+          "actual": 2.6,
+          "forecast": 3.72
+        },
+        "kerosene": {
+          "actual": -1,
+          "forecast": 3.72
+        }
+      },
+      "backtest": true
+    },
+    {
+      "date": "2026-10-13",
+      "fuels": {
+        "gasoline": {
+          "actual": 1.56,
+          "forecast": -1.32
+        },
+        "diesel": {
+          "actual": -3,
+          "forecast": -1.21
+        },
+        "kerosene": {
+          "actual": 1.77,
+          "forecast": -1.21
+        }
+      },
+      "backtest": true
+    },
+    {
+      "date": "2026-10-06",
+      "fuels": {
+        "gasoline": {
+          "actual": 1.93,
+          "forecast": -2.7
+        },
+        "diesel": {
+          "actual": -1.3,
+          "forecast": -0.97
+        },
+        "kerosene": {
+          "actual": 3.3,
+          "forecast": -0.97
+        }
+      },
+      "backtest": true
+    },
+    {
+      "date": "2026-09-29",
+      "fuels": {
+        "gasoline": {
+          "actual": -0.24,
+          "forecast": 0.56
+        },
+        "diesel": {
+          "actual": -7.55,
+          "forecast": -6.26
+        },
+        "kerosene": {
+          "actual": -5.85,
+          "forecast": -6.26
+        }
+      },
+      "backtest": true
+    },
+    {
+      "date": "2026-09-22",
+      "fuels": {
+        "gasoline": {
+          "actual": 4.88,
+          "forecast": 3.38
+        },
+        "diesel": {
+          "actual": 8.82,
+          "forecast": 5.57
+        },
+        "kerosene": {
+          "actual": 6.47,
+          "forecast": 5.57
+        }
+      },
+      "backtest": true
+    },
+    {
+      "date": "2026-09-15",
+      "fuels": {
+        "gasoline": {
+          "actual": 5.7,
+          "forecast": null
+        },
+        "diesel": {
+          "actual": 4.4,
+          "forecast": null
+        },
+        "kerosene": {
+          "actual": 4.62,
+          "forecast": null
+        }
+      },
+      "backtest": false
+    },
+    {
+      "date": "2026-09-08",
+      "fuels": {
+        "gasoline": {
+          "actual": 4.7,
+          "forecast": -1.92
+        },
+        "diesel": {
+          "actual": 5.2,
+          "forecast": 6.68
+        },
+        "kerosene": {
+          "actual": 5.6,
+          "forecast": 6.68
+        }
+      },
+      "backtest": true
+    },
+    {
+      "date": "2026-09-01",
+      "fuels": {
+        "gasoline": {
+          "actual": -0.3,
+          "forecast": 1.18
+        },
+        "diesel": {
+          "actual": -3.8,
+          "forecast": -3.12
+        },
+        "kerosene": {
+          "actual": -3.8,
+          "forecast": -3.12
+        }
+      },
+      "backtest": true
+    },
+    {
+      "date": "2026-08-25",
+      "fuels": {
+        "gasoline": {
+          "actual": 1.1,
+          "forecast": 3.05
+        },
+        "diesel": {
+          "actual": 2.31,
+          "forecast": 4.44
+        },
+        "kerosene": {
+          "actual": 1,
+          "forecast": 4.44
+        }
+      },
+      "backtest": true
+    }
+  ],
   "errors": [],
+  "actualsNote": "",
   "industry": null,
   "market": {
-<<<<<<< Updated upstream
     "gasoline": {
       "label": "US RBOB gasoline futures (gasoline proxy)",
       "unit": "USD/gal",
-      "pct": -6.6,
-      "last": 2.6186,
-      "lastDate": "2026-11-10"
+      "pct": -6.46,
+      "last": 2.6264,
+      "lastDate": "2026-11-11"
     },
     "diesel": {
       "label": "US ULSD futures (diesel and kerosene proxy)",
       "unit": "USD/gal",
-      "pct": -4.4,
-      "last": 4.1371,
-      "lastDate": "2026-11-10"
+      "pct": -4.21,
+      "last": 4.1539,
+      "lastDate": "2026-11-11"
     },
     "brent": {
       "label": "Brent crude (context only)",
       "unit": "USD/bbl",
-      "pct": -7.7,
-      "last": 91.88,
-      "lastDate": "2026-11-10"
+      "pct": -7.49,
+      "last": 92.3,
+      "lastDate": "2026-11-11"
     },
     "fx": {
       "label": "USD/PHP",
@@ -91,11 +294,5 @@
       "last": 62.904,
       "lastDate": "2026-11-10"
     }
-=======
-    "gasoline": { "label": "US RBOB gasoline futures (gasoline proxy)", "unit": "USD/gal", "pct": -1.2, "last": 2.1, "lastDate": "2026-11-09" },
-    "diesel": { "label": "US ULSD futures (diesel and kerosene proxy)", "unit": "USD/gal", "pct": 1.5, "last": 2.4, "lastDate": "2026-11-09" },
-    "brent": { "label": "Brent crude (context only)", "unit": "USD/bbl", "pct": 0.4, "last": 70, "lastDate": "2026-11-09" },
-    "fx": { "label": "USD/PHP", "unit": "PHP", "pct": 0.3, "last": 58.5, "lastDate": "2026-11-09" }
->>>>>>> Stashed changes
   }
 }

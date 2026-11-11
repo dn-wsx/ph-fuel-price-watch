@@ -1,0 +1,44 @@
+{
+  "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Price%20Adjustment%20of%20liquid%20fuels%20Nov%203-9.pdf?prefix=dev%2Fmedia": {
+    "date": "2026-11-03",
+    "rows": 15,
+    "gasoline": 3.5,
+    "diesel": -1,
+    "kerosene": -1.9
+  },
+  "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Fuel%20Price%20Adjustments%20for%202026%20Oct%2027-%202026%20Nov%202.pdf?prefix=dev%2Fmedia": {
+    "date": "2026-10-27",
+    "rows": 15,
+    "gasoline": -0.3,
+    "diesel": 1.2,
+    "kerosene": 0.5
+  },
+  "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Price%20Adjustment%20on%20Fuel%2020-26%20Oct%202026.pdf?prefix=dev%2Fmedia": {
+    "date": "2026-10-20",
+    "rows": 15,
+    "gasoline": -4.3,
+    "diesel": 2.6,
+    "kerosene": -1
+  },
+  "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Price%20Adjustment%20on%20Fuel%2013-19%20Oct%202026.pdf?prefix=dev%2Fmedia": {
+    "date": "2026-10-13",
+    "rows": 15,
+    "gasoline": null,
+    "diesel": null,
+    "kerosene": 1.77
+  },
+  "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Price%20Adjustments%206-12%20Oct%202026.pdf?prefix=dev%2Fmedia": {
+    "date": "2026-10-06",
+    "rows": 15,
+    "gasoline": null,
+    "diesel": -1.3,
+    "kerosene": 3.3
+  },
+  "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Website%20Posting%20itmsfuel%20Sep%2029-Oct%205.pdf?prefix=dev%2Fmedia": {
+    "date": "2026-09-29",
+    "rows": 15,
+    "gasoline": null,
+    "diesel": null,
+    "kerosene": -5.85
+  }
+}
