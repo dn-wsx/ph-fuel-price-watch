@@ -1,3 +1,9 @@
 {
-  "_help": "Optional. Add an entry keyed by the Tuesday date. Each fuel can be a single number or a [low, high] range in PHP per liter (rollback is negative), e.g. \"2026-11-17\": { \"gasoline\": -4.70, \"diesel\": -6.40, \"kerosene\": -6.90, \"source\": \"Name of the estimator\" }. The forecast then blends it 50/50 with the market model, and the page shows both numbers."
+  "_help": "Optional. Add an entry keyed by the Tuesday it forecasts: a number or a [low, high] range per fuel in PHP per liter (rollback is negative), plus a source. Easiest is Actions > Update forecast and deploy > Run workflow > Published estimate. The forecast gives it 90% weight, because it is built on the real Singapore prices, and shows the model beside it.",
+  "2026-11-17": {
+    "gasoline": -4.7,
+    "diesel": -6.4,
+    "kerosene": -6.9,
+    "source": "Facebook oil-price page: world market trading Day 1 (Nov 10, 2026)"
+  }
 }

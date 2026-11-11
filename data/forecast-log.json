@@ -1,10 +1,11 @@
 {
   "2026-11-03": {
     "backtest": true,
-    "generatedAt": "2026-11-11T02:41:36.659Z",
+    "model": 2,
+    "generatedAt": "2026-11-11T03:37:23.320Z",
     "gasoline": {
-      "raw": 1.32,
-      "value": 1.32
+      "raw": 1.8,
+      "value": 1.8
     },
     "diesel": {
       "raw": -1.05,
@@ -17,10 +18,11 @@
   },
   "2026-10-27": {
     "backtest": true,
-    "generatedAt": "2026-11-11T02:41:36.660Z",
+    "model": 2,
+    "generatedAt": "2026-11-11T03:37:23.320Z",
     "gasoline": {
-      "raw": -1.08,
-      "value": -1.08
+      "raw": 0.64,
+      "value": 0.64
     },
     "diesel": {
       "raw": 1.35,
@@ -33,10 +35,11 @@
   },
   "2026-10-20": {
     "backtest": true,
-    "generatedAt": "2026-11-11T02:41:36.660Z",
+    "model": 2,
+    "generatedAt": "2026-11-11T03:37:23.320Z",
     "gasoline": {
-      "raw": -0.48,
-      "value": -0.48
+      "raw": 0.86,
+      "value": 0.86
     },
     "diesel": {
       "raw": 3.72,
@@ -45,46 +48,15 @@
     "kerosene": {
       "raw": 3.72,
       "value": 3.72
-    }
-  },
-  "2026-10-13": {
-    "backtest": true,
-    "generatedAt": "2026-11-11T02:41:36.661Z",
-    "gasoline": {
-      "raw": -1.32,
-      "value": -1.32
-    },
-    "diesel": {
-      "raw": -1.21,
-      "value": -1.21
-    },
-    "kerosene": {
-      "raw": -1.21,
-      "value": -1.21
-    }
-  },
-  "2026-10-06": {
-    "backtest": true,
-    "generatedAt": "2026-11-11T02:41:36.661Z",
-    "gasoline": {
-      "raw": -2.7,
-      "value": -2.7
-    },
-    "diesel": {
-      "raw": -0.97,
-      "value": -0.97
-    },
-    "kerosene": {
-      "raw": -0.97,
-      "value": -0.97
     }
   },
   "2026-09-29": {
     "backtest": true,
-    "generatedAt": "2026-11-11T02:41:36.661Z",
+    "model": 2,
+    "generatedAt": "2026-11-11T03:37:23.320Z",
     "gasoline": {
-      "raw": 0.56,
-      "value": 0.56
+      "raw": -0.46,
+      "value": -0.46
     },
     "diesel": {
       "raw": -6.26,
@@ -97,10 +69,11 @@
   },
   "2026-09-22": {
     "backtest": true,
-    "generatedAt": "2026-11-11T02:41:36.662Z",
+    "model": 2,
+    "generatedAt": "2026-11-11T03:37:23.320Z",
     "gasoline": {
-      "raw": 3.38,
-      "value": 3.38
+      "raw": 2.42,
+      "value": 2.42
     },
     "diesel": {
       "raw": 5.57,
@@ -109,30 +82,15 @@
     "kerosene": {
       "raw": 5.57,
       "value": 5.57
-    }
-  },
-  "2026-09-08": {
-    "backtest": true,
-    "generatedAt": "2026-11-11T02:41:36.662Z",
-    "gasoline": {
-      "raw": -1.92,
-      "value": -1.92
-    },
-    "diesel": {
-      "raw": 6.68,
-      "value": 6.68
-    },
-    "kerosene": {
-      "raw": 6.68,
-      "value": 6.68
     }
   },
   "2026-09-01": {
     "backtest": true,
-    "generatedAt": "2026-11-11T02:41:36.663Z",
+    "model": 2,
+    "generatedAt": "2026-11-11T03:37:23.320Z",
     "gasoline": {
-      "raw": 1.18,
-      "value": 1.18
+      "raw": 0.02,
+      "value": 0.02
     },
     "diesel": {
       "raw": -3.12,
@@ -145,10 +103,11 @@
   },
   "2026-08-25": {
     "backtest": true,
-    "generatedAt": "2026-11-11T02:41:36.663Z",
+    "model": 2,
+    "generatedAt": "2026-11-11T03:37:23.320Z",
     "gasoline": {
-      "raw": 3.05,
-      "value": 3.05
+      "raw": 2.58,
+      "value": 2.58
     },
     "diesel": {
       "raw": 4.44,
@@ -160,24 +119,48 @@
     }
   },
   "2026-11-17": {
-    "generatedAt": "2026-11-11T02:41:36.664Z",
+    "generatedAt": "2026-11-11T03:37:23.325Z",
+    "model": 2,
     "gasoline": {
-      "raw": -3.63,
-      "value": -1.81,
-      "low": -4.71,
-      "high": 1.08
+      "raw": -3.99,
+      "value": -4.65,
+      "low": -5.94,
+      "high": -3.35,
+      "published": -4.7,
+      "publishedBy": "manual"
     },
     "diesel": {
-      "raw": -3.78,
-      "value": -3.94,
-      "low": -5.48,
-      "high": -2.4
+      "raw": -4.56,
+      "value": -6.21,
+      "low": -7.91,
+      "high": -4.51,
+      "published": -6.4,
+      "publishedBy": "manual"
     },
     "kerosene": {
-      "raw": -3.78,
-      "value": -2.77,
-      "low": -5.09,
-      "high": -0.46
+      "raw": -4.56,
+      "value": -6.62,
+      "low": -8.32,
+      "high": -4.91,
+      "published": -6.9,
+      "publishedBy": "manual"
+    }
+  },
+  "2026-11-10": {
+    "backtest": true,
+    "model": 2,
+    "generatedAt": "2026-11-11T03:37:23.320Z",
+    "gasoline": {
+      "raw": -5.71,
+      "value": -5.71
+    },
+    "diesel": {
+      "raw": -6.19,
+      "value": -6.19
+    },
+    "kerosene": {
+      "raw": -6.19,
+      "value": -6.19
     }
   }
 }

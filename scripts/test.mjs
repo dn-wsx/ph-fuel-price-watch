@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
-import { windows, rawChange, calibrate, forecast, confidence, barDate } from './model.mjs';
+import { CONFIG, addDays, windows, rawChange, calibrate, forecast, confidence, barDate, frontContract, spansRoll, seriesFor, fuelChange, partialSd, toRange, pickEstimates } from './model.mjs';
 import { listReports, parseYtd, recordFromDoe, parseNotice, recordFromNotices } from './doe.mjs';
+import { settledBars, intradayClose, latestSettleDate } from './market.mjs';
+import { parseRss, parseEstimate, estimatesFromNews } from './news.mjs';
 
 // Window logic: a Tuesday looks ahead to the following Tuesday.
 assert.deepEqual(windows('2026-11-10').cur, ['2026-11-09', '2026-11-13']);
@@ -19,16 +21,65 @@ const up = { ...days('2026-11-02', 5, 2.0), ...days('2026-11-09', 5, 2.1) };
 assert.ok(Math.abs(rawChange(up, fx, w).raw - (0.1 / 3.78541) * 58 * 1.12) < 1e-9);
 assert.equal(rawChange({ ...days('2026-11-02', 2, 2.0), ...days('2026-11-09', 5, 2.1) }, fx, w), null); // prior week too thin
 
-// Calibration: actual = 0.8 * raw exactly -> scale 0.8, rmse 0.
+const wk = (mon, vals) => Object.fromEntries(vals.map((v, i) => [addDays(mon, i), v])); // Mon-Fri prices from a Monday
+
+// The unfinished week is projected at the latest price instead of averaging only the days seen so far.
+const partial = rawChange({ ...days('2026-11-02', 5, 2.0), '2026-11-09': 2.0, '2026-11-10': 2.4 }, fx, w);
+assert.equal(partial.days, 2);
+assert.ok(Math.abs(partial.raw - ((2.0 + 4 * 2.4) / 5 - 2.0) / 3.78541 * 58 * 1.12) < 1e-9);
+assert.ok(rawChange(up, fx, w).dailySd >= 0);
+// Remaining days add uncertainty: nothing left -> none; more days left -> more.
+assert.equal(partialSd(1, 5), 0);
+assert.ok(partialSd(1, 2) > partialSd(1, 4) && partialSd(1, 4) > 0);
+assert.ok(Math.abs(partialSd(1, 2) - Math.sqrt(14) / 5) < 1e-9); // 3 days left: sqrt(1+4+9)/5
+
+// Futures contract rolls
+assert.equal(frontContract('HO', '2026-11-09'), 'HOZ26'); assert.equal(frontContract('HO', '2026-10-30'), 'HOX26');
+assert.equal(frontContract('RB', '2026-12-15'), 'RBF27'); assert.equal(frontContract('BZ', '2026-11-09'), 'BZF27'); assert.equal(frontContract('BZ', '2026-10-30'), 'BZZ26');
+const cont = { ...wk('2026-10-26', [4.8, 4.8, 4.8, 4.8, 4.8]), ...wk('2026-11-02', [4.4, 4.4, 4.4, 4.4, 4.4]) }; // continuous series drops 8% at the roll
+const dec = { ...wk('2026-10-26', [4.4, 4.4, 4.4, 4.4, 4.4]), ...wk('2026-11-02', [4.4, 4.4, 4.4, 4.4, 4.4]) };  // the Dec contract did not move
+const wRoll = windows('2026-11-07'); // cur 11-02..06, prev 10-26..30
+assert.equal(spansRoll('HO', cont, wRoll), true);
+const liveWeek = { ...wk('2026-11-02', [4.4, 4.4, 4.4, 4.4, 4.4]), '2026-11-09': 4.4, '2026-11-10': 4.4 };
+assert.equal(spansRoll('HO', liveWeek, windows('2026-11-10')), false); // both weeks after the roll
+assert.equal(spansRoll('HO', { ...wk('2026-10-26', [4.8, 4.8, 4.8, 4.8, 4.8]), '2026-11-02': 4.4, '2026-11-03': 4.4 }, windows('2026-11-03')), true); // roll falls inside the two weeks (early-week run)
+assert.equal(rawChange({ ...wk('2026-10-26', [2, 2, 2, 2, 2]), ...wk('2026-11-02', [1, 1, 1, 1, 1]) }, fx, wRoll).dailySd, 0); // the month-end jump is a roll, not volatility
+const S = { 'HO=F': cont, HOZ26: dec };
+assert.equal(seriesFor('HO=F', S, wRoll).prices, dec);
+assert.equal(seriesFor('HO=F', { 'HO=F': cont }, wRoll).unresolved, true);
+const fixed = fuelChange('diesel', S, fx, wRoll);
+assert.ok(Math.abs(fixed.raw) < 1e-9 && fixed.rolled && !fixed.unresolved); // roll jump removed
+const unfixed = fuelChange('diesel', { 'HO=F': cont }, fx, wRoll);
+assert.ok(unfixed.unresolved && unfixed.raw < -3); // without the contract the false drop remains, and is flagged
+
+// Calibration pulls toward 1 (little history can not move the scale far) and never leaves 0.7-1.3.
 const pairs = [1, -0.5, 0.7, 1.4, -1, 0.3].map((r) => [r, 0.8 * r]);
 const cal = calibrate(pairs);
-assert.ok(Math.abs(cal.scale - 0.8) < 1e-9 && cal.rmse < 1e-9 && cal.fitted);
+assert.ok(cal.fitted && cal.scale > 0.8 && cal.scale < 1);
+const many = Array.from({ length: 60 }, (_, i) => [Math.sin(i) * 3, 0.8 * Math.sin(i) * 3]);
+assert.ok(Math.abs(calibrate(many).scale - 0.8) < 0.1);
+assert.equal(calibrate([[1, 9], [2, 9], [3, 9], [4, 9], [5, 9], [6, 9]]).scale, 1.3);
+// One freak week (Singapore moved 4x what New York did) must not steer the scale, but it must still widen the range.
+const clean = [3, -2, 1.5, -1, 2.5, -3, 1, 2, -1.5, 0.5].map((r) => [r, r + (r > 0 ? 0.1 : -0.1)]);
+const freak = calibrate([...clean, [-4, -17]]);
+assert.ok(Math.abs(freak.scale - calibrate(clean).scale) < 0.1, `scale ${freak.scale}`);
+assert.ok(freak.rmse > 3 * calibrate(clean).rmse);
 assert.equal(calibrate(pairs.slice(0, 3)).scale, 1); // too little history -> unchanged
 
 const f = forecast(1.0, { scale: 1, rmse: 0.6 }, null);
 assert.deepEqual([f.direction, f.low, f.high], ['increase', 0.4, 1.6]);
-assert.equal(forecast(1.0, { scale: 1, rmse: 0.6 }, [0, 0]).value, 0.5); // 50/50 blend
+assert.equal(forecast(1.0, { scale: 1, rmse: 0.6 }, [0, 0], CONFIG, { weight: 0.5 }).value, 0.5); // 50/50 blend
+assert.equal(forecast(10, { scale: 1, rmse: 2 }, [0, 0], CONFIG, { weight: 0.9 }).value, 1); // published estimate dominates
+// A published estimate removes most of the model's own error from the range; unfinished days still count.
+const ranged = forecast(0, { scale: 1, rmse: 2 }, [0, 0], CONFIG, { weight: 0.9, sd: 0 });
+assert.ok(ranged.high < 1.0);
+assert.ok(forecast(0, { scale: 1, rmse: 2 }, [0, 0], CONFIG, { weight: 0.9, sd: 2 }).high > ranged.high);
 assert.equal(confidence(5, 10), 'high'); assert.equal(confidence(2, 10), 'low');
+
+// Published estimates: number or [low, high], manual entries win over news.
+assert.deepEqual(toRange(-4.7), [-4.7, -4.7]); assert.deepEqual(toRange([-3, -2]), [-3, -2]); assert.equal(toRange(undefined), null); assert.equal(toRange('x'), null); assert.equal(toRange([1, 2, 3]), null);
+const picked = pickEstimates({ diesel: -6.4, source: 'FB' }, { diesel: -1, gasoline: -13.25 });
+assert.deepEqual(picked.diesel, { range: [-6.4, -6.4], kind: 'manual' }); assert.deepEqual(picked.gasoline, { range: [-13.25, -13.25], kind: 'news' }); assert.equal(picked.kerosene, undefined);
 
 
 // ---- DOE Oil Monitor reader (wording copied from real 2026 reports) ----
@@ -83,9 +134,9 @@ assert.equal(barDate(ts('2026-10-31T04:00:00Z')), null);          // Saturday is
 assert.equal(barDate(ts('2026-11-01T05:00:00Z')), null);          // Sunday
 
 // ---- Published estimate is reported next to the model ----
-const fp = forecast(-3.62, { scale: 1.5, rmse: 3.4 }, [-4.7, -4.7]);
-assert.deepEqual([fp.model, fp.published], [-5.43, -4.7]);
-assert.ok(Math.abs(fp.value - -5.065) <= 0.01); // 50/50 blend of model and published
+const fp = forecast(-3.62, { scale: 1.3, rmse: 3.4 }, [-4.7, -4.7], CONFIG, { weight: 0.5 });
+assert.deepEqual([fp.model, fp.published], [-4.71, -4.7]);
+assert.ok(Math.abs(fp.value - -4.705) <= 0.01); // 50/50 blend of model and published
 
 // ---- DOE Prior Notice (real text of the 20-26 Oct 2026 PDF; companies with no kerosene leave it blank) ----
 const notice = `Gasoline Diesel Kerosene
@@ -153,4 +204,57 @@ actuals = { '2026-10-20': { gasoline: -4.25, diesel: 2.6, kerosene: -1 } }; noti
 await recordFromNotices({ actuals, notices, today: '2026-10-21', fetchImpl: nf({ 'https://x.example/week.pdf': notice }), pdfText });
 await recordFromDoe({ actuals, ytd: {}, today: '2026-10-21', fetchImpl: mkFetch(om), pdfText });
 assert.equal(actuals['2026-10-20'].gasoline, -4.25);
+
+// ---- Yahoo bars: only settled sessions count; a live evening-session bar must not stand in for a trade date ----
+const yres = (bars) => ({ meta: { exchangeTimezoneName: 'America/New_York' }, timestamp: bars.map((b) => Date.parse(b[0]) / 1000), indicators: { quote: [{ close: bars.map((b) => b[1]) }] } });
+const evening = yres([['2026-11-09T05:00:00Z', 4.2148], ['2026-11-10T05:00:00Z', null], ['2026-11-11T02:53:00Z', 4.1672]]); // real Yahoo shape at 22:05 ET on Nov 10
+assert.deepEqual(settledBars(evening, Date.parse('2026-11-11T03:05:00Z')), { '2026-11-09': 4.2148 });
+const settled = yres([['2026-11-09T05:00:00Z', 4.2148], ['2026-11-10T05:00:00Z', 4.14]]);
+assert.deepEqual(settledBars(settled, Date.parse('2026-11-10T20:30:00Z')), { '2026-11-09': 4.2148, '2026-11-10': 4.14 }); // 15:30 ET, after the 14:30 settlement
+assert.deepEqual(settledBars(settled, Date.parse('2026-11-10T16:00:00Z')), { '2026-11-09': 4.2148 }); // 11:00 ET, still trading
+assert.equal(latestSettleDate(Date.parse('2026-11-11T03:05:00Z')), '2026-11-10');
+assert.equal(latestSettleDate(Date.parse('2026-11-10T16:00:00Z')), '2026-11-09');
+assert.equal(latestSettleDate(Date.parse('2026-11-09T14:00:00Z')), '2026-11-06'); // Monday morning looks back to Friday
+assert.equal(latestSettleDate(Date.parse('2026-11-14T10:00:00Z')), '2026-11-13'); // Saturday
+// When the daily bar has no close yet, the 14:25 ET five-minute bar (closing at the 14:30 settlement) stands in.
+const m5 = yres([['2026-11-10T19:20:00Z', 4.13], ['2026-11-10T19:25:00Z', 4.132], ['2026-11-10T19:30:00Z', 4.14], ['2026-11-11T00:00:00Z', 4.15], ['2026-11-09T19:25:00Z', 4.2175]]);
+assert.equal(intradayClose(m5, '2026-11-10'), 4.132);
+assert.equal(intradayClose(m5, '2026-11-12'), null);
+
+// ---- Published estimates in the news (real headlines, Google News RSS) ----
+const fc = (title, iso) => parseEstimate(title, iso);
+assert.deepEqual(fc('OIL PRICE WATCH: Gasoline may plunge by P14/L next week - ABS-CBN', '2026-11-07T04:14:00Z'), { gasoline: -14 });
+assert.deepEqual(fc('Pump price rollback: P13 for gas, P4 for diesel - Philstar.com', '2026-11-06T16:00:00Z'), { gasoline: -13, diesel: -4 });
+assert.deepEqual(fc('Gasoline seen plunging P13.50 as oil markets ease - Daily Tribune', '2026-11-06T15:54:00Z'), { gasoline: -13.5 });
+assert.deepEqual(fc('Gasoline prices may crash by up to ₱13 next week - Manila Bulletin', '2026-11-06T02:20:00Z'), { gasoline: -13 });
+assert.deepEqual(fc('Up to P1/liter diesel rollback, over P2/liter hike in gasoline expected next week - GMA Network', '2026-10-31T07:00:00Z'), { diesel: -1, gasoline: 2 });
+assert.deepEqual(fc('Diesel prices seen to go up by P2 to P3 per liter, gasoline rollback P0.50 to P1 per liter —source - GMA Network', '2026-10-24T07:00:00Z'), { diesel: [2, 3], gasoline: [-1, -0.5] });
+assert.deepEqual(fc('Diesel prices are set to rise by P2.88/L, while gasoline prices are set to go down by P1.07/L. Link to the full story in the comments section. | via ANC 24/7 - Facebook', '2026-10-23T07:00:00Z'), { diesel: 2.88, gasoline: -1.07 });
+assert.deepEqual(fc('Rollback seen next week: gasoline P4.70, diesel P6.40 and kerosene P6.90', '2026-11-12T08:00:00Z'), { gasoline: -4.7, diesel: -6.4, kerosene: -6.9 }); // each fuel keeps its own amount
+assert.deepEqual(fc('Gasoline price may drop by P1.20 and diesel by P2.50 next week', '2026-11-12T08:00:00Z'), { gasoline: -1.2, diesel: -2.5 });
+assert.deepEqual(fc('Diesel P6.40 and gasoline P4.70 rollback seen next week', '2026-11-12T08:00:00Z'), { diesel: -6.4, gasoline: -4.7 });
+// Not forecasts: this week's announced change, no fuel named, no amount.
+assert.equal(fc('Nearly P17/liter gasoline price cut set this week - Inquirer.net', '2026-11-09T05:14:00Z'), null);
+assert.equal(fc('Gasoline prices set for P3.50-per-liter hike - Inquirer.net', '2026-11-02T04:29:00Z'), null);
+assert.equal(fc('OIL PRICE WATCH: Gasoline falls almost P17, diesel down more than P4 - ABS-CBN', '2026-11-10T00:46:00Z'), null);
+assert.equal(fc('Pump price rollbacks of up to P14 per liter seen next week - GMA Network', '2026-11-06T01:51:00Z'), null);
+assert.equal(fc('Gasoline rebound erases rollback gains - Daily Tribune', '2026-10-31T07:00:00Z'), null);
+
+const rss = `<?xml version="1.0"?><rss><channel><item><title><![CDATA[Gasoline may plunge by P14/L &amp; more - ABS-CBN]]></title><link>https://x.example/a</link><pubDate>Sat, 07 Nov 2026 04:14:00 GMT</pubDate><source url="https://abs-cbn.com">ABS-CBN</source></item><item><title>No date here</title></item></channel></rss>`;
+assert.deepEqual(parseRss(rss), [{ title: 'Gasoline may plunge by P14/L & more', source: 'ABS-CBN', published: '2026-11-07T04:14:00.000Z', link: 'https://x.example/a' }]);
+
+const item = (title, published) => ({ title, published, source: 'x', link: 'l' });
+const news = estimatesFromNews([
+  item('OIL PRICE WATCH: Gasoline may plunge by P14/L next week - ABS-CBN', '2026-11-07T04:14:00Z'),
+  item('Pump price rollback: P13 for gas, P4 for diesel - Philstar.com', '2026-11-06T16:00:00Z'),
+  item('Gasoline seen plunging P13.50 as oil markets ease - Daily Tribune', '2026-11-06T15:54:00Z'),
+  item('Gasoline prices may crash by up to ₱13 next week - Manila Bulletin', '2026-11-06T02:20:00Z'),
+  item('Gasoline seen plunging P2 next week - Somewhere', '2026-11-06T02:20:00Z'), // outlier, no corroboration
+  item('Nearly P17/liter gasoline price cut set this week - Inquirer.net', '2026-11-09T05:14:00Z'),
+]);
+assert.deepEqual(Object.keys(news), ['2026-11-10']);
+assert.equal(news['2026-11-10'].gasoline, -13.25); // median of the agreeing headlines
+assert.equal(news['2026-11-10'].diesel, undefined); // a single headline is not enough
+assert.ok(news['2026-11-10'].items.length >= 4);
+
 console.log('All tests passed');

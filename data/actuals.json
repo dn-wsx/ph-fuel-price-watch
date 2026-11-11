@@ -64,5 +64,11 @@
     "diesel": -1,
     "kerosene": -1.9,
     "source": "DOE Oil Monitor (year-to-date difference)"
+  },
+  "2026-11-10": {
+    "gasoline": -16.8,
+    "diesel": -4.1,
+    "kerosene": -3.7,
+    "source": "DOE announcement (Rappler, Inquirer, 9 Nov 2026)"
   }
 }

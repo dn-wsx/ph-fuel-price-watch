@@ -27,14 +27,21 @@
       <div class="scroll"><table id="market"></table></div>
     </section>
 
+    <section aria-labelledby="h-src">
+      <h2 id="h-src">Published estimates</h2>
+      <div id="sources"></div>
+      <p class="note">The Facebook oil-price pages and the news carry industry estimates built on the real Singapore prices, which a free model cannot see. To add one, open <a href="https://github.com/dn-wsx/ph-fuel-price-watch/actions/workflows/update.yml" rel="noopener">Actions → Update forecast and deploy → Run workflow</a> and fill in the <em>Published estimate</em> fields.</p>
+    </section>
+
     <section aria-labelledby="h-hist">
       <h2 id="h-hist">Forecast vs. actual</h2>
       <div class="scroll"><table id="history"></table></div>
+      <p id="accuracy" class="note"></p>
       <p id="histNote" class="note" hidden>* Back-tested: what the model would have said from that week's market data, not a forecast made at the time. Actual adjustments come from the DOE's weekly Oil Monitor.</p>
     </section>
 
     <footer>
-      <p>This is an estimate from public market data, not an official figure. Pump prices follow Singapore (MOPS) product prices, which are not free to access, so this site uses US futures as stand-ins and corrects for them as actual adjustments are recorded. Always check announcements from the DOE and your oil company.</p>
+      <p>This is an estimate from public market data, not an official figure. Pump prices follow Singapore (MOPS) product prices, which are not free to access, so this site uses Brent and US futures as stand-ins, corrects for them as actual adjustments are recorded, and blends in published industry estimates when it has them. Always check announcements from the DOE and your oil company.</p>
     </footer>
   </main>
   <script type="module" src="assets/app.js"></script>

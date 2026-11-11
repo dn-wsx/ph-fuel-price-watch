@@ -17,6 +17,8 @@ h1, h2, .name, .val { font-family: "Barlow Condensed", "Arial Narrow", sans-seri
 h1 { font-size: clamp(2rem, 6vw, 2.75rem); line-height: 1.05; margin: 0 0 .35rem; font-weight: 700; letter-spacing: .01em; }
 h2 { font-size: 1.5rem; margin: 2.5rem 0 .75rem; font-weight: 600; }
 #sub { margin: 0; color: var(--muted); max-width: 60ch; }
+.banner p { margin: 0 0 .5rem; }
+.banner p:last-child { margin: 0; }
 .banner { margin: 1.25rem 0 0; padding: .7rem .9rem; border-radius: 6px; background: var(--warn-bg); color: var(--warn-text); font-size: .925rem; }
 .board { margin-top: 1.5rem; background: var(--board); border: 3px solid var(--board-line); border-radius: 10px; color: #e8eef3; }
 .row { display: grid; grid-template-columns: 1fr auto; gap: .1rem 1rem; padding: 1rem 1.25rem; align-items: baseline; }
@@ -28,6 +30,10 @@ h2 { font-size: 1.5rem; margin: 2.5rem 0 .75rem; font-weight: 600; }
 .row.decrease .val, .row.decrease .tag { color: var(--led-down); }
 .row.unchanged .val, .row.unchanged .tag { color: var(--led-flat); }
 .tag { font-weight: 600; }
+.meta.src { margin-top: .15rem; }
+.muted { color: var(--muted); }
+#sources ul { margin: 0; padding-left: 1.1rem; max-width: 68ch; }
+#sources li { margin-bottom: .4rem; }
 .note { color: var(--muted); font-size: .875rem; margin: .6rem 0 0; }
 .scroll { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: .925rem; font-variant-numeric: tabular-nums; }
