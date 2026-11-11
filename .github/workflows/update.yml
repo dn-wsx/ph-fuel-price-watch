@@ -79,3 +79,14 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v5
+
+  # A red run is the alert: GitHub emails the owner about failed scheduled runs. Runs beside the deploy so a fault never blocks publishing.
+  health:
+    needs: update
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with: { ref: main }
+      - uses: actions/setup-node@v7
+        with: { node-version: 24 }
+      - run: node scripts/health.mjs

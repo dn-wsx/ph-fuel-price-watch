@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
-import { CONFIG, addDays, windows, rawChange, calibrate, forecast, confidence, barDate, frontContract, spansRoll, seriesFor, fuelChange, partialSd, basisOf } from './model.mjs';
+import { CONFIG, addDays, windows, rawChange, calibrate, forecast, confidence, barDate, frontContract, spansRoll, seriesFor, fuelChange, partialSd, basisOf, liveTrack } from './model.mjs';
 import { listReports, parseYtd, recordFromDoe, parseNotice, recordFromNotices } from './doe.mjs';
 import { settledBars, intradayClose, latestSettleDate, parseOpinet } from './market.mjs';
 import { parseRss, parseEstimate, estimatesFromNews } from './news.mjs';
+import { healthProblems } from './health.mjs';
 
 // Window logic: a Tuesday looks ahead to the following Tuesday.
 assert.deepEqual(windows('2026-11-10').cur, ['2026-11-09', '2026-11-13']);
@@ -285,4 +286,33 @@ assert.equal(basisOf(['us', 'us'], true), 'us-unreadable');     // Opinet itself
 assert.equal(confidence(5, 10, 'us-waiting'), 'low');
 assert.equal(confidence(5, 10, 'singapore'), 'high');
 
+
+// ---- Live track record: what the page really said, day by day, against what the DOE announced ----
+const snap = (g, d, k) => ({ gasoline: g, diesel: d, kerosene: k });
+const trackLog = {
+  '2026-11-17': { ...snap({ value: -5 }, { value: -6 }, { value: -7 }), snapshots: { early: snap(-2, -3, -3), 1: snap(-4, -6.5, -7) } },
+  '2026-11-24': { ...snap({ value: 1 }, { value: 1 }, { value: 1 }), snapshots: { 1: snap(0, 0, 0) } }, // no actual yet
+  '2026-11-10': { backtest: true, ...snap({ value: -11 }, { value: -4 }, { value: -5 }) },              // rebuilt rows are not live
+  '2026-11-03': { ...snap({ value: 2 }, { value: 0 }, { value: 0 }) },                                   // made before daily snapshots existed
+};
+const track = liveTrack(trackLog, { '2026-11-17': snap(-6, -6, -8), '2026-11-10': snap(-16.8, -4.1, -3.7), '2026-11-03': snap(3.5, -1, -1.9) });
+assert.equal(track.weeks, 1);
+assert.deepEqual(track.pending, ['2026-11-24']);
+assert.deepEqual(track.stages.map((x) => x.key), ['early', '1', 'final']); // in the order they happen
+assert.deepEqual(track.stages.find((x) => x.key === 'early').mae, { gasoline: 4, diesel: 3, kerosene: 5 });
+assert.deepEqual(track.stages.find((x) => x.key === 'final').mae, { gasoline: 1, diesel: 0, kerosene: 1 });
+assert.equal(track.stages.find((x) => x.key === '1').n, 1);
+assert.deepEqual(liveTrack({}, {}), { weeks: 0, pending: [], stages: [] });
+
+// ---- Health check: a failing run is the alert (GitHub emails the owner about failed scheduled runs) ----
+const healthy = { asOf: '2026-11-11', singaporeThrough: '2026-11-10', errors: [], actualsNote: '', fuels: { gasoline: {} } };
+assert.deepEqual(healthProblems(healthy), []);
+assert.deepEqual(healthProblems({ ...healthy, basis: 'us-waiting' }), []); // Tuesday morning is normal, not a fault
+assert.equal(healthProblems({ ...healthy, fuels: {} }).length, 1);
+assert.match(healthProblems({ ...healthy, errors: ['Opinet: HTTP 503'] })[0], /Opinet.*503/);
+assert.deepEqual(healthProblems({ ...healthy, errors: ['HO=F: HTTP 429'] }), []); // only the backup feed: not worth an alert
+assert.deepEqual(healthProblems({ ...healthy, asOf: '2026-11-18', singaporeThrough: '2026-11-13' }), []); // 5 days: a weekend plus a holiday
+assert.match(healthProblems({ ...healthy, asOf: '2026-11-19', singaporeThrough: '2026-11-13' })[0], /2026-11-13/);
+assert.match(healthProblems({ ...healthy, actualsNote: "Could not read the DOE's price reports" })[0], /DOE/);
+assert.equal(healthProblems(null).length, 1);
 console.log('All tests passed');

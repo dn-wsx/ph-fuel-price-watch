@@ -66,3 +66,7 @@ a:focus-visible, :focus-visible { outline: 3px solid var(--led-flat); outline-of
 .miss.ok { background: var(--ok-bg); color: var(--ok-text); }
 .miss.bad { background: var(--bad-bg); color: var(--bad-text); }
 .legend { display: flex; flex-wrap: wrap; gap: .4rem .9rem; align-items: center; }
+
+#h-live { font-size: 1.15rem; margin: 1.5rem 0 .5rem; font-family: "Barlow Condensed", "Arial Narrow", sans-serif; font-weight: 600; }
+#live table { font-size: .9rem; }
+#live .date { text-align: left; }

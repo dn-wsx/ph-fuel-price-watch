@@ -35,6 +35,17 @@ function historyTable(rows) {
   return `${head}<tbody>${body}</tbody><tfoot><tr><th class="date">Average miss</th>${foot}</tr></tfoot>`;
 }
 
+const STAGE_LABEL = { early: 'Tuesday, before Singapore posts', 1: 'After day 1', 2: 'After day 2', 3: 'After day 3', 4: 'After day 4', 5: 'After day 5', final: 'Final (before Tuesday)' };
+
+// What the page really said at each point of the week, against the DOE's figure. Empty until a saved week has an actual.
+function liveTable(t) {
+  const pending = t?.pending?.length ? `Tracking now: the ${fmtDate(t.pending[0], { month: 'long', day: 'numeric' })} adjustment.` : '';
+  if (!t?.weeks) return `<p class="note">Every row above was rebuilt afterwards from finished data. From now on the page also saves what it says each day, and the real accuracy appears here once a saved week has been announced. ${esc(pending)}</p>`;
+  const rows = t.stages.map((s) => `<tr><td class="date">${STAGE_LABEL[s.key] ?? s.key}</td>${FUEL_KEYS.map((k) => `<td class="num">${s.mae[k] == null ? '<span class="muted">—</span>' : `<span class="miss ${grade(s.mae[k])}">${s.mae[k].toFixed(2)}</span>`}</td>`).join('')}<td class="num muted">${s.n}</td></tr>`).join('');
+  return `<div class="scroll"><table><thead><tr><th class="date">When</th>${FUEL_KEYS.map((k) => `<th class="num">${NAMES[k]}</th>`).join('')}<th class="num">Weeks</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <p class="note">Average miss in pesos per liter, from what the page actually showed, across ${t.weeks} announced week${t.weeks === 1 ? '' : 's'}. ${esc(pending)}</p>`;
+}
+
 function render(d) {
   $('#sub').textContent = `Estimated change at the pump starting ${fmtDate(d.target)}. Confidence: ${d.confidence}.`;
 
@@ -58,7 +69,7 @@ function render(d) {
       <div class="name">${NAMES[k]}</div>
       <div class="val">${php(f.value)}</div>
       <div class="meta"><span class="tag">${LABEL[f.direction]}${f.withinError ? ' (within margin of error)' : ''}</span>
-      <span>Likely range ${php(f.low)} to ${php(f.high)} per liter</span></div>
+      <span title="The final adjustment landed inside this range in about 3 of 4 past weeks">Typical range ${php(f.low)} to ${php(f.high)} per liter</span></div>
       ${f.news != null ? `<div class="meta src"><span>News estimate for comparison: ${php(f.news)}</span></div>` : ''}
     </div>`).join('') || '<div class="row"><div class="name">No forecast yet</div></div>';
 
@@ -87,6 +98,7 @@ function render(d) {
   const rows = d.history ?? [];
   $('#history').innerHTML = rows.length ? historyTable(rows) : '<tbody><tr><td>No actual adjustments yet. They are read from the DOE\'s weekly Oil Monitor automatically.</td></tr></tbody>';
   $('#histNote').hidden = !rows.some((r) => r.backtest);
+  $('#live').innerHTML = liveTable(d.liveTrack);
 }
 
 fetch(`data/forecast.json?t=${Date.now()}`)

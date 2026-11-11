@@ -180,3 +180,27 @@ export function confidence(days, calibratedWeeks, basis = 'singapore') {
   if (basis !== 'singapore' || days < 3) return 'low';
   return days >= 5 && calibratedWeeks >= 8 ? 'high' : 'medium';
 }
+
+// What the page really said, day by day, against what the DOE announced. Only weeks that kept daily snapshots count
+// (rebuilt rows say what the model would have said, not what was published). Stages run in the order they happen.
+const STAGE_ORDER = ['early', '1', '2', '3', '4', '5', 'final'];
+export function liveTrack(log, actuals) {
+  const misses = {}, pending = [];
+  let weeks = 0;
+  for (const [date, entry] of Object.entries(log).sort()) {
+    if (entry.backtest || !entry.snapshots) continue;
+    if (!actuals[date]) { pending.push(date); continue; }
+    weeks++;
+    const stages = { ...entry.snapshots, final: Object.fromEntries(FUELS.map((f) => [f, entry[f]?.value])) };
+    for (const [stage, values] of Object.entries(stages)) for (const fuel of FUELS) {
+      if (typeof values[fuel] !== 'number' || typeof actuals[date][fuel] !== 'number') continue;
+      ((misses[stage] ??= {})[fuel] ??= []).push(Math.abs(values[fuel] - actuals[date][fuel]));
+    }
+  }
+  const stages = STAGE_ORDER.filter((key) => misses[key]).map((key) => ({
+    key,
+    n: Math.max(...Object.values(misses[key]).map((v) => v.length)),
+    mae: Object.fromEntries(FUELS.map((f) => [f, misses[key][f] ? r2(mean(misses[key][f])) : null])),
+  }));
+  return { weeks, pending, stages };
+}

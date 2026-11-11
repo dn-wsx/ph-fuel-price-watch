@@ -6,11 +6,12 @@ An estimate of next Tuesday's pump price change in the Philippines (gasoline, di
 
 ## What you see on the page
 - **The estimate**, in pesos per liter, for each fuel. Negative and green is a rollback. Positive and red is a hike.
-- **Likely range.** Wide early in the week, tighter as more trading days come in.
+- **Typical range.** Wide early in the week, tighter as more trading days come in. The final adjustment landed inside it in about 3 of 4 past weeks, so it is a typical range, not a guarantee.
 - **Trading days.** "Based on 2 of 5 trading days" tells you how much of the week's Singapore trading has been seen so far.
 - **Confidence** (low, medium, high), based on how many days have been seen and how much history there is.
 - **News cross-check.** From about Thursday, news outlets publish their own estimates. They are listed beside ours for comparison and are not used in our number.
 - **Forecast vs. actual.** For each past Tuesday: our forecast, the adjustment the DOE announced, and the miss. Green is within ₱1, amber is ₱1 to ₱2.50, red is more. Rows marked with * were rebuilt afterwards from that week's finished data.
+- **How the live forecasts did.** The page saves what it actually says each day of the week. Once a saved week has been announced, this table shows the real average miss at each point of the week, from Tuesday morning to the final estimate. It started with the 17 November 2026 adjustment, so it fills in from there.
 
 ## Why the price moves on Tuesdays
 Oil companies adjust pump prices every Tuesday. The change follows the average Singapore (MOPS) price of each product from Monday to Friday of the week before, compared with the week before that, converted to pesos, plus 12% VAT. So the estimate gets firmer as the week goes on. Until Friday, days that have not happened yet are assumed to stay at the latest price, and the range allows for that.
@@ -60,9 +61,21 @@ Deploy to GitHub Pages
 6. Open https://YOUR-USER.github.io/ph-fuel-price-watch/
 
 Schedule
-The workflow runs on a cron schedule (see .github/workflows/update.yml). GitHub may delay runs by hours, and may pause
-scheduled runs after 60 days without repository activity. If that happens, press "Enable workflow" in the Actions tab.
-data/market.json records when Opinet first showed each new day (opinetSeen), for tuning the schedule.
+The workflow runs on a cron schedule (see .github/workflows/update.yml), at odd minutes because GitHub delays or drops runs
+at the top of the hour and on :30. GitHub may also pause scheduled runs after 60 days without repository activity. If that
+happens, press "Enable workflow" in the Actions tab.
+data/market.json records when Opinet first showed each new Singapore day (opinetSeen: the run before it, "after", and the run
+that saw it, "by"). Once a few weeks of that exist, drop the runs that never catch anything new.
+
+Alerts
+The "health" job runs scripts/health.mjs after each update and fails the run when Opinet cannot be read, Singapore prices stop
+for more than 5 days, no forecast is produced, or the DOE reports cannot be read. GitHub emails the owner about failed
+scheduled runs (check Settings → Notifications → Actions). It cannot alert when GitHub does not start a run at all; the page's
+own warning covers that for readers.
+
+Live track record
+Each run saves a snapshot per number of Singapore days seen (plus "early" for the Tuesday US-futures look) in
+data/forecast-log.json under snapshots. liveTrack() in scripts/model.mjs turns finished weeks into the page's table.
 
 Actual adjustments
 Each run reads two DOE publications and never overwrites values entered by hand:
@@ -90,6 +103,7 @@ Files
   scripts/model.mjs            forecasting maths
   scripts/market.mjs           Opinet, Yahoo and FX data
   scripts/news.mjs             news cross-check
+  scripts/health.mjs           fails the run when something needs a person
   scripts/update.mjs           data and forecast
   scripts/doe.mjs              DOE report reader
   scripts/add-actual.mjs       manual actual helper

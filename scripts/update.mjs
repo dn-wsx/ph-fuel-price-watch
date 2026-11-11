@@ -1,6 +1,6 @@
 // Fetches free market data, computes the forecast, writes JSON into /data.
 import fs from 'node:fs/promises';
-import { CONFIG, FUELS, rootOf, frontContract, windows, manilaToday, addDays, r2, fuelChange, seriesFor, avgChange, calibrate, forecast, confidence, partialSd, basisOf } from './model.mjs';
+import { CONFIG, FUELS, rootOf, frontContract, windows, manilaToday, addDays, r2, fuelChange, seriesFor, avgChange, calibrate, forecast, confidence, partialSd, basisOf, liveTrack } from './model.mjs';
 import { yahoo, usdphp, opinet } from './market.mjs';
 import { recordFromDoe, recordFromNotices } from './doe.mjs';
 import { estimatesFromNews, fetchNews } from './news.mjs';
@@ -28,11 +28,12 @@ try {
   const sg = await opinet(addDays(today, -150), today);
   const known = new Set(Object.keys(market.series.MOPS92 ?? {}));
   for (const [key, days] of Object.entries(sg)) market.series[key] = trim({ ...market.series[key], ...days }, 110);
-  if (known.size) { // note when each new Singapore day first shows up on Opinet, to time the schedule from facts
+  if (known.size) { // when each new Singapore day first shows up on Opinet: between the look before and this look, to time the schedule
     market.opinetSeen = { ...market.opinetSeen };
-    for (const d of Object.keys(sg.MOPS92)) if (!known.has(d)) market.opinetSeen[d] = new Date().toISOString();
+    for (const d of Object.keys(sg.MOPS92)) if (!known.has(d)) market.opinetSeen[d] = { after: market.opinetChecked ?? null, by: new Date().toISOString() };
     market.opinetSeen = trim(market.opinetSeen, 40);
   }
+  market.opinetChecked = new Date().toISOString();
 } catch (e) { errors.push(`Opinet: ${e.message}`); }
 if (!market.series['USDPHP'] || !market.series['HO=F']) {
   console.error('Missing required market data and no cache available:', errors);
@@ -126,7 +127,11 @@ for (const fuel of FUELS) {
 }
 
 const basis = basisOf(Object.values(fuels).map((f) => f.source), errors.some((e) => e.startsWith('Opinet')));
-log[win.target] = { generatedAt: new Date().toISOString(), model: MODEL_VERSION, ...Object.fromEntries(Object.entries(fuels).map(([k, f]) => [k, { raw: f.raw, value: f.value, low: f.low, high: f.high, }])) };
+// One snapshot per number of Singapore days seen ("early" = the US-futures look before the week's first day posts), the latest
+// run wins, so the live track record can show how the forecast firmed up through the week.
+const snapshotKey = basis === 'singapore' ? String(minDays) : 'early';
+const snapshots = { ...log[win.target]?.snapshots, [snapshotKey]: { at: new Date().toISOString(), ...Object.fromEntries(Object.entries(fuels).map(([k, f]) => [k, f.value])) } };
+log[win.target] = { generatedAt: new Date().toISOString(), model: MODEL_VERSION, ...Object.fromEntries(Object.entries(fuels).map(([k, f]) => [k, { raw: f.raw, value: f.value, low: f.low, high: f.high }])), snapshots };
 await write('forecast-log.json', log);
 
 const history = Object.keys(actuals).sort().reverse().slice(0, 26).map((date) => ({
@@ -147,7 +152,7 @@ await write('forecast.json', {
   sample: false, model: MODEL_VERSION, generatedAt: new Date().toISOString(), asOf: today, target: win.target, window: { current: win.cur, previous: win.prev },
   confidence: Object.keys(fuels).length && !unresolved ? confidence(minDays, calibratedWeeks, basis) : 'low',
   rollWarning: unresolved, rollAdjusted: rolled && !unresolved, singaporeData: basis === 'singapore', basis, singaporeThrough: Object.keys(S.MOPS92 ?? {}).sort().at(-1) ?? null,
-  fuels, history, accuracy, errors, actualsNote, newsNote,
+  fuels, history, accuracy, liveTrack: liveTrack(log, actuals), errors, actualsNote, newsNote,
   news: news ? { updatedAt: newsCache.updatedAt, items: news.items } : null,
   market: {
     mogas: { label: 'Singapore gasoline RON 92 (gasoline)', unit: 'USD/bbl', ...trend('MOPS92') },
