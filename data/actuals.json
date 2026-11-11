@@ -69,6 +69,7 @@
     "gasoline": -16.8,
     "diesel": -4.1,
     "kerosene": -3.7,
-    "source": "DOE announcement (Rappler, Inquirer, 9 Nov 2026)"
+    "source": "DOE announcement (Rappler, Inquirer, 9 Nov 2026)",
+    "provisional": true
   }
 }
