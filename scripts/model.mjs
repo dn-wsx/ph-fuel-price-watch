@@ -8,23 +8,21 @@ export const CONFIG = {
   minScale: 0.7, maxScale: 1.3,
   defaultErrorPhp: 2.5,      // typical miss (PHP/L) until calibrated; back-tests on Jul-Nov 2026 gave about 1.3 (diesel), 1.8 (gasoline), 1.8 (kerosene) on normal weeks
   minHalfRangePhp: 0.5,      // never show a range tighter than +/- this
-  industryWeight: 0.9,       // weight of a published estimate typed in by hand (it is built on the real Singapore prices)
-  newsWeight: 0.7,           // weight of an estimate read from news headlines (rounded, sometimes "up to")
-  industryErrorPhp: 0.7,     // typical miss of a published estimate once it is based on the full week
   flatThresholdPhp: 0.05,    // |value| below this is shown as "no change"
   // What stands in for the Singapore (MOPS) price, best source first: [symbol, weight] baskets. The first basket with data is used.
-  // 1. Singapore prices from Opinet (USD/bbl): gasoline RON 95, diesel 0.05%S, kerosene. Over the 12 weeks of actual DOE adjustments from
-  //    Aug to Nov 2026 the average miss (PHP/L) was gasoline 1.05, diesel 0.83, kerosene 0.61, direction right 12/12.
+  // 1. Singapore prices from Opinet (USD/bbl): gasoline RON 92, diesel 0.001%S, kerosene. These are the products the DOE's weekly
+  //    "international price" change follows (within US$0.1/bbl). Over the 12 weeks of actual DOE adjustments from Aug to Nov 2026 the
+  //    average miss (PHP/L) was gasoline 0.86, diesel 0.65, kerosene 0.61, direction right 12/12.
   // 2. US futures if Opinet cannot be read (gasoline 3.0, diesel 1.3, kerosene 1.9; Brent/RBOB mixed because RBOB alone is poorer).
   proxies: {
-    gasoline: [[['MOPS95', 1]], [['BZ=F', 0.5], ['RB=F', 0.5]]],
+    gasoline: [[['MOPS92', 1]], [['BZ=F', 0.5], ['RB=F', 0.5]]],
     diesel: [[['MOPSD', 1]], [['HO=F', 1]]],
     kerosene: [[['MOPSK', 1]], [['HO=F', 1]]],
   },
   sources: ['singapore', 'us'], // names of the baskets above, in order
 };
 export const FUELS = Object.keys(CONFIG.proxies);
-const PER_BARREL = ['BZ=F', 'MOPS95', 'MOPSD', 'MOPSK']; // quoted in USD per barrel; the NYMEX products are USD per gallon
+const PER_BARREL = ['BZ=F', 'MOPS92', 'MOPSD', 'MOPSK']; // quoted in USD per barrel; the NYMEX products are USD per gallon
 export const rootOf = (symbol) => symbol.slice(0, 2);
 
 const DAY = 864e5;
@@ -162,33 +160,11 @@ export function calibrate(pairs, cfg = CONFIG) {
   return { scale, rmse, n, fitted: true };
 }
 
-// A published estimate is a number or a [low, high] range of PHP/L (rollback negative).
-export function toRange(v) {
-  const a = Array.isArray(v) ? v : [v, v];
-  return a.length === 2 && a.every((x) => typeof x === 'number' && Number.isFinite(x)) ? [Math.min(...a), Math.max(...a)] : null;
-}
-// Per fuel, a hand-entered estimate wins over one read from the news.
-export function pickEstimates(manual, news) {
-  const out = {};
-  for (const fuel of FUELS) {
-    const m = toRange(manual?.[fuel]), n = toRange(news?.[fuel]);
-    if (m) out[fuel] = { range: m, kind: 'manual' };
-    else if (n) out[fuel] = { range: n, kind: 'news' };
-  }
-  return out;
-}
-
-export function forecast(raw, cal, industry, cfg = CONFIG, { weight = cfg.industryWeight, sd = 0 } = {}) {
-  const model = raw * cal.scale;
-  const value = industry ? (1 - weight) * model + weight * mean(industry) : model;
-  const basis = industry ? Math.hypot((1 - weight) * cal.rmse, weight * cfg.industryErrorPhp) : cal.rmse;
-  const half = Math.max(cfg.minHalfRangePhp, Math.hypot(basis, sd));
+export function forecast(raw, cal, cfg = CONFIG, { sd = 0 } = {}) {
+  const value = raw * cal.scale;
+  const half = Math.max(cfg.minHalfRangePhp, Math.hypot(cal.rmse, sd));
   const direction = value > cfg.flatThresholdPhp ? 'increase' : value < -cfg.flatThresholdPhp ? 'decrease' : 'unchanged';
-  return {
-    raw: r2(raw), model: r2(model), published: industry ? r2(mean(industry)) : null,
-    value: r2(value), low: r2(value - half), high: r2(value + half),
-    direction, withinError: Math.abs(value) < half, blended: Boolean(industry),
-  };
+  return { raw: r2(raw), value: r2(value), low: r2(value - half), high: r2(value + half), direction, withinError: Math.abs(value) < half };
 }
 
 export function confidence(days, calibratedWeeks) {

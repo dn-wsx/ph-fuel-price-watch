@@ -1,7 +1,7 @@
 {
   "sample": false,
   "model": 2,
-  "generatedAt": "2026-11-11T04:24:04.105Z",
+  "generatedAt": "2026-11-11T04:33:32.432Z",
   "asOf": "2026-11-11",
   "target": "2026-11-17",
   "window": {
@@ -14,71 +14,50 @@
       "2026-11-06"
     ]
   },
-  "confidence": "medium",
+  "confidence": "low",
   "rollWarning": false,
   "rollAdjusted": false,
   "singaporeData": true,
   "singaporeThrough": "2026-11-10",
   "fuels": {
     "gasoline": {
-      "raw": -4.71,
-      "model": -4.53,
-      "published": -4.7,
-      "value": -4.68,
-      "low": -6.37,
-      "high": -2.99,
+      "raw": -4.95,
+      "value": -5.04,
+      "low": -7.26,
+      "high": -2.81,
       "direction": "decrease",
       "withinError": false,
-      "blended": true,
       "source": "singapore",
-      "proxy": "MOPS95",
+      "proxy": "MOPS92",
       "daysOfData": 1,
       "calibrationWeeks": 12,
-      "scale": 0.96,
-      "estimate": {
-        "kind": "manual",
-        "weight": 0.9
-      }
+      "scale": 1.017
     },
     "diesel": {
-      "raw": -6.43,
-      "model": -6.56,
-      "published": -6.4,
-      "value": -6.42,
-      "low": -8.45,
-      "high": -4.38,
+      "raw": -6.71,
+      "value": -6.71,
+      "low": -8.89,
+      "high": -4.52,
       "direction": "decrease",
       "withinError": false,
-      "blended": true,
       "source": "singapore",
       "proxy": "MOPSD",
       "daysOfData": 1,
       "calibrationWeeks": 12,
-      "scale": 1.021,
-      "estimate": {
-        "kind": "manual",
-        "weight": 0.9
-      }
+      "scale": 0.999
     },
     "kerosene": {
       "raw": -7.22,
-      "model": -7.13,
-      "published": -6.9,
-      "value": -6.92,
-      "low": -8.9,
-      "high": -4.95,
+      "value": -7.13,
+      "low": -9.18,
+      "high": -5.07,
       "direction": "decrease",
       "withinError": false,
-      "blended": true,
       "source": "singapore",
       "proxy": "MOPSK",
       "daysOfData": 1,
       "calibrationWeeks": 12,
-      "scale": 0.987,
-      "estimate": {
-        "kind": "manual",
-        "weight": 0.9
-      }
+      "scale": 0.987
     }
   },
   "history": [
@@ -87,18 +66,15 @@
       "fuels": {
         "gasoline": {
           "actual": -16.8,
-          "forecast": -11.56,
-          "published": null
+          "forecast": -11.88
         },
         "diesel": {
           "actual": -4.1,
-          "forecast": -4.24,
-          "published": null
+          "forecast": -5.07
         },
         "kerosene": {
           "actual": -3.7,
-          "forecast": -5.35,
-          "published": null
+          "forecast": -5.35
         }
       },
       "backtest": true
@@ -108,18 +84,15 @@
       "fuels": {
         "gasoline": {
           "actual": 3.5,
-          "forecast": 1.6,
-          "published": null
+          "forecast": 1.78
         },
         "diesel": {
           "actual": -1,
-          "forecast": -0.88,
-          "published": null
+          "forecast": -1.06
         },
         "kerosene": {
           "actual": -1.9,
-          "forecast": -1.65,
-          "published": null
+          "forecast": -1.65
         }
       },
       "backtest": true
@@ -129,18 +102,15 @@
       "fuels": {
         "gasoline": {
           "actual": -0.3,
-          "forecast": -1.01,
-          "published": null
+          "forecast": -0.68
         },
         "diesel": {
           "actual": 1.2,
-          "forecast": 4.12,
-          "published": null
+          "forecast": 3.37
         },
         "kerosene": {
           "actual": 0.5,
-          "forecast": 1.96,
-          "published": null
+          "forecast": 1.96
         }
       },
       "backtest": true
@@ -150,18 +120,15 @@
       "fuels": {
         "gasoline": {
           "actual": -4.3,
-          "forecast": -5.95,
-          "published": null
+          "forecast": -4.23
         },
         "diesel": {
           "actual": 2.6,
-          "forecast": 0.8,
-          "published": null
+          "forecast": 0.34
         },
         "kerosene": {
           "actual": -1,
-          "forecast": -0.43,
-          "published": null
+          "forecast": -0.43
         }
       },
       "backtest": true
@@ -171,18 +138,15 @@
       "fuels": {
         "gasoline": {
           "actual": 1.56,
-          "forecast": 0.76,
-          "published": null
+          "forecast": 1.08
         },
         "diesel": {
           "actual": -3,
-          "forecast": -1.72,
-          "published": null
+          "forecast": -1.62
         },
         "kerosene": {
           "actual": 1.77,
-          "forecast": 1.02,
-          "published": null
+          "forecast": 1.02
         }
       },
       "backtest": true
@@ -192,18 +156,15 @@
       "fuels": {
         "gasoline": {
           "actual": 1.93,
-          "forecast": 1.93,
-          "published": null
+          "forecast": 1.92
         },
         "diesel": {
           "actual": -1.3,
-          "forecast": -0.82,
-          "published": null
+          "forecast": -1.06
         },
         "kerosene": {
           "actual": 3.3,
-          "forecast": 1.95,
-          "published": null
+          "forecast": 1.95
         }
       },
       "backtest": true
@@ -213,18 +174,15 @@
       "fuels": {
         "gasoline": {
           "actual": -0.24,
-          "forecast": -1.43,
-          "published": null
+          "forecast": -1.56
         },
         "diesel": {
           "actual": -7.55,
-          "forecast": -7.51,
-          "published": null
+          "forecast": -7.53
         },
         "kerosene": {
           "actual": -5.85,
-          "forecast": -6.01,
-          "published": null
+          "forecast": -6.01
         }
       },
       "backtest": true
@@ -234,18 +192,15 @@
       "fuels": {
         "gasoline": {
           "actual": 4.88,
-          "forecast": 5.17,
-          "published": null
+          "forecast": 4.4
         },
         "diesel": {
           "actual": 8.82,
-          "forecast": 8.4,
-          "published": null
+          "forecast": 8.5
         },
         "kerosene": {
           "actual": 6.47,
-          "forecast": 6.62,
-          "published": null
+          "forecast": 6.62
         }
       },
       "backtest": true
@@ -255,18 +210,15 @@
       "fuels": {
         "gasoline": {
           "actual": 5.7,
-          "forecast": 5.57,
-          "published": null
+          "forecast": 5.5
         },
         "diesel": {
           "actual": 4.4,
-          "forecast": 3.56,
-          "published": null
+          "forecast": 4.46
         },
         "kerosene": {
           "actual": 4.62,
-          "forecast": 4.84,
-          "published": null
+          "forecast": 4.84
         }
       },
       "backtest": true
@@ -276,18 +228,15 @@
       "fuels": {
         "gasoline": {
           "actual": 4.7,
-          "forecast": 4.74,
-          "published": null
+          "forecast": 4.62
         },
         "diesel": {
           "actual": 5.2,
-          "forecast": 4.16,
-          "published": null
+          "forecast": 5.28
         },
         "kerosene": {
           "actual": 5.6,
-          "forecast": 5.35,
-          "published": null
+          "forecast": 5.35
         }
       },
       "backtest": true
@@ -297,18 +246,15 @@
       "fuels": {
         "gasoline": {
           "actual": -0.3,
-          "forecast": -0.71,
-          "published": null
+          "forecast": -0.72
         },
         "diesel": {
           "actual": -3.8,
-          "forecast": -4.51,
-          "published": null
+          "forecast": -3.89
         },
         "kerosene": {
           "actual": -3.8,
-          "forecast": -3.65,
-          "published": null
+          "forecast": -3.65
         }
       },
       "backtest": true
@@ -318,18 +264,15 @@
       "fuels": {
         "gasoline": {
           "actual": 1.1,
-          "forecast": 1.4,
-          "published": null
+          "forecast": 1.39
         },
         "diesel": {
           "actual": 2.31,
-          "forecast": 2.19,
-          "published": null
+          "forecast": 2.21
         },
         "kerosene": {
           "actual": 1,
-          "forecast": 1.42,
-          "published": null
+          "forecast": 1.42
         }
       },
       "backtest": true
@@ -338,13 +281,13 @@
   "accuracy": {
     "gasoline": {
       "weeks": 12,
-      "mae": 1.05,
-      "worst": 5.24
+      "mae": 0.86,
+      "worst": 4.92
     },
     "diesel": {
       "weeks": 12,
-      "mae": 0.83,
-      "worst": 2.92
+      "mae": 0.65,
+      "worst": 2.26
     },
     "kerosene": {
       "weeks": 12,
@@ -355,24 +298,20 @@
   "errors": [],
   "actualsNote": "",
   "newsNote": "",
-  "industry": {
-    "source": "Facebook oil-price page: world market trading Day 1 (Nov 10, 2026)",
-    "url": null
-  },
   "news": null,
   "market": {
     "mogas": {
-      "label": "Singapore gasoline RON 95 (gasoline)",
+      "label": "Singapore gasoline RON 92 (gasoline)",
       "unit": "USD/bbl",
-      "pct": -8.77,
-      "last": 102.89,
+      "pct": -9.36,
+      "last": 101.06,
       "lastDate": "2026-11-10"
     },
     "gasoil": {
-      "label": "Singapore gasoil 0.05%S (diesel)",
+      "label": "Singapore gasoil 0.001%S (diesel)",
       "unit": "USD/bbl",
-      "pct": -8.37,
-      "last": 147.28,
+      "pct": -8.62,
+      "last": 149.27,
       "lastDate": "2026-11-10"
     },
     "jet": {

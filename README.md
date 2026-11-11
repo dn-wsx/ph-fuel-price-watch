@@ -4,17 +4,21 @@ A free, no-build static site that estimates the next Tuesday's pump price change
 GitHub Actions fetches free market data, writes `data/forecast.json`, and publishes the site to GitHub Pages.
 
 ## How the estimate works
-Pump prices follow the average Singapore (MOPS) price of each product from Monday to Friday, against the week before, converted at the peso rate, plus 12% VAT. Checked against the DOE's own weekly figures, this arithmetic reproduces the announced adjustments with a typical miss under P0.9/L. The only unknown is the Singapore price, which is not free. So:
+Pump prices follow the average Singapore (MOPS) price of each product from Monday to Friday, against the week before, converted at the peso rate, plus 12% VAT. The only unknown is the Singapore price, which is not free, except for one source:
 
-1. **Singapore price model (always runs).** Korea's Opinet (KNOC) publishes the daily Singapore (Platts-based) price of each product in USD/bbl, back to 2008, the day after (Tuesday to Saturday): https://www.opinet.co.kr/glopopdSelect.do. The updater reads gasoline RON 95, diesel 0.05%S and kerosene from that table, and USD/PHP from Frankfurter (ECB, which matched the BSP weekly average quoted by the DOE to within P0.04 over 17 weeks). Days Singapore's market is closed are skipped. Day 1 of the week is the first Singapore trading day, which is why the FB post of 10 Nov 2026 said "Day 1 (Nov 10)": Monday 9 Nov was a Singapore holiday (Deepavali).
-   - **It reproduces the FB pages.** For Day 1 of the week of 17 Nov the table gave gasoline -4.71, diesel -6.43 and kerosene -7.22 per liter, against the posted -4.70, -6.40 and -6.90.
-   - **It reproduces the actual adjustments.** Over the 12 weeks of DOE adjustments from Aug to Nov 2026 the Mon-Fri average missed by P1.05/L (gasoline), P0.83 (diesel) and P0.61 (kerosene), with the direction right 12 of 12 times for every fuel. The DOE's own USD figures miss by about P0.6 to 0.9, so this is close to the limit. The week of 10 Nov 2026 is the outlier (gasoline P11.6 estimated against P16.80 announced).
-   - **Rest of the week held at the latest price.** Days still to come are projected at the newest price (the unbiased guess for a random walk), and the range widens for them.
-   - **Calibration.** Once 6+ actual DOE adjustments are known, a correction scale (robust to one freak week, pulled toward 1) is fitted, and the range comes from the real past error.
-   - **Fallback.** If Opinet cannot be read (and nothing is saved), the page says so and uses US futures (Brent/RBOB for gasoline, NY ULSD for diesel and kerosene), which miss Asian moves: about P3.0, P1.3 and P1.9 on the same 12 weeks. Roll jumps in those monthly contracts are neutralised by reading the same contract on both sides.
-2. **Published estimates (when available, 90% weight).** The Facebook oil-price pages and the news publish an estimate on the real Singapore prices every day ("world market trading Day 1..."). Add one by hand (below), or the updater reads estimates from news headlines on its own (70% weight, and only when two headlines agree). A published estimate removes most of the model's own error from the range.
+**Korea's Opinet (KNOC) publishes the daily Singapore (Platts-based) price of each product** in USD/bbl, back to 2008, the day after (Tuesday to Saturday): https://www.opinet.co.kr/glopopdSelect.do. The updater reads gasoline RON 92, diesel 0.001%S and kerosene from that table, and USD/PHP from Frankfurter (ECB, which matched the BSP weekly average quoted by the DOE to within P0.04 over 17 weeks). Days Singapore's market is closed are skipped.
 
-Singapore products can move far differently from US futures: in the week of 10 Nov 2026 gasoline was cut by P16.80/L, 3 to 4 times what Brent and RBOB implied, which is why Opinet's Singapore prices replaced them. The one limit is timing. Opinet posts day T on day T+1, so the model trails the FB pages by about half a day. A published estimate you add by hand closes that gap.
+- **It is the data the DOE uses.** The Oil Monitor's weekly change in "international" gasoline and diesel prices equals the change in Opinet's 92RON and 0.001%S columns to within US$0.1/bbl over 16 weeks (Jul-Nov 2026). The 95RON and 0.05%S columns differ by up to US$0.7.
+- **It reproduces the actual adjustments.** Over the 12 weeks of announced DOE adjustments from Aug to Nov 2026 the Mon-Fri average missed by P0.86/L (gasoline), P0.65 (diesel) and P0.61 (kerosene), with the direction right 12 of 12 times for every fuel. The DOE's own USD figures miss by about P0.6 to 0.9, so this is close to the limit. The old US-futures proxy missed by about P3.0, P1.3 and P1.9. The page shows these numbers under "Forecast vs. actual".
+- **Day by day.** The average miss against the final adjustment is about P1.9 after trading day 1, P1.2 to 1.6 after day 2, P0.9 to 1.3 after day 3 and P0.6 to 1.0 by days 4 and 5. Days still to come are held at the latest price, and the range widens for them. Day 1 is the first Singapore trading day: Monday 9 Nov 2026 was a Singapore holiday, so Day 1 was Tuesday 10 Nov.
+- **Calibration.** Once 6+ actual DOE adjustments are known, a correction scale (robust to one freak week, pulled toward 1) is fitted; it comes out at about 1.0, which confirms the structure. The range comes from the real past error.
+- **Fallback.** If Opinet cannot be read (and nothing is saved), the page says so and uses US futures (Brent/RBOB for gasoline, NY ULSD for diesel and kerosene), which miss Asian moves. Month-end contract rolls in those futures are neutralised by reading the same contract on both sides.
+- **News cross-check.** Outlets publish an industry estimate from Thursday to Saturday. The updater reads them from Google News headlines (only when two agree) and shows them beside the number. They are built on the same Singapore prices, so they never change it: on the Friday of the 10 Nov week the model said P12.2 for gasoline and the news P13.
+
+The limits: Opinet posts day T on day T+1, so the model trails same-day posts by about half a day. Measured, that costs almost nothing (a same-day nowcast from Singapore-close-aligned futures changed the weekly miss by about 5%, within noise), because the main uncertainty early in the week is the days that have not happened yet. The remaining miss is the oil companies' own rounding and discretion: the week of 10 Nov 2026 gasoline was cut by P16.80 where the Singapore price implied P11.9.
+
+## Everything runs by itself
+GitHub Actions runs it Monday to Saturday at 06:30 PHT and Tuesday to Saturday at 12:00 and 18:30 PHT. Each run reads Opinet, Yahoo, Frankfurter, the DOE's Prior Notice and Oil Monitor reports and the news; records new actual adjustments; refits the calibration; rewrites `data/forecast.json`; and republishes the page. Nothing needs to be typed in. If an update stops, the page shows a warning. GitHub can delay scheduled runs by hours, and may pause them after 60 days without repository activity (press **Enable workflow** in the Actions tab). The updater records when Opinet first shows each new day in `data/market.json` (`opinetSeen`), so the schedule can be tuned from facts.
 
 ## Deploy to GitHub Pages
 1. Create a new **public** repository on GitHub (e.g. `ph-fuel-price-watch`).
@@ -38,23 +42,16 @@ Each run reads two DOE publications. Neither ever overwrites values you entered 
 
 **Optional manual override** (a skipped week or a correction): **Actions** tab → **Update forecast and deploy** → **Run workflow**, fill in the fuels you have (rollback is negative, e.g. `-0.50`; leave `date` as `auto` for the most recent Tuesday). Or edit `data/actuals.json` directly.
 
-## Adding a published estimate (the FB pages)
-Easiest, also from the GitHub phone app: **Actions → Update forecast and deploy → Run workflow**, fill in the **PUBLISHED ESTIMATE** fields (rollback is negative, e.g. `-4.70`; leave the date as `auto` for the next Tuesday; put the page and trading day in the source) and run it. The page updates in about a minute and shows the model and the published number side by side.
-
-Or locally: `node scripts/add-estimate.mjs auto gasoline=-4.70 diesel=-6.40 kerosene=-6.90 source="FB page, trading Day 1"` (a range is written `diesel=-6.9:-6.4`), or edit `data/industry.json` by hand. The values are saved in `data/forecast-log.json`, so you can later compare how each source did. Update it each day as the page posts Day 2, 3, 4: the estimate is only as fresh as what you enter.
-
-**News headlines (automatic).** Each run reads a Google News RSS search for rollback/hike headlines, keeps only forecasts (Thursday to Saturday, or "next week" wording), parses fuel and amount (`Gasoline may plunge by P14/L`, `P13 for gas, P4 for diesel`, `P2 to P3`), and uses a fuel only when at least two headlines agree within P1.50. Estimates are saved in `data/news.json`. Headlines that say "up to P14" without naming a fuel are ignored.
-
 ## Free sources checked for Singapore (MOPS) prices
 - **Used: Korea Opinet** public page (above). Free, no key, one form POST per run, plain HTTP. It is a public page, not an API, so it can change; it is a government site, so keep the load light (the updater makes one request per run).
-- **TradingView's unofficial chart socket** serves CME Singapore swap futures (Mogas 92, Gasoil, Jet Kerosene) and was tested, but it is unofficial and thinly traded. Against the actual adjustments it missed gasoline by P1.55/L (Opinet: P1.05) and its day-to-day moves track Singapore's only loosely (correlation about 0.4), so it is not used.
-- **Not usable:** Yahoo (no Singapore or ICE gasoil symbols), EIA (no Singapore series), CME, ICE, Barchart and Investing.com (block scripted access), Stooq (proof-of-work challenge), TradingEconomics (guest key gone), IndexMundi (monthly world averages), India PPAC (PDF only), AIP Australia (chart data behind JavaScript), Facebook (not machine-readable). The DOE Oil Monitor states the week-on-week change in Singapore gasoline and diesel, but only on the Tuesday.
+- **Tested and not used:** TradingView's unofficial chart socket serves CME Singapore swap futures (Mogas 92, Gasoil, Jet Kerosene). They are unofficial and thin, missed gasoline by P1.55/L (Opinet: P0.86) and track Singapore's daily moves only loosely. Yahoo's hourly futures aligned to Singapore's close track diesel and kerosene moves well (correlation about 0.8) but add nothing measurable to the weekly estimate.
+- **Not usable:** Yahoo daily data alone (no Singapore or ICE gasoil symbols), EIA (no Singapore series), CME, ICE, Barchart and Investing.com (block scripted access), Stooq (proof-of-work challenge), TradingEconomics (guest key gone), IndexMundi (monthly world averages), India PPAC (PDF only), AIP Australia (chart data behind JavaScript), Facebook (not machine-readable). The DOE Oil Monitor states the weekly change in Singapore gasoline and diesel, but only on the Tuesday.
 
 ## Known limits
-- Without a published estimate the page shows the model alone, which trails the FB pages by about half a day because Opinet posts a day late.
-- Early-week estimates (1 or 2 trading days) move a lot. Compare again on Friday.
+- Early-week estimates (1 or 2 trading days) move a lot. The range says how much. Compare again on Friday.
+- Freak weeks happen: the oil companies do not always pass the Singapore change through one for one. The model's misses do not carry over from week to week, so they cannot be corrected for.
 - The US-futures fallback needs the front contract saved to handle month-end rolls. Contracts are saved from now on, so fallback back-tests across an older roll are skipped, not guessed.
-- Published estimates in headlines are rounded or "up to" figures. The hand-entered ones are better.
+- Opinet's layout or access could change. The page then falls back to US futures and says so.
 
 ## Local use
     npm test          # model, market-data and news-parser tests
@@ -69,6 +66,5 @@ Or locally: `node scripts/add-estimate.mjs auto gasoline=-4.70 diesel=-6.40 kero
 - `data/actuals.json` – actual adjustments (filled automatically from DOE; you can edit)
 - `data/ytd.json`, `data/notices.json` – DOE reports already read (generated)
 - `data/news.json` – estimates read from news headlines (generated)
-- `data/industry.json` – published estimates you add (by form, script or by hand)
-- `scripts/model.mjs` – forecasting math · `scripts/market.mjs` – Opinet, Yahoo and FX data · `scripts/news.mjs` – headline estimates · `scripts/update.mjs` – data + forecast · `scripts/doe.mjs` – DOE Oil Monitor reader · `scripts/add-actual.mjs`, `scripts/add-estimate.mjs` – helpers · `scripts/test.mjs`
+- `scripts/model.mjs` – forecasting math · `scripts/market.mjs` – Opinet, Yahoo and FX data · `scripts/news.mjs` – news cross-check · `scripts/update.mjs` – data + forecast · `scripts/doe.mjs` – DOE Oil Monitor reader · `scripts/add-actual.mjs` – helper · `scripts/test.mjs`
 - `.github/workflows/update.yml` – schedule + deploy

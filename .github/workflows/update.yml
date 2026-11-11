@@ -23,22 +23,6 @@ on:
       kerosene:
         description: 'Kerosene change in PHP per liter (e.g. -0.30). Blank = skip'
         required: false
-      est_target:
-        description: 'PUBLISHED ESTIMATE: Tuesday it is for (YYYY-MM-DD). "auto" = the next Tuesday'
-        default: 'auto'
-        required: false
-      est_gasoline:
-        description: 'PUBLISHED ESTIMATE: gasoline in PHP per liter from an FB page or news (rollback is negative, e.g. -4.70). Blank = skip'
-        required: false
-      est_diesel:
-        description: 'PUBLISHED ESTIMATE: diesel in PHP per liter (e.g. -6.40). Blank = skip'
-        required: false
-      est_kerosene:
-        description: 'PUBLISHED ESTIMATE: kerosene in PHP per liter (e.g. -6.90). Blank = skip'
-        required: false
-      est_source:
-        description: 'PUBLISHED ESTIMATE: where it came from, e.g. "FB page, trading Day 2"'
-        required: false
 
 permissions:
   contents: write
@@ -72,23 +56,6 @@ jobs:
           if [ -n "$D" ]; then args+=("diesel=$D"); fi
           if [ -n "$K" ]; then args+=("kerosene=$K"); fi
           if [ ${#args[@]} -gt 0 ]; then node scripts/add-actual.mjs "${DATE:-auto}" "${args[@]}"; else echo "No values entered, skipping."; fi
-      - name: Record published estimate by hand (only when you filled in the estimate fields)
-        if: github.event_name == 'workflow_dispatch'
-        env:
-          TARGET: ${{ inputs.est_target }}
-          G: ${{ inputs.est_gasoline }}
-          D: ${{ inputs.est_diesel }}
-          K: ${{ inputs.est_kerosene }}
-          SRC: ${{ inputs.est_source }}
-        run: |
-          args=()
-          if [ -n "$G" ]; then args+=("gasoline=$G"); fi
-          if [ -n "$D" ]; then args+=("diesel=$D"); fi
-          if [ -n "$K" ]; then args+=("kerosene=$K"); fi
-          if [ ${#args[@]} -gt 0 ]; then
-            if [ -n "$SRC" ]; then args+=("source=$SRC"); fi
-            node scripts/add-estimate.mjs "${TARGET:-auto}" "${args[@]}"
-          else echo "No estimate entered, skipping."; fi
       - run: node scripts/update.mjs
       - name: Commit data changes
         run: |

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { CONFIG, addDays, windows, rawChange, calibrate, forecast, confidence, barDate, frontContract, spansRoll, seriesFor, fuelChange, partialSd, toRange, pickEstimates } from './model.mjs';
+import { CONFIG, addDays, windows, rawChange, calibrate, forecast, confidence, barDate, frontContract, spansRoll, seriesFor, fuelChange, partialSd } from './model.mjs';
 import { listReports, parseYtd, recordFromDoe, parseNotice, recordFromNotices } from './doe.mjs';
 import { settledBars, intradayClose, latestSettleDate, parseOpinet } from './market.mjs';
 import { parseRss, parseEstimate, estimatesFromNews } from './news.mjs';
@@ -66,21 +66,13 @@ assert.ok(Math.abs(freak.scale - calibrate(clean).scale) < 0.1, `scale ${freak.s
 assert.ok(freak.rmse > 3 * calibrate(clean).rmse);
 assert.equal(calibrate(pairs.slice(0, 3)).scale, 1); // too little history -> unchanged
 
-const f = forecast(1.0, { scale: 1, rmse: 0.6 }, null);
+const f = forecast(1.0, { scale: 1, rmse: 0.6 });
 assert.deepEqual([f.direction, f.low, f.high], ['increase', 0.4, 1.6]);
-assert.equal(forecast(1.0, { scale: 1, rmse: 0.6 }, [0, 0], CONFIG, { weight: 0.5 }).value, 0.5); // 50/50 blend
-assert.equal(forecast(10, { scale: 1, rmse: 2 }, [0, 0], CONFIG, { weight: 0.9 }).value, 1); // published estimate dominates
-// A published estimate removes most of the model's own error from the range; unfinished days still count.
-const ranged = forecast(0, { scale: 1, rmse: 2 }, [0, 0], CONFIG, { weight: 0.9, sd: 0 });
-assert.ok(ranged.high < 1.0);
-assert.ok(forecast(0, { scale: 1, rmse: 2 }, [0, 0], CONFIG, { weight: 0.9, sd: 2 }).high > ranged.high);
+assert.equal(forecast(1.0, { scale: 0.8, rmse: 0.1 }).value, 0.8); // the fitted scale is applied
+// The range always includes the days still to come.
+assert.ok(forecast(0, { scale: 1, rmse: 1 }, CONFIG, { sd: 2 }).high > forecast(0, { scale: 1, rmse: 1 }).high);
+assert.equal(forecast(0.02, { scale: 1, rmse: 1 }).direction, 'unchanged');
 assert.equal(confidence(5, 10), 'high'); assert.equal(confidence(2, 10), 'low');
-
-// Published estimates: number or [low, high], manual entries win over news.
-assert.deepEqual(toRange(-4.7), [-4.7, -4.7]); assert.deepEqual(toRange([-3, -2]), [-3, -2]); assert.equal(toRange(undefined), null); assert.equal(toRange('x'), null); assert.equal(toRange([1, 2, 3]), null);
-const picked = pickEstimates({ diesel: -6.4, source: 'FB' }, { diesel: -1, gasoline: -13.25 });
-assert.deepEqual(picked.diesel, { range: [-6.4, -6.4], kind: 'manual' }); assert.deepEqual(picked.gasoline, { range: [-13.25, -13.25], kind: 'news' }); assert.equal(picked.kerosene, undefined);
-
 
 // ---- DOE Oil Monitor reader (wording copied from real 2026 reports) ----
 assert.deepEqual(parseYtd('The 37th price movement this year resulted in a total net increase of:\n| • | P65.02/liter for gasoline, |\n| • | P64.86/liter for diesel, and |\n| • | P58.07/liter for kerosene |'), { n: 37, gasoline: 65.02, diesel: 64.86, kerosene: 58.07 });
@@ -132,11 +124,6 @@ assert.equal(barDate(ts('2026-11-02T05:00:00Z')), '2026-11-02'); // Mon 00:00 ES
 assert.equal(barDate(ts('2026-10-25T22:00:00Z')), '2026-10-26'); // Sunday 18:00 EDT session open = Monday's trade date
 assert.equal(barDate(ts('2026-10-31T04:00:00Z')), null);          // Saturday is not a trading day
 assert.equal(barDate(ts('2026-11-01T05:00:00Z')), null);          // Sunday
-
-// ---- Published estimate is reported next to the model ----
-const fp = forecast(-3.62, { scale: 1.3, rmse: 3.4 }, [-4.7, -4.7], CONFIG, { weight: 0.5 });
-assert.deepEqual([fp.model, fp.published], [-4.71, -4.7]);
-assert.ok(Math.abs(fp.value - -4.705) <= 0.01); // 50/50 blend of model and published
 
 // ---- DOE Prior Notice (real text of the 20-26 Oct 2026 PDF; companies with no kerosene leave it blank) ----
 const notice = `Gasoline Diesel Kerosene
@@ -263,7 +250,7 @@ const opRow = (date, vals) => `<tr><td class="nobd_l">${date}</td>${vals.map((v)
 const opinetHtml = `<table><thead><tr><th>기간</th><th>휘발유<br />(95RON)</th></tr></thead>
 <tbody id="tbody1" style="display: none">${opRow('26년11월06일', ['941.18', '927.59', '1338.33', '1366.02', '1349.22', '878.12', '839.63'])}</tbody>
 <tbody id="tbody2" style="display: none">${opRow('26년11월06일', ['111.50', '109.89', '158.55', '161.83', '159.84', '104.03', '99.47'])}${opRow('26년11월09일', ['-', '-', '-', '-', '-', '-', '-'])}${opRow('26년11월10일', ['102.89', '101.06', '145.98', '149.27', '147.28', '91.83', '92.01'])}</tbody></table>`;
-assert.deepEqual(parseOpinet(opinetHtml), { MOPS95: { '2026-11-06': 111.5, '2026-11-10': 102.89 }, MOPSD: { '2026-11-06': 159.84, '2026-11-10': 147.28 }, MOPSK: { '2026-11-06': 158.55, '2026-11-10': 145.98 } }); // USD table, not the KRW one; a Singapore holiday row is skipped
+assert.deepEqual(parseOpinet(opinetHtml), { MOPS92: { '2026-11-06': 109.89, '2026-11-10': 101.06 }, MOPSD: { '2026-11-06': 161.83, '2026-11-10': 149.27 }, MOPSK: { '2026-11-06': 158.55, '2026-11-10': 145.98 } }); // USD table, not the KRW one; a Singapore holiday row is skipped
 assert.throws(() => parseOpinet('<html>maintenance</html>'), /Opinet/);
 
 // A Singapore holiday inside the week is not an unseen day: the week is averaged over the days that traded.
@@ -274,7 +261,7 @@ assert.equal(rawChange({ ...wk('2026-11-02', [2, 2, 2, 2, 2]), '2026-11-10': 2.1
 
 // The Singapore prices lead; the US futures take over only if they are missing.
 const op = { ...wk('2026-11-02', [110, 110, 110, 110, 110]), ...wk('2026-11-09', [100, 100, 100, 100, 100]) };
-const sing = fuelChange('gasoline', { MOPS95: op, 'BZ=F': {}, 'RB=F': {} }, { '2026-10-01': 63 }, windows('2026-11-14'));
+const sing = fuelChange('gasoline', { MOPS92: op, 'BZ=F': {}, 'RB=F': {} }, { '2026-10-01': 63 }, windows('2026-11-14'));
 assert.ok(Math.abs(sing.raw - (-10 / 158.987) * 63 * 1.12) < 1e-9 && sing.source === 'singapore'); // USD per barrel
 const usGal = { ...wk('2026-11-02', [4, 4, 4, 4, 4]), ...wk('2026-11-09', [3.9, 3.9, 3.9, 3.9, 3.9]) };
 const us = fuelChange('diesel', { 'HO=F': usGal }, { '2026-10-01': 63 }, windows('2026-11-14'));

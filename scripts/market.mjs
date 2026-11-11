@@ -69,10 +69,11 @@ export async function usdphp(start) { // ECB reference rates via Frankfurter (bu
 // ---- Singapore (Platts) product prices from Korea's Opinet (KNOC): daily USD/bbl, a day behind ----
 // Opinet's "international oil price > petroleum products" page lists the Singapore price of each product, back to 2008,
 // collected the day after (Tuesday to Saturday). The weekly adjustment is the change in these prices' Mon-Fri average, and
-// the FB pages' "trading Day N" estimates reproduce from them: Day 1 of 10 Nov 2026 gave -4.71 / -6.43 / -7.22 vs posted -4.70 / -6.40 / -6.90.
+// the "trading Day N" estimates that oil-price pages post reproduce from them to within about P0.3/L.
 export const OPINET_URL = 'https://www.opinet.co.kr/glopopdSelect.do';
-// Table columns: 95RON, 92RON, kerosene, diesel 0.001%S, diesel 0.05%S, fuel oil, naphtha.
-const OPINET_COLUMNS = { MOPS95: 1, MOPSK: 3, MOPSD: 5 };
+// Table columns: 95RON, 92RON, kerosene, diesel 0.001%S, diesel 0.05%S, fuel oil, naphtha. The DOE Oil Monitor's weekly change in
+// "international" gasoline and diesel prices equals the change in the 92RON and 0.001%S columns to within US$0.1/bbl (16 weeks, Jul-Nov 2026).
+const OPINET_COLUMNS = { MOPS92: 2, MOPSK: 3, MOPSD: 4 };
 
 export function parseOpinet(html) {
   const usd = html.match(/<tbody id="tbody2"[^>]*>([\s\S]*?)<\/tbody>/)?.[1]; // tbody1 is the same table in won per liter
