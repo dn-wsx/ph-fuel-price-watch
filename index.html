@@ -36,8 +36,11 @@
     <section aria-labelledby="h-hist">
       <h2 id="h-hist">Forecast vs. actual</h2>
       <div class="scroll"><table id="history"></table></div>
+      <p class="note legend"><span>All figures are pesos per liter. <strong>Forecast</strong>: our estimate. <strong>Actual</strong>: what the DOE announced (green rollback, red hike). <strong>Miss</strong> = forecast − actual:</span>
+        <span class="miss good">within ₱1</span><span class="miss ok">₱1 to ₱2.50</span><span class="miss bad">over ₱2.50</span>
+        <span>A plus means the forecast was too high (too little rollback or too big a hike).</span></p>
       <p id="accuracy" class="note"></p>
-      <p id="histNote" class="note" hidden>* Back-tested: what the model would have said from that week's market data, not a forecast made at the time. Actual adjustments come from the DOE's weekly Oil Monitor.</p>
+      <p id="histNote" class="note" hidden>* Rebuilt: what the model says from that week's finished Singapore prices, not a forecast made at the time. Actual adjustments come from the DOE's weekly Oil Monitor.</p>
     </section>
 
     <footer>

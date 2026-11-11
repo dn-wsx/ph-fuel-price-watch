@@ -8,6 +8,33 @@ const fmtDate = (iso, opts = { weekday: 'long', month: 'long', day: 'numeric', y
 const safeUrl = (u) => (/^https?:\/\//i.test(u ?? '') ? esc(u) : '');
 const LABEL = { increase: '▲ Price hike', decrease: '▼ Rollback', unchanged: '● No change' };
 
+const GOOD_PHP = 1, OK_PHP = 2.5; // a miss within P1 is good, within P2.50 fair, beyond that poor
+const grade = (miss) => (Math.abs(miss) <= GOOD_PHP ? 'good' : Math.abs(miss) <= OK_PHP ? 'ok' : 'bad');
+const signed = (v) => (v == null ? '—' : `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v).toFixed(2)}`); // pesos per liter, shown without the peso sign to keep the table narrow
+const FUEL_KEYS = Object.keys(NAMES);
+const avg = (a) => a.reduce((s, x) => s + x, 0) / a.length;
+
+// One block of three cells per fuel: what we forecast, what the DOE announced, and how far off we were.
+function historyTable(rows) {
+  const head = `<thead><tr><th rowspan="2" class="date">Tuesday</th>${FUEL_KEYS.map((k) => `<th colspan="3" class="grp">${NAMES[k]}</th>`).join('')}</tr>
+    <tr>${FUEL_KEYS.map(() => '<th class="num grp">Forecast</th><th class="num">Actual</th><th class="num">Miss</th>').join('')}</tr></thead>`;
+  const cells = (r, k) => {
+    const { forecast: f, actual: a } = r.fuels[k], miss = f != null && a != null ? f - a : null;
+    return `<td class="num grp fc">${signed(f)}${r.backtest && f != null ? '<sup>*</sup>' : ''}</td>
+      <td class="num act ${a < 0 ? 'down' : a > 0 ? 'up' : ''}">${signed(a)}</td>
+      <td class="num">${miss == null ? '<span class="muted">—</span>' : `<span class="miss ${grade(miss)}" title="Forecast was ₱${Math.abs(miss).toFixed(2)} ${miss > 0 ? 'higher' : 'lower'} than the actual">${signed(miss)}</span>`}</td>`;
+  };
+  const year = rows[0].date.slice(0, 4);
+  const body = rows.map((r) => `<tr><td class="date" title="${fmtDate(r.date)}">${fmtDate(r.date, r.date.startsWith(year) ? { month: 'short', day: 'numeric' } : { month: 'short', day: 'numeric', year: 'numeric' })}</td>${FUEL_KEYS.map((k) => cells(r, k)).join('')}</tr>`).join('');
+  const foot = FUEL_KEYS.map((k) => {
+    const both = rows.map((r) => r.fuels[k]).filter((x) => x.forecast != null && x.actual != null);
+    if (!both.length) return '<td colspan="3" class="grp"></td>';
+    const mae = avg(both.map((x) => Math.abs(x.forecast - x.actual))), right = both.filter((x) => Math.sign(x.forecast) === Math.sign(x.actual)).length;
+    return `<td colspan="2" class="num grp muted">direction ${right}/${both.length}</td><td class="num"><span class="miss ${grade(mae)}">${mae.toFixed(2)}</span></td>`;
+  }).join('');
+  return `${head}<tbody>${body}</tbody><tfoot><tr><th class="date">Average miss</th>${foot}</tr></tfoot>`;
+}
+
 function render(d) {
   $('#sub').textContent = `Estimated change at the pump starting ${fmtDate(d.target)}. Confidence: ${d.confidence}.`;
 
@@ -62,10 +89,7 @@ function render(d) {
   $('#accuracy').textContent = acc.length ? `The model alone, checked against ${acc[0][1].weeks} past weeks: average miss ${acc.map(([k, a]) => `${NAMES[k].toLowerCase()} ${php(a.mae, true)} (worst ${php(a.worst, true)})`).join(', ')} per liter.` : '';
 
   const rows = d.history ?? [];
-  $('#history').innerHTML = rows.length
-    ? `<tr><th>Tuesday</th>${Object.values(NAMES).map((n) => `<th class="num">${n}<br>forecast / actual</th>`).join('')}</tr>` +
-      rows.map((r) => `<tr><td>${fmtDate(r.date, { month: 'short', day: 'numeric', year: 'numeric' })}</td>${Object.keys(NAMES).map((k) => `<td class="num">${php(r.fuels[k].forecast)}${r.backtest && r.fuels[k].forecast != null ? '*' : ''} / ${php(r.fuels[k].actual)}</td>`).join('')}</tr>`).join('')
-    : '<tr><td>No actual adjustments yet. They are read from the DOE\'s weekly Oil Monitor automatically.</td></tr>';
+  $('#history').innerHTML = rows.length ? historyTable(rows) : '<tbody><tr><td>No actual adjustments yet. They are read from the DOE\'s weekly Oil Monitor automatically.</td></tr></tbody>';
   $('#histNote').hidden = !rows.some((r) => r.backtest);
 }
 
