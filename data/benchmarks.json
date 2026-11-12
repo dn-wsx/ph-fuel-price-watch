@@ -133,5 +133,17 @@
     "source": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2018%20August-1.pdf?prefix=dev%2Fmedia",
     "sha256": "502ff36e2bab39cfc75b8619e851f8797104a287064604809eb174a2b3f5655b",
     "checkedOn": "2026-11-11"
+  },
+  "2026-11-10": {
+    "current": [
+      "2026-11-02",
+      "2026-11-06"
+    ],
+    "changes": {
+      "diesel": -16.1
+    },
+    "source": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2010%20November.pdf?prefix=dev%2Fmedia",
+    "sha256": "b480bd57737a98ae5b3feade99ecbe350ad0944d6ce8c843774650a5d2e793d8",
+    "checkedOn": "2026-11-12"
   }
 }

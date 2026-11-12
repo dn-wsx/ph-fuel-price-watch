@@ -300,7 +300,27 @@
     "gasoline": -16.8,
     "diesel": -4.1,
     "kerosene": -3.7,
-    "source": "DOE announcement (Rappler, Inquirer, 9 Nov 2026)",
-    "provisional": true
+    "source": "DOE Oil Monitor (year-to-date difference)",
+    "fuelSources": {
+      "gasoline": {
+        "kind": "official",
+        "source": "DOE Oil Monitor (year-to-date difference)",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2010%20November.pdf?prefix=dev%2Fmedia",
+        "provisional": false
+      },
+      "diesel": {
+        "kind": "official",
+        "source": "DOE Oil Monitor (year-to-date difference)",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2010%20November.pdf?prefix=dev%2Fmedia",
+        "provisional": false
+      },
+      "kerosene": {
+        "kind": "official",
+        "source": "DOE Oil Monitor (year-to-date difference)",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2010%20November.pdf?prefix=dev%2Fmedia",
+        "provisional": false
+      }
+    },
+    "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2010%20November.pdf?prefix=dev%2Fmedia"
   }
 }
