@@ -10,7 +10,7 @@
     },
     "source": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2003%20November.pdf?prefix=dev%2Fmedia",
     "sha256": "84a4fccbd5d4c1f402989e984cb5f122a34f6f3876317ef8fee1516041144d79",
-    "checkedOn": "2026-11-11"
+    "checkedOn": "2026-11-12"
   },
   "2026-10-27": {
     "current": [
@@ -23,7 +23,7 @@
     },
     "source": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2027%20October.pdf?prefix=dev%2Fmedia",
     "sha256": "912573f53fd54bd29e97b4a324cf1bcf887d646243f454f86b4c132dc8675b3d",
-    "checkedOn": "2026-11-11"
+    "checkedOn": "2026-11-12"
   },
   "2026-10-20": {
     "current": [

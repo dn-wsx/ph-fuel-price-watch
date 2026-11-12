@@ -1,8 +1,8 @@
 {
   "sample": false,
   "model": 2,
-  "generatedAt": "2026-11-11T13:48:33.887Z",
-  "asOf": "2026-11-11",
+  "generatedAt": "2026-11-12T02:28:48.185Z",
+  "asOf": "2026-11-12",
   "target": "2026-11-17",
   "window": {
     "current": [
@@ -19,44 +19,44 @@
   "rollAdjusted": false,
   "singaporeData": true,
   "basis": "singapore",
-  "singaporeThrough": "2026-11-10",
+  "singaporeThrough": "2026-11-11",
   "fuels": {
     "gasoline": {
-      "raw": -4.95,
-      "value": -5.04,
-      "low": -6.77,
+      "raw": -4.43,
+      "value": -4.51,
+      "low": -5.7,
       "high": -3.32,
       "direction": "decrease",
       "withinError": false,
       "source": "singapore",
       "proxy": "MOPS92",
-      "daysOfData": 1,
+      "daysOfData": 2,
       "calibrationWeeks": 11,
       "scale": 1.018
     },
     "diesel": {
-      "raw": -6.71,
-      "value": -6.77,
-      "low": -8.96,
-      "high": -4.57,
+      "raw": -5.88,
+      "value": -5.93,
+      "low": -7.5,
+      "high": -4.35,
       "direction": "decrease",
       "withinError": false,
       "source": "singapore",
       "proxy": "MOPSD",
-      "daysOfData": 1,
+      "daysOfData": 2,
       "calibrationWeeks": 11,
       "scale": 1.008
     },
     "kerosene": {
-      "raw": -7.22,
-      "value": -7.2,
-      "low": -9.21,
-      "high": -5.2,
+      "raw": -6.48,
+      "value": -6.47,
+      "low": -7.79,
+      "high": -5.16,
       "direction": "decrease",
       "withinError": false,
       "source": "singapore",
       "proxy": "MOPSK",
-      "daysOfData": 1,
+      "daysOfData": 2,
       "calibrationWeeks": 11,
       "scale": 0.999
     }
@@ -719,7 +719,7 @@
   "actualsProblems": [],
   "newsNote": "",
   "benchmark": {
-    "checkedAt": "2026-11-11T13:48:33.887Z",
+    "checkedAt": "2026-11-12T02:28:48.185Z",
     "checks": [
       {
         "date": "2026-11-03",
@@ -948,7 +948,7 @@
     ]
   },
   "publicationTiming": {
-    "observations": 0,
+    "observations": 1,
     "schedule": "Retained until several weeks of publication observations are available."
   },
   "news": null,
@@ -956,58 +956,58 @@
     "mogas": {
       "label": "Singapore gasoline RON 92 (gasoline)",
       "unit": "USD/bbl",
-      "pct": -9.36,
-      "last": 101.06,
-      "lastDate": "2026-11-10",
-      "through": "2026-11-10"
+      "pct": -8.91,
+      "last": 102.07,
+      "lastDate": "2026-11-11",
+      "through": "2026-11-11"
     },
     "gasoil": {
       "label": "Singapore gasoil 0.001%S (diesel)",
       "unit": "USD/bbl",
-      "pct": -8.62,
-      "last": 149.27,
-      "lastDate": "2026-11-10",
-      "through": "2026-11-10"
+      "pct": -8.11,
+      "last": 150.94,
+      "lastDate": "2026-11-11",
+      "through": "2026-11-11"
     },
     "jet": {
       "label": "Singapore kerosene (kerosene)",
       "unit": "USD/bbl",
-      "pct": -9.45,
-      "last": 145.98,
-      "lastDate": "2026-11-10",
-      "through": "2026-11-10"
+      "pct": -9.01,
+      "last": 147.37,
+      "lastDate": "2026-11-11",
+      "through": "2026-11-11"
     },
     "brent": {
       "label": "Brent crude (context)",
       "unit": "USD/bbl",
-      "pct": -7.9,
-      "last": 91.49,
-      "lastDate": "2026-11-10",
-      "through": "2026-11-10"
+      "pct": -7.7,
+      "last": 92.62,
+      "lastDate": "2026-11-11",
+      "through": "2026-11-11"
     },
     "gasoline": {
       "label": "US RBOB gasoline futures (fallback only)",
       "unit": "USD/gal",
-      "pct": -6.77,
-      "last": 2.6088,
-      "lastDate": "2026-11-10",
-      "through": "2026-11-10"
+      "pct": -7.45,
+      "last": 2.5726,
+      "lastDate": "2026-11-11",
+      "through": "2026-11-11"
     },
     "diesel": {
       "label": "US ULSD futures (fallback only)",
       "unit": "USD/gal",
-      "pct": -4.47,
-      "last": 4.1309,
-      "lastDate": "2026-11-10",
-      "through": "2026-11-10"
+      "pct": -4.23,
+      "last": 4.2052,
+      "lastDate": "2026-11-11",
+      "through": "2026-11-11"
     },
     "fx": {
       "label": "USD/PHP",
       "unit": "PHP",
-      "pct": -0.43,
-      "last": 62.904,
-      "lastDate": "2026-11-10",
-      "through": "2026-11-10"
+      "pct": -0.32,
+      "last": 63.251,
+      "lastDate": "2026-11-11",
+      "through": "2026-11-11"
     }
   }
 }
