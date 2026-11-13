@@ -1,8 +1,8 @@
 {
   "sample": false,
   "model": 2,
-  "generatedAt": "2026-11-12T15:58:44.704Z",
-  "asOf": "2026-11-12",
+  "generatedAt": "2026-11-13T02:37:47.938Z",
+  "asOf": "2026-11-13",
   "target": "2026-11-17",
   "window": {
     "current": [
@@ -14,49 +14,49 @@
       "2026-11-06"
     ]
   },
-  "confidence": "low",
+  "confidence": "medium",
   "rollWarning": false,
   "rollAdjusted": false,
   "singaporeData": true,
   "basis": "singapore",
-  "singaporeThrough": "2026-11-11",
+  "singaporeThrough": "2026-11-12",
   "fuels": {
     "gasoline": {
-      "raw": -4.43,
-      "value": -4.5,
-      "low": -6.35,
-      "high": -2.66,
+      "raw": -3.49,
+      "value": -3.55,
+      "low": -5.19,
+      "high": -1.9,
       "direction": "decrease",
       "withinError": false,
       "source": "singapore",
       "proxy": "MOPS92",
-      "daysOfData": 2,
+      "daysOfData": 3,
       "calibrationWeeks": 12,
       "scale": 1.017
     },
     "diesel": {
-      "raw": -5.88,
-      "value": -5.87,
-      "low": -7.44,
-      "high": -4.31,
+      "raw": -5.13,
+      "value": -5.13,
+      "low": -6.32,
+      "high": -3.93,
       "direction": "decrease",
       "withinError": false,
       "source": "singapore",
       "proxy": "MOPSD",
-      "daysOfData": 2,
+      "daysOfData": 3,
       "calibrationWeeks": 12,
       "scale": 0.999
     },
     "kerosene": {
-      "raw": -6.48,
-      "value": -6.4,
-      "low": -7.79,
-      "high": -5.02,
+      "raw": -5.65,
+      "value": -5.58,
+      "low": -6.55,
+      "high": -4.61,
       "direction": "decrease",
       "withinError": false,
       "source": "singapore",
       "proxy": "MOPSK",
-      "daysOfData": 2,
+      "daysOfData": 3,
       "calibrationWeeks": 12,
       "scale": 0.987
     }
@@ -740,7 +740,7 @@
   "actualsProblems": [],
   "newsNote": "",
   "benchmark": {
-    "checkedAt": "2026-11-12T15:58:44.704Z",
+    "checkedAt": "2026-11-13T02:37:47.938Z",
     "checks": [
       {
         "date": "2026-11-10",
@@ -975,7 +975,7 @@
     ]
   },
   "publicationTiming": {
-    "observations": 1,
+    "observations": 2,
     "schedule": "Retained until several weeks of publication observations are available."
   },
   "news": null,
@@ -983,50 +983,50 @@
     "mogas": {
       "label": "Singapore gasoline RON 92 (gasoline)",
       "unit": "USD/bbl",
-      "pct": -8.91,
-      "last": 102.07,
-      "lastDate": "2026-11-11",
-      "through": "2026-11-11"
+      "pct": -7.73,
+      "last": 105.49,
+      "lastDate": "2026-11-12",
+      "through": "2026-11-12"
     },
     "gasoil": {
       "label": "Singapore gasoil 0.001%S (diesel)",
       "unit": "USD/bbl",
-      "pct": -8.11,
-      "last": 150.94,
-      "lastDate": "2026-11-11",
-      "through": "2026-11-11"
+      "pct": -7.49,
+      "last": 153.15,
+      "lastDate": "2026-11-12",
+      "through": "2026-11-12"
     },
     "jet": {
       "label": "Singapore kerosene (kerosene)",
       "unit": "USD/bbl",
-      "pct": -9.01,
-      "last": 147.37,
-      "lastDate": "2026-11-11",
-      "through": "2026-11-11"
+      "pct": -8.33,
+      "last": 149.96,
+      "lastDate": "2026-11-12",
+      "through": "2026-11-12"
     },
     "brent": {
       "label": "Brent crude (context)",
       "unit": "USD/bbl",
-      "pct": -7.65,
-      "last": 92.76,
-      "lastDate": "2026-11-11",
-      "through": "2026-11-11"
+      "pct": -6.77,
+      "last": 95.82,
+      "lastDate": "2026-11-12",
+      "through": "2026-11-12"
     },
     "gasoline": {
       "label": "US RBOB gasoline futures (fallback only)",
       "unit": "USD/gal",
-      "pct": -7.04,
-      "last": 2.6075,
-      "lastDate": "2026-11-11",
-      "through": "2026-11-11"
+      "pct": -6.61,
+      "last": 2.6708,
+      "lastDate": "2026-11-12",
+      "through": "2026-11-12"
     },
     "diesel": {
       "label": "US ULSD futures (fallback only)",
       "unit": "USD/gal",
-      "pct": -4.18,
-      "last": 4.2113,
-      "lastDate": "2026-11-11",
-      "through": "2026-11-11"
+      "pct": -3.6,
+      "last": 4.2865,
+      "lastDate": "2026-11-12",
+      "through": "2026-11-12"
     },
     "fx": {
       "label": "USD/PHP",

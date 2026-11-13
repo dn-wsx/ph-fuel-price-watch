@@ -2,7 +2,7 @@
   "2026-11-03": {
     "backtest": true,
     "model": 2,
-    "generatedAt": "2026-11-12T15:58:44.704Z",
+    "generatedAt": "2026-11-13T02:37:47.938Z",
     "gasoline": {
       "raw": 1.78,
       "value": 1.78
@@ -19,7 +19,7 @@
   "2026-10-27": {
     "backtest": true,
     "model": 2,
-    "generatedAt": "2026-11-12T15:58:44.704Z",
+    "generatedAt": "2026-11-13T02:37:47.938Z",
     "gasoline": {
       "raw": -0.68,
       "value": -0.68
@@ -36,7 +36,7 @@
   "2026-10-20": {
     "backtest": true,
     "model": 2,
-    "generatedAt": "2026-11-12T15:58:44.704Z",
+    "generatedAt": "2026-11-13T02:37:47.938Z",
     "gasoline": {
       "raw": -4.23,
       "value": -4.23
@@ -53,7 +53,7 @@
   "2026-09-29": {
     "backtest": true,
     "model": 2,
-    "generatedAt": "2026-11-12T15:58:44.704Z",
+    "generatedAt": "2026-11-13T02:37:47.938Z",
     "gasoline": {
       "raw": -1.56,
       "value": -1.56
@@ -70,7 +70,7 @@
   "2026-09-22": {
     "backtest": true,
     "model": 2,
-    "generatedAt": "2026-11-12T15:58:44.704Z",
+    "generatedAt": "2026-11-13T02:37:47.938Z",
     "gasoline": {
       "raw": 4.4,
       "value": 4.4
@@ -87,7 +87,7 @@
   "2026-09-01": {
     "backtest": true,
     "model": 2,
-    "generatedAt": "2026-11-12T15:58:44.704Z",
+    "generatedAt": "2026-11-13T02:37:47.938Z",
     "gasoline": {
       "raw": -0.72,
       "value": -0.72
@@ -104,7 +104,7 @@
   "2026-08-25": {
     "backtest": true,
     "model": 2,
-    "generatedAt": "2026-11-12T15:58:44.704Z",
+    "generatedAt": "2026-11-13T02:37:47.938Z",
     "gasoline": {
       "raw": 1.39,
       "value": 1.39
@@ -119,25 +119,25 @@
     }
   },
   "2026-11-17": {
-    "generatedAt": "2026-11-12T15:58:44.704Z",
+    "generatedAt": "2026-11-13T02:37:47.938Z",
     "model": 2,
     "gasoline": {
-      "raw": -4.43,
-      "value": -4.5,
-      "low": -6.35,
-      "high": -2.66
+      "raw": -3.49,
+      "value": -3.55,
+      "low": -5.19,
+      "high": -1.9
     },
     "diesel": {
-      "raw": -5.88,
-      "value": -5.87,
-      "low": -7.44,
-      "high": -4.31
+      "raw": -5.13,
+      "value": -5.13,
+      "low": -6.32,
+      "high": -3.93
     },
     "kerosene": {
-      "raw": -6.48,
-      "value": -6.4,
-      "low": -7.79,
-      "high": -5.02
+      "raw": -5.65,
+      "value": -5.58,
+      "low": -6.55,
+      "high": -4.61
     },
     "snapshots": {
       "1": {
@@ -151,6 +151,12 @@
         "gasoline": -4.5,
         "diesel": -5.87,
         "kerosene": -6.4
+      },
+      "3": {
+        "at": "2026-11-13T02:37:47.938Z",
+        "gasoline": -3.55,
+        "diesel": -5.13,
+        "kerosene": -5.58
       }
     },
     "records": [
@@ -517,14 +523,75 @@
           "MOPSK": "2026-11-11",
           "MOPSD": "2026-11-11"
         },
-        "stage": "2"
+        "stage": "2",
+        "publishedObservedAt": "2026-11-13T02:37:51.015Z"
+      },
+      {
+        "target": "2026-11-17",
+        "generatedAt": "2026-11-13T02:37:47.938Z",
+        "model": 2,
+        "basis": "singapore",
+        "fuels": {
+          "gasoline": {
+            "raw": -3.49,
+            "value": -3.55,
+            "low": -5.19,
+            "high": -1.9,
+            "direction": "decrease",
+            "withinError": false,
+            "source": "singapore",
+            "proxy": "MOPS92",
+            "daysOfData": 3,
+            "calibrationWeeks": 12,
+            "scale": 1.017
+          },
+          "diesel": {
+            "raw": -5.13,
+            "value": -5.13,
+            "low": -6.32,
+            "high": -3.93,
+            "direction": "decrease",
+            "withinError": false,
+            "source": "singapore",
+            "proxy": "MOPSD",
+            "daysOfData": 3,
+            "calibrationWeeks": 12,
+            "scale": 0.999
+          },
+          "kerosene": {
+            "raw": -5.65,
+            "value": -5.58,
+            "low": -6.55,
+            "high": -4.61,
+            "direction": "decrease",
+            "withinError": false,
+            "source": "singapore",
+            "proxy": "MOPSK",
+            "daysOfData": 3,
+            "calibrationWeeks": 12,
+            "scale": 0.987
+          }
+        },
+        "sourceDates": {
+          "RB=F": "2026-11-12",
+          "HO=F": "2026-11-12",
+          "BZ=F": "2026-11-12",
+          "USDPHP": "2026-11-12",
+          "RBZ26": "2026-11-12",
+          "HOZ26": "2026-11-12",
+          "BZF27": "2026-11-12",
+          "MOPS92": "2026-11-12",
+          "MOPSK": "2026-11-12",
+          "MOPSD": "2026-11-12"
+        },
+        "stage": "3"
       }
     ]
   },
   "2026-09-08": {
     "backtest": true,
     "model": 2,
-    "generatedAt": "2026-11-12T15:58:44.704Z",
+    "generatedAt": "2026-11-13T02:37:47.938Z",
     "gasoline": {
       "raw": 4.62,
       "value": 4.62
@@ -541,7 +608,7 @@
   "2026-09-15": {
     "backtest": true,
     "model": 2,
-    "generatedAt": "2026-11-12T15:58:44.704Z",
+    "generatedAt": "2026-11-13T02:37:47.938Z",
     "gasoline": {
       "raw": 5.5,
       "value": 5.5
@@ -558,7 +625,7 @@
   "2026-10-06": {
     "backtest": true,
     "model": 2,
-    "generatedAt": "2026-11-12T15:58:44.704Z",
+    "generatedAt": "2026-11-13T02:37:47.938Z",
     "gasoline": {
       "raw": 1.92,
       "value": 1.92
@@ -575,7 +642,7 @@
   "2026-10-13": {
     "backtest": true,
     "model": 2,
-    "generatedAt": "2026-11-12T15:58:44.704Z",
+    "generatedAt": "2026-11-13T02:37:47.938Z",
     "gasoline": {
       "raw": 1.08,
       "value": 1.08
@@ -592,7 +659,7 @@
   "2026-11-10": {
     "backtest": true,
     "model": 2,
-    "generatedAt": "2026-11-12T15:58:44.704Z",
+    "generatedAt": "2026-11-13T02:37:47.938Z",
     "gasoline": {
       "raw": -11.88,
       "value": -11.88
