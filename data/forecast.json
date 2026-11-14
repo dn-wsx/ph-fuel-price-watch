@@ -1,7 +1,7 @@
 {
   "sample": false,
   "model": 2,
-  "generatedAt": "2026-11-14T02:26:12.612Z",
+  "generatedAt": "2026-11-14T06:22:21.553Z",
   "asOf": "2026-11-14",
   "target": "2026-11-17",
   "window": {
@@ -740,7 +740,7 @@
   "actualsProblems": [],
   "newsNote": "",
   "benchmark": {
-    "checkedAt": "2026-11-14T02:26:12.612Z",
+    "checkedAt": "2026-11-14T06:22:21.553Z",
     "checks": [
       {
         "date": "2026-11-10",
@@ -1007,24 +1007,24 @@
     "brent": {
       "label": "Brent crude (context)",
       "unit": "USD/bbl",
-      "pct": -6.18,
-      "last": 96.08,
+      "pct": -6.23,
+      "last": 95.84,
       "lastDate": "2026-11-13",
       "through": "2026-11-13"
     },
     "gasoline": {
       "label": "US RBOB gasoline futures (fallback only)",
       "unit": "USD/gal",
-      "pct": -6.85,
-      "last": 2.5998,
+      "pct": -6.7,
+      "last": 2.6214,
       "lastDate": "2026-11-13",
       "through": "2026-11-13"
     },
     "diesel": {
       "label": "US ULSD futures (fallback only)",
       "unit": "USD/gal",
-      "pct": -3.16,
-      "last": 4.3067,
+      "pct": -3.38,
+      "last": 4.2585,
       "lastDate": "2026-11-13",
       "through": "2026-11-13"
     },
