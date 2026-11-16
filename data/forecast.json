@@ -1,8 +1,8 @@
 {
   "sample": false,
   "model": 2,
-  "generatedAt": "2026-11-15T04:24:36.938Z",
-  "asOf": "2026-11-15",
+  "generatedAt": "2026-11-16T02:01:59.403Z",
+  "asOf": "2026-11-16",
   "target": "2026-11-17",
   "window": {
     "current": [
@@ -741,7 +741,7 @@
   "actualsProblems": [],
   "newsNote": "",
   "benchmark": {
-    "checkedAt": "2026-11-15T04:24:36.938Z",
+    "checkedAt": "2026-11-16T02:01:59.403Z",
     "checks": [
       {
         "date": "2026-11-10",
@@ -980,12 +980,12 @@
     "schedule": "Retained until several weeks of publication observations are available."
   },
   "news": {
-    "updatedAt": "2026-11-15T04:24:36.938Z",
+    "updatedAt": "2026-11-16T02:01:59.403Z",
     "items": [
       {
         "title": "OIL PRICE WATCH: Fuel prices set for another major rollback; diesel may drop by up to P5/L",
         "source": "ABS-CBN",
-        "published": "2026-11-15T00:58:49.000Z",
+        "published": "2026-11-15T08:01:15.000Z",
         "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOVXJoM3JVVjFvVFlkS3NkM3RmR1JsYm9SYm9OSDNfUnlxZ29ORU5HaEdpeXFmUDhKODB2QjYxQmdaSUF0TW9HMlY5ODI0bE9kdkp2SVFmcVFibEp1ZG9BaF9reURxMEdRdjVQMHh3d3VuUlh6czdyc3Q1WlRneEZYOHMxZmJnYWx5NHI3dVowQ2k1ZHlySl9rVUVtUmtuSmMzXy1ZTjhucHBqR3Y1M0kwZjh3?oc=5"
       },
       {
