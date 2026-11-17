@@ -1,7 +1,7 @@
 {
   "sample": false,
   "model": 2,
-  "generatedAt": "2026-11-17T04:29:13.967Z",
+  "generatedAt": "2026-11-17T07:54:59.962Z",
   "asOf": "2026-11-17",
   "target": "2026-11-24",
   "window": {
@@ -736,12 +736,14 @@
       ]
     }
   },
-  "errors": [],
+  "errors": [
+    "USDPHP: HTTP 522"
+  ],
   "actualsNote": "",
   "actualsProblems": [],
   "newsNote": "",
   "benchmark": {
-    "checkedAt": "2026-11-17T04:29:13.967Z",
+    "checkedAt": "2026-11-17T07:54:59.962Z",
     "checks": [
       {
         "date": "2026-11-10",
