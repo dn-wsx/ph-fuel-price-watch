@@ -1,63 +1,62 @@
 {
   "sample": false,
   "model": 2,
-  "generatedAt": "2026-11-16T02:01:59.403Z",
-  "asOf": "2026-11-16",
-  "target": "2026-11-17",
+  "generatedAt": "2026-11-17T03:10:27.137Z",
+  "asOf": "2026-11-17",
+  "target": "2026-11-24",
   "window": {
     "current": [
-      "2026-11-09",
-      "2026-11-13"
+      "2026-11-16",
+      "2026-11-20"
     ],
     "previous": [
-      "2026-11-02",
-      "2026-11-06"
+      "2026-11-09",
+      "2026-11-13"
     ]
   },
-  "confidence": "medium",
+  "confidence": "low",
   "rollWarning": false,
   "rollAdjusted": false,
   "singaporeData": true,
   "basis": "singapore",
-  "singaporeThrough": "2026-11-13",
+  "singaporeThrough": "2026-11-16",
   "fuels": {
     "gasoline": {
-      "raw": -3.59,
-      "value": -3.65,
-      "low": -5.23,
-      "high": -2.06,
+      "raw": -0.21,
+      "value": -0.21,
+      "low": -3.01,
+      "high": 2.59,
       "direction": "decrease",
-      "withinError": false,
+      "withinError": true,
       "source": "singapore",
       "proxy": "MOPS92",
-      "daysOfData": 4,
+      "daysOfData": 1,
       "calibrationWeeks": 12,
       "scale": 1.017
     },
     "diesel": {
-      "raw": -4.99,
-      "value": -4.99,
-      "low": -6.07,
-      "high": -3.91,
-      "direction": "decrease",
-      "withinError": false,
+      "raw": 1.67,
+      "value": 1.67,
+      "low": -1.26,
+      "high": 4.59,
+      "direction": "increase",
+      "withinError": true,
       "source": "singapore",
       "proxy": "MOPSD",
-      "daysOfData": 4,
+      "daysOfData": 1,
       "calibrationWeeks": 12,
-      "scale": 0.999,
-      "news": -5
+      "scale": 0.999
     },
     "kerosene": {
-      "raw": -5.5,
-      "value": -5.43,
-      "low": -6.27,
-      "high": -4.59,
-      "direction": "decrease",
-      "withinError": false,
+      "raw": 1.95,
+      "value": 1.93,
+      "low": -0.83,
+      "high": 4.68,
+      "direction": "increase",
+      "withinError": true,
       "source": "singapore",
       "proxy": "MOPSK",
-      "daysOfData": 4,
+      "daysOfData": 1,
       "calibrationWeeks": 12,
       "scale": 0.987
     }
@@ -492,7 +491,8 @@
   "liveTrack": {
     "weeks": 0,
     "pending": [
-      "2026-11-17"
+      "2026-11-17",
+      "2026-11-24"
     ],
     "stages": []
   },
@@ -741,7 +741,7 @@
   "actualsProblems": [],
   "newsNote": "",
   "benchmark": {
-    "checkedAt": "2026-11-16T02:01:59.403Z",
+    "checkedAt": "2026-11-17T03:10:27.137Z",
     "checks": [
       {
         "date": "2026-11-10",
@@ -976,82 +976,66 @@
     ]
   },
   "publicationTiming": {
-    "observations": 3,
+    "observations": 4,
     "schedule": "Retained until several weeks of publication observations are available."
   },
-  "news": {
-    "updatedAt": "2026-11-16T02:01:59.403Z",
-    "items": [
-      {
-        "title": "OIL PRICE WATCH: Fuel prices set for another major rollback; diesel may drop by up to P5/L",
-        "source": "ABS-CBN",
-        "published": "2026-11-15T08:01:15.000Z",
-        "link": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOVXJoM3JVVjFvVFlkS3NkM3RmR1JsYm9SYm9OSDNfUnlxZ29ORU5HaEdpeXFmUDhKODB2QjYxQmdaSUF0TW9HMlY5ODI0bE9kdkp2SVFmcVFibEp1ZG9BaF9reURxMEdRdjVQMHh3d3VuUlh6czdyc3Q1WlRneEZYOHMxZmJnYWx5NHI3dVowQ2k1ZHlySl9rVUVtUmtuSmMzXy1ZTjhucHBqR3Y1M0kwZjh3?oc=5"
-      },
-      {
-        "title": "Another big fuel price rollback looms as diesel may drop ₱5, gasoline ₱4/liter",
-        "source": "Manila Bulletin",
-        "published": "2026-11-13T06:03:53.000Z",
-        "link": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQdnhsM1dldnF6YmdyeUI0dE53d013ekhkNzVRUUtHV0lQcEZfbktiS2FXZF8xN1JiOXVMblp3WGJGcnljNFRDalQwbTYwSGkwSGItRXlWdm81UFpKUHYtUUxIT1dtNGN4MGhHajdTYWtaU0xiQTN3MjVVWkxHZUM3c3lVSUpqdEFlR0I0MFo1YmN2b092SzliNDhmVC1GMDdhV3puMFdR?oc=5"
-      }
-    ]
-  },
+  "news": null,
   "market": {
     "mogas": {
       "label": "Singapore gasoline RON 92 (gasoline)",
       "unit": "USD/bbl",
-      "pct": -7.37,
-      "last": 104.49,
-      "lastDate": "2026-11-13",
-      "through": "2026-11-13"
+      "pct": -1.27,
+      "last": 101.97,
+      "lastDate": "2026-11-16",
+      "through": "2026-11-16"
     },
     "gasoil": {
       "label": "Singapore gasoil 0.001%S (diesel)",
       "unit": "USD/bbl",
-      "pct": -7.02,
-      "last": 154.16,
-      "lastDate": "2026-11-13",
-      "through": "2026-11-13"
+      "pct": 1.62,
+      "last": 154.34,
+      "lastDate": "2026-11-16",
+      "through": "2026-11-16"
     },
     "jet": {
       "label": "Singapore kerosene (kerosene)",
       "unit": "USD/bbl",
-      "pct": -7.81,
-      "last": 151.16,
-      "lastDate": "2026-11-13",
-      "through": "2026-11-13"
+      "pct": 2.09,
+      "last": 151.73,
+      "lastDate": "2026-11-16",
+      "through": "2026-11-16"
     },
     "brent": {
       "label": "Brent crude (context)",
       "unit": "USD/bbl",
-      "pct": -6.23,
-      "last": 95.84,
-      "lastDate": "2026-11-13",
-      "through": "2026-11-13"
+      "pct": -1.34,
+      "last": 92.44,
+      "lastDate": "2026-11-16",
+      "through": "2026-11-16"
     },
     "gasoline": {
       "label": "US RBOB gasoline futures (fallback only)",
       "unit": "USD/gal",
-      "pct": -6.7,
-      "last": 2.6214,
-      "lastDate": "2026-11-13",
-      "through": "2026-11-13"
+      "pct": -3.57,
+      "last": 2.5379,
+      "lastDate": "2026-11-16",
+      "through": "2026-11-16"
     },
     "diesel": {
       "label": "US ULSD futures (fallback only)",
       "unit": "USD/gal",
-      "pct": -3.38,
-      "last": 4.2585,
-      "lastDate": "2026-11-13",
-      "through": "2026-11-13"
+      "pct": -3.28,
+      "last": 4.0818,
+      "lastDate": "2026-11-16",
+      "through": "2026-11-16"
     },
     "fx": {
       "label": "USD/PHP",
       "unit": "PHP",
-      "pct": 0.1,
-      "last": 63.813,
-      "lastDate": "2026-11-13",
-      "through": "2026-11-13"
+      "pct": 0.92,
+      "last": 63.954,
+      "lastDate": "2026-11-16",
+      "through": "2026-11-16"
     }
   }
 }
