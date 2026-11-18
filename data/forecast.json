@@ -1,7 +1,7 @@
 {
   "sample": false,
   "model": 2,
-  "generatedAt": "2026-11-18T02:00:09.999Z",
+  "generatedAt": "2026-11-18T03:10:52.873Z",
   "asOf": "2026-11-18",
   "target": "2026-11-24",
   "window": {
@@ -23,45 +23,76 @@
   "fuels": {
     "gasoline": {
       "raw": -2.29,
-      "value": -2.33,
-      "low": -4.59,
-      "high": -0.08,
+      "value": -2.32,
+      "low": -4.62,
+      "high": -0.02,
       "direction": "decrease",
       "withinError": false,
       "source": "singapore",
       "proxy": "MOPS92",
       "daysOfData": 2,
-      "calibrationWeeks": 12,
-      "scale": 1.017
+      "calibrationWeeks": 13,
+      "scale": 1.012
     },
     "diesel": {
       "raw": -2.45,
-      "value": -2.45,
-      "low": -4.74,
-      "high": -0.15,
+      "value": -2.43,
+      "low": -4.72,
+      "high": -0.13,
       "direction": "decrease",
       "withinError": false,
       "source": "singapore",
       "proxy": "MOPSD",
       "daysOfData": 2,
-      "calibrationWeeks": 12,
-      "scale": 0.999
+      "calibrationWeeks": 13,
+      "scale": 0.99
     },
     "kerosene": {
       "raw": -1.82,
-      "value": -1.8,
-      "low": -3.91,
-      "high": 0.31,
+      "value": -1.82,
+      "low": -3.92,
+      "high": 0.28,
       "direction": "decrease",
       "withinError": true,
       "source": "singapore",
       "proxy": "MOPSK",
       "daysOfData": 2,
-      "calibrationWeeks": 12,
-      "scale": 0.987
+      "calibrationWeeks": 13,
+      "scale": 0.996
     }
   },
   "history": [
+    {
+      "date": "2026-11-17",
+      "fuels": {
+        "gasoline": {
+          "actual": -1.5,
+          "forecast": -3.65,
+          "kind": "manual",
+          "source": "Manual override",
+          "provisional": false
+        },
+        "diesel": {
+          "actual": -3.8,
+          "forecast": -4.99,
+          "kind": "manual",
+          "source": "Manual override",
+          "provisional": false
+        },
+        "kerosene": {
+          "actual": -5.8,
+          "forecast": -5.43,
+          "kind": "manual",
+          "source": "Manual override",
+          "provisional": false
+        }
+      },
+      "backtest": false,
+      "provisional": false,
+      "source": "Manual override",
+      "sourceUrl": null,
+      "items": []
+    },
     {
       "date": "2026-11-10",
       "fuels": {
@@ -473,35 +504,180 @@
   ],
   "accuracy": {
     "gasoline": {
-      "weeks": 12,
-      "mae": 0.86,
+      "weeks": 13,
+      "mae": 0.96,
       "worst": 4.92
     },
     "diesel": {
-      "weeks": 12,
-      "mae": 0.65,
+      "weeks": 13,
+      "mae": 0.69,
       "worst": 2.26
     },
     "kerosene": {
-      "weeks": 12,
-      "mae": 0.61,
+      "weeks": 13,
+      "mae": 0.59,
       "worst": 1.65
     }
   },
   "liveTrack": {
-    "weeks": 0,
+    "weeks": 1,
     "pending": [
-      "2026-11-17",
       "2026-11-24"
     ],
-    "stages": []
+    "stages": [
+      {
+        "key": "1",
+        "metrics": {
+          "gasoline": {
+            "n": 1,
+            "mae": 3.54,
+            "bias": -3.54,
+            "directionCorrect": 1,
+            "covered": 0,
+            "intervalN": 1
+          },
+          "diesel": {
+            "n": 1,
+            "mae": 2.97,
+            "bias": -2.97,
+            "directionCorrect": 1,
+            "covered": 0,
+            "intervalN": 1
+          },
+          "kerosene": {
+            "n": 1,
+            "mae": 1.4,
+            "bias": -1.4,
+            "directionCorrect": 1,
+            "covered": 1,
+            "intervalN": 1
+          }
+        }
+      },
+      {
+        "key": "2",
+        "metrics": {
+          "gasoline": {
+            "n": 1,
+            "mae": 3,
+            "bias": -3,
+            "directionCorrect": 1,
+            "covered": 0,
+            "intervalN": 1
+          },
+          "diesel": {
+            "n": 1,
+            "mae": 2.07,
+            "bias": -2.07,
+            "directionCorrect": 1,
+            "covered": 0,
+            "intervalN": 1
+          },
+          "kerosene": {
+            "n": 1,
+            "mae": 0.6,
+            "bias": -0.6,
+            "directionCorrect": 1,
+            "covered": 1,
+            "intervalN": 1
+          }
+        }
+      },
+      {
+        "key": "3",
+        "metrics": {
+          "gasoline": {
+            "n": 1,
+            "mae": 2.05,
+            "bias": -2.05,
+            "directionCorrect": 1,
+            "covered": 0,
+            "intervalN": 1
+          },
+          "diesel": {
+            "n": 1,
+            "mae": 1.33,
+            "bias": -1.33,
+            "directionCorrect": 1,
+            "covered": 0,
+            "intervalN": 1
+          },
+          "kerosene": {
+            "n": 1,
+            "mae": 0.22,
+            "bias": 0.22,
+            "directionCorrect": 1,
+            "covered": 1,
+            "intervalN": 1
+          }
+        }
+      },
+      {
+        "key": "4",
+        "metrics": {
+          "gasoline": {
+            "n": 1,
+            "mae": 2.15,
+            "bias": -2.15,
+            "directionCorrect": 1,
+            "covered": 0,
+            "intervalN": 1
+          },
+          "diesel": {
+            "n": 1,
+            "mae": 1.19,
+            "bias": -1.19,
+            "directionCorrect": 1,
+            "covered": 0,
+            "intervalN": 1
+          },
+          "kerosene": {
+            "n": 1,
+            "mae": 0.37,
+            "bias": 0.37,
+            "directionCorrect": 1,
+            "covered": 1,
+            "intervalN": 1
+          }
+        }
+      },
+      {
+        "key": "final",
+        "metrics": {
+          "gasoline": {
+            "n": 1,
+            "mae": 2.15,
+            "bias": -2.15,
+            "directionCorrect": 1,
+            "covered": 0,
+            "intervalN": 1
+          },
+          "diesel": {
+            "n": 1,
+            "mae": 1.19,
+            "bias": -1.19,
+            "directionCorrect": 1,
+            "covered": 0,
+            "intervalN": 1
+          },
+          "kerosene": {
+            "n": 1,
+            "mae": 0.37,
+            "bias": 0.37,
+            "directionCorrect": 1,
+            "covered": 1,
+            "intervalN": 1
+          }
+        }
+      }
+    ]
   },
   "publicationNote": "",
   "walkForward": {
     "gasoline": {
-      "n": 12,
-      "mae": 0.84,
-      "baselineMae": 0.86,
+      "n": 13,
+      "mae": 0.94,
+      "baselineMae": 0.96,
       "predictions": [
         {
           "date": "2026-08-25",
@@ -574,13 +750,19 @@
           "value": -12.1,
           "actual": -16.8,
           "raw": -11.88
+        },
+        {
+          "date": "2026-11-17",
+          "value": -3.65,
+          "actual": -1.5,
+          "raw": -3.59
         }
       ]
     },
     "diesel": {
-      "n": 12,
-      "mae": 0.65,
-      "baselineMae": 0.65,
+      "n": 13,
+      "mae": 0.69,
+      "baselineMae": 0.69,
       "predictions": [
         {
           "date": "2026-08-25",
@@ -653,13 +835,19 @@
           "value": -5.11,
           "actual": -4.1,
           "raw": -5.07
+        },
+        {
+          "date": "2026-11-17",
+          "value": -4.99,
+          "actual": -3.8,
+          "raw": -4.99
         }
       ]
     },
     "kerosene": {
-      "n": 12,
-      "mae": 0.62,
-      "baselineMae": 0.62,
+      "n": 13,
+      "mae": 0.6,
+      "baselineMae": 0.59,
       "predictions": [
         {
           "date": "2026-08-25",
@@ -732,6 +920,12 @@
           "value": -5.34,
           "actual": -3.7,
           "raw": -5.35
+        },
+        {
+          "date": "2026-11-17",
+          "value": -5.43,
+          "actual": -5.8,
+          "raw": -5.5
         }
       ]
     }
@@ -741,7 +935,7 @@
   "actualsProblems": [],
   "newsNote": "",
   "benchmark": {
-    "checkedAt": "2026-11-18T02:00:09.999Z",
+    "checkedAt": "2026-11-18T03:10:52.873Z",
     "checks": [
       {
         "date": "2026-11-10",
@@ -1016,16 +1210,16 @@
     "gasoline": {
       "label": "US RBOB gasoline futures (fallback only)",
       "unit": "USD/gal",
-      "pct": -4.23,
-      "last": 2.5032,
+      "pct": -3.63,
+      "last": 2.5349,
       "lastDate": "2026-11-17",
       "through": "2026-11-17"
     },
     "diesel": {
       "label": "US ULSD futures (fallback only)",
       "unit": "USD/gal",
-      "pct": -4.65,
-      "last": 3.9667,
+      "pct": -3.69,
+      "last": 4.0475,
       "lastDate": "2026-11-17",
       "through": "2026-11-17"
     },

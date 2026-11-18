@@ -322,5 +322,28 @@
       }
     },
     "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2010%20November.pdf?prefix=dev%2Fmedia"
+  },
+  "2026-11-17": {
+    "fuelSources": {
+      "gasoline": {
+        "kind": "manual",
+        "source": "Manual override",
+        "provisional": false
+      },
+      "diesel": {
+        "kind": "manual",
+        "source": "Manual override",
+        "provisional": false
+      },
+      "kerosene": {
+        "kind": "manual",
+        "source": "Manual override",
+        "provisional": false
+      }
+    },
+    "gasoline": -1.5,
+    "diesel": -3.8,
+    "kerosene": -5.8,
+    "source": "Manual override"
   }
 }
