@@ -40,5 +40,19 @@
     "gasoline": null,
     "diesel": null,
     "kerosene": -5.85
+  },
+  "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Price%20Adjustments%20Liquid%20Fuels%2017-23%20Nov%202026.pdf?prefix=dev%2Fmedia": {
+    "date": "2026-11-17",
+    "rows": 16,
+    "gasoline": -1.5,
+    "diesel": -3.8,
+    "kerosene": -5.8
+  },
+  "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Price%20Adjustments%20Liquid%20Fuel%2010-16%20Nov%202026.pdf?prefix=dev%2Fmedia": {
+    "date": "2026-11-10",
+    "rows": 18,
+    "gasoline": -16.8,
+    "diesel": -4.1,
+    "kerosene": -3.7
   }
 }
