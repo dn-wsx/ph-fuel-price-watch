@@ -1,7 +1,7 @@
 {
   "sample": false,
   "model": 2,
-  "generatedAt": "2026-11-21T07:06:30.611Z",
+  "generatedAt": "2026-11-21T15:22:27.568Z",
   "asOf": "2026-11-21",
   "target": "2026-11-24",
   "window": {
@@ -45,7 +45,8 @@
       "proxy": "MOPSD",
       "daysOfData": 5,
       "calibrationWeeks": 13,
-      "scale": 0.99
+      "scale": 0.99,
+      "news": -2.5
     },
     "kerosene": {
       "raw": -2.07,
@@ -935,7 +936,7 @@
   "actualsProblems": [],
   "newsNote": "",
   "benchmark": {
-    "checkedAt": "2026-11-21T07:06:30.611Z",
+    "checkedAt": "2026-11-21T15:22:27.568Z",
     "checks": [
       {
         "date": "2026-11-10",
@@ -1173,7 +1174,23 @@
     "observations": 8,
     "schedule": "Retained until several weeks of publication observations are available."
   },
-  "news": null,
+  "news": {
+    "updatedAt": "2026-11-21T15:22:27.568Z",
+    "items": [
+      {
+        "title": "Philippine Pump Prices Set for Third Straight Rollback, Diesel Down Up to P2.55 a Liter",
+        "source": "BigGo Finance",
+        "published": "2026-11-20T23:55:00.000Z",
+        "link": "https://news.google.com/rss/articles/CBMidkFVX3lxTE1CMjF3bUdLVVRlT3ZHRHg1WmxwTGozRG5YR1RWRU81dllDYzdnLXJfUkF3a2FCc3B2MlNiV3c3T3p6Zm5sQWs5ZjlaN2J6SXhWbW9LeUxhOWlKSWM0cHZ6NTF0TjhCSnNJVEtqOFczYmFQcVRuTnc?oc=5"
+      },
+      {
+        "title": "FUEL PRICE ROLLBACK EXPECTED AGAIN NEXT WEEK Another round of fuel price cuts is expected next week, with diesel projected to drop by P2.35 to P2.55 per liter and gasoline by P2.00 to P2.15 per liter. | via Brix Lelis",
+        "source": "Facebook",
+        "published": "2026-11-20T00:55:56.000Z",
+        "link": "https://news.google.com/rss/articles/CBMi3AFBVV95cUxNd0Z3UkZJdXZoTEZJaDB5UEZsQWtPSGR6WVZQaC1LMGV2M2FyUkdnczZUc0xuY0Vtck1kdW5aUUNYZnR5c1FFdkVNZ1hIbjVtODVYUkIySlZjNEVoOXZPMkFJQTU3SEN2OC1PbHh0dUdaRG5XOVdYREZWdlBhbl9lNjl3RXpRWlRjMmM4QmRpMVRUZGstX2lXZjNrSzBPRlpYQXhKN3BLQk9iUG9kTlQwLWhQVDdoNjZTd2Y0WFdMQzdKcFctdzV0emtHNkxZdTBwTmplSTRXQUlqcjBE?oc=5"
+      }
+    ]
+  },
   "market": {
     "mogas": {
       "label": "Singapore gasoline RON 92 (gasoline)",
