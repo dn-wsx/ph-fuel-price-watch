@@ -1,7 +1,7 @@
 {
   "sample": false,
   "model": 2,
-  "generatedAt": "2026-11-24T09:20:49.482Z",
+  "generatedAt": "2026-11-24T09:43:58.814Z",
   "asOf": "2026-11-24",
   "target": "2026-12-01",
   "window": {
@@ -1013,7 +1013,7 @@
   "actualsProblems": [],
   "newsNote": "",
   "benchmark": {
-    "checkedAt": "2026-11-24T09:20:49.482Z",
+    "checkedAt": "2026-11-24T09:43:58.814Z",
     "checks": [
       {
         "date": "2026-11-10",
@@ -1255,6 +1255,42 @@
   "publicationTiming": {
     "observations": 9,
     "schedule": "Retained until several weeks of publication observations are available."
+  },
+  "newsStatus": {
+    "target": "2026-12-01",
+    "status": "stale",
+    "estimate": {
+      "gasoline": -2.9,
+      "diesel": -2.77
+    },
+    "items": [
+      {
+        "title": "Up to P3/liter diesel, P2.90/liter gasoline rollback seen next week",
+        "source": "Facebook",
+        "published": "2026-11-21T05:22:11.000Z",
+        "link": "https://news.google.com/rss/articles/CBMivAFBVV95cUxNOXhfNWZYNE02dk03bk9sQ1FTVFZPRDBGN0RTTFFwR3NaU3JNeUpVc3hPSi1qaWJUV1phTWd4THU5YS1nS1hBdlJwdldhdzlqdmNMMy1vNUYybUJuMGlNMDVEcFJ2c0ZGeTI3YVFmNktqTlUxSXZjZFlwMjdYVVJQc1k0emRTV08wdVdNelo2LXNqTl9UZ0RIbTdLOU8yNHlYUmdUU3kwdzc1d0tpYjQxRVo1WkJuTHltUFNnLQ?oc=5"
+      },
+      {
+        "title": "Up to P3/liter diesel, P2.90/liter gasoline rollback seen next week",
+        "source": "GMA Network",
+        "published": "2026-11-21T05:09:48.000Z",
+        "link": "https://news.google.com/rss/articles/CBMixgFBVV95cUxQTGM3YVg2T3VUb0taa184TXhTU0VGZ3RLY2pOMkw5MzdxZEFIVEtHZENFZG1nSkdrSkRZU3AzSFdhaFprN2RTZGJmRUlMRGowa3VGY21DdEZjZ2x5U3ZmLTItZlJ4dHBMdjBjTWpvb2MwZWxsSUlrOENJOFRmRWlmSnZuQ2xUZE5QYWh6MV83N1B4V3EtazVJbVR2eWJmVnduSzlibmN5V3BWY01OVjBsRi00RnpQX2NDWVVDYlpBTHZSSGJIblHSAcsBQVVfeXFMTzJHR1MwQkJuZW1Da2NPQVkwVW5uaHozTkpIc0pWN3pOejYxQXFwMjYteFdyUXQzMy1OTEhJY1h6d09KZVBWR3ZHWUpXbnVqcW94TnhyeVB3aXFCRk5ZYlV4SURQTkRZYjlHdWNOSFd3U3gyMGM4RmpWQVFEQWlONTAwN1U5Tm1laTF4RU5DWi1zbzNOby05WHdNVTdhNmdHOGdrNDFiRVJNbnZGRE9BeHhNYnJkTVpNWV9sTTlOVHlGeHRoekpoNWRETnc?oc=5"
+      },
+      {
+        "title": "Philippine Pump Prices Set for Third Straight Rollback, Diesel Down Up to P2.55 a Liter",
+        "source": "BigGo Finance",
+        "published": "2026-11-20T23:55:00.000Z",
+        "link": "https://news.google.com/rss/articles/CBMidkFVX3lxTE1CMjF3bUdLVVRlT3ZHRHg1WmxwTGozRG5YR1RWRU81dllDYzdnLXJfUkF3a2FCc3B2MlNiV3c3T3p6Zm5sQWs5ZjlaN2J6SXhWbW9LeUxhOWlKSWM0cHZ6NTF0TjhCSnNJVEtqOFczYmFQcVRuTnc?oc=5"
+      },
+      {
+        "title": "FUEL PRICE ROLLBACK EXPECTED AGAIN NEXT WEEK Another round of fuel price cuts is expected next week, with diesel projected to drop by P2.35 to P2.55 per liter and gasoline by P2.00 to P2.15 per liter. | via Brix Lelis",
+        "source": "Facebook",
+        "published": "2026-11-20T00:55:56.000Z",
+        "link": "https://news.google.com/rss/articles/CBMi3AFBVV95cUxNd0Z3UkZJdXZoTEZJaDB5UEZsQWtPSGR6WVZQaC1LMGV2M2FyUkdnczZUc0xuY0Vtck1kdW5aUUNYZnR5c1FFdkVNZ1hIbjVtODVYUkIySlZjNEVoOXZPMkFJQTU3SEN2OC1PbHh0dUdaRG5XOVdYREZWdlBhbl9lNjl3RXpRWlRjMmM4QmRpMVRUZGstX2lXZjNrSzBPRlpYQXhKN3BLQk9iUG9kTlQwLWhQVDdoNjZTd2Y0WFdMQzdKcFctdzV0emtHNkxZdTBwTmplSTRXQUlqcjBE?oc=5"
+      }
+    ],
+    "staleTarget": "2026-11-24",
+    "error": null
   },
   "news": null,
   "market": {
