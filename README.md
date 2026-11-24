@@ -19,7 +19,7 @@ Oil companies adjust pump prices every Tuesday. The change follows the average S
 ## Where the numbers come from
 - **Singapore product prices:** [Opinet (KNOC)](https://www.opinet.co.kr/glopopdSelect.do), listing gasoline (RON 92), diesel (0.001%S) and kerosene with a publication delay. This is a public website, not a guaranteed API or licensed MOPS feed.
 - **Exchange rate:** [Frankfurter](https://frankfurter.dev/), using ECB reference rates rather than an oil company's actual exchange costs.
-- **Actual adjustments:** [DOE company filings](https://doe.gov.ph/data-and-prices/liquid-fuels/retail-pump-prices/price-adjustments) and the [Oil Monitor](https://doe.gov.ph/data-and-prices/liquid-fuels/oil-monitor). Exact Monday/Tuesday announcements reported by at least two distinct supported news publishers can supply provisional figures while waiting for DOE confirmation. Forecasts, ranges and conflicting announcements are rejected. This conservative check may find no usable announcement.
+- **Actual adjustments:** [DOE company filings](https://doe.gov.ph/data-and-prices/liquid-fuels/retail-pump-prices/price-adjustments) and the [Oil Monitor](https://doe.gov.ph/data-and-prices/liquid-fuels/oil-monitor). Exact Monday/Tuesday announcements reported by at least two distinct supported news publishers can supply provisional figures while waiting for DOE confirmation. Inquirer RSS articles are read directly for this fallback; GMA, Philstar and Manila Times remain supported headline sources. Forecasts, ranges and conflicting announcements are rejected. This conservative check may find no usable announcement.
 - **News cross-check:** headlines found through [Google News](https://news.google.com/search?q=Philippines%20fuel%20price%20adjustment); forecasts never change the model's number.
 - **Backup:** when Singapore prices are missing, the page says so and uses [US futures via Yahoo Finance](https://finance.yahoo.com/markets/commodities/), with a range calibrated on that source's own history. They can miss Asian market moves.
 - **Source roles:** Opinet is the source of Singapore product prices; DOE is the source of announced Philippine adjustments. Both are kept as reported. An optional comparison of international-price changes is available under "What is driving it", but differences do not trigger failures or change the forecast. A report whose dates cannot be aligned is not compared.
@@ -48,7 +48,7 @@ The four intended update slots are retained while publication-time observations 
 isolated missed run or failed deployment, but cannot wake themselves up during a GitHub scheduler outage. An unreadable or
 invalid public forecast produces a logged warning and allows a full update rather than incorrectly skipping it.
 
-Temporary request failures get up to three total attempts, with short waits between attempts. Time limits prevent a slow source from holding the update indefinitely. After unsuccessful attempts, usable saved data is retained and a warning is shown; the next full update tries again. Publishing with cached data still covers that update slot. No additional monitoring service, server or database is used. Retries cannot recover a scheduled run that GitHub never starts.
+Temporary request failures get up to three total attempts, with short waits between attempts. Time limits prevent a slow source from holding the update indefinitely. Publisher feeds and articles are bounded, and Google News opaque redirect URLs are not accepted as article evidence. After unsuccessful attempts, usable saved data is retained and a warning is shown; the next full update tries again. Publishing with cached data still covers that update slot. No additional monitoring service, server or database is used. Retries cannot recover a scheduled run that GitHub never starts.
 
 ## Limits
 - This is an estimate from public data, not an official figure. Always check announcements from the DOE and your oil company.
@@ -99,7 +99,7 @@ This proves visibility by the observation time, not the original deployment time
 scripts/records.mjs computes per-fuel scores and chronological calibration checks; no future actuals train an earlier forecast.
 
 Actual adjustments
-Each run reads corroborated announcement headlines and two DOE publications. Provenance is stored per fuel:
+Each run reads the Inquirer publisher feed/direct text fallback, corroborated announcement headlines and two DOE publications. Provenance is stored per fuel:
 - Exact, agreeing announcements from at least two supported publisher domains can create provisional actuals after the effective Tuesday arrives.
 - Prior Notice on Price Adjustments (doe.gov.ph, retail pump prices, price adjustments): one row per oil company, posted before
   the Tuesday. A fuel is recorded only when at least 3 companies filed and at least 60% agree. Marked provisional.

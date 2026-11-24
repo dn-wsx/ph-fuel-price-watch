@@ -1,7 +1,7 @@
 import { setTimeout as sleep } from 'node:timers/promises';
 
 // Keep the deadline active through body consumption, not just receipt of headers.
-export async function readUrl(url, { format = 'text', timeoutMs = 25_000, attempts = 3, signal, fetchImpl = fetch, sleepImpl = sleep, ...init } = {}) {
+export async function readUrl(url, { format = 'text', timeoutMs = 25_000, attempts = 3, maxBytes, signal, fetchImpl = fetch, sleepImpl = sleep, ...init } = {}) {
   for (let attempt = 1; attempt <= attempts; attempt++) {
     signal?.throwIfAborted();
     const deadline = AbortSignal.timeout(timeoutMs);
@@ -15,7 +15,12 @@ export async function readUrl(url, { format = 'text', timeoutMs = 25_000, attemp
         error.retryable = [408, 429, 500, 502, 503, 504].includes(response.status);
         throw error;
       }
+      if (format === 'text' && maxBytes && response.headers?.get('content-length')) {
+        const length = Number(response.headers.get('content-length'));
+        if (Number.isFinite(length) && length > maxBytes) throw new Error(`Response exceeded ${maxBytes} bytes: ${url}`);
+      }
       const body = await response[format]();
+      if (typeof body === 'string' && maxBytes && Buffer.byteLength(body, 'utf8') > maxBytes) throw new Error(`Response exceeded ${maxBytes} bytes: ${url}`);
       return { body, headers: response.headers };
     } catch (error) {
       if (signal?.aborted) throw signal.reason;

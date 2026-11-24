@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { CONFIG, addDays, windows, rawChange, calibrate, forecast, confidence, barDate, frontContract, spansRoll, seriesFor, fuelChange, partialSd, basisOf, liveTrack } from './model.mjs';
+import { CONFIG, addDays, windows, rawChange, calibrate, forecast, confidence, barDate, frontContract, spansRoll, seriesFor, fuelChange, partialSd, basisOf, liveTrack, latestEffectiveTuesday } from './model.mjs';
 import { listReports, parseYtd, recordFromDoe, parseNotice, recordFromNotices } from './doe.mjs';
 import { settledBars, intradayClose, latestSettleDate, parseOpinet } from './market.mjs';
 import { parseRss, parseEstimate, estimatesFromNews } from './news.mjs';
@@ -11,6 +11,10 @@ assert.equal(windows('2026-11-10').target, '2026-11-17');
 assert.equal(windows('2026-11-14').target, '2026-11-17'); // Saturday
 assert.equal(windows('2026-11-16').target, '2026-11-17'); // Monday
 assert.equal(windows('2026-11-17').target, '2026-11-24'); // Tuesday itself
+assert.equal(latestEffectiveTuesday('2026-11-22'), '2026-11-17');
+assert.equal(latestEffectiveTuesday('2026-11-23'), '2026-11-17');
+assert.equal(latestEffectiveTuesday('2026-11-24'), '2026-11-24');
+assert.equal(latestEffectiveTuesday('2026-11-29'), '2026-11-24');
 
 // Flat prices -> zero change. +0.10 USD/gal at 58 PHP -> 0.10/3.78541*58*1.12 PHP/L.
 const w = windows('2026-11-14');

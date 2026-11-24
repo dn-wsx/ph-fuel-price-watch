@@ -39,6 +39,116 @@ assert.equal(news.announcementsFromNews([
 ], '2026-05-12')['2026-05-12'].gasoline, -4.7);
 assert.deepEqual(news.announcementsFromNews([item('Gasoline and diesel down P4.70 effective Tuesday'), item('Gasoline and diesel down P4.70 effective Tuesday', 'https://www.philstar.com')], '2026-11-10'), {});
 assert.equal(news.parseRss('<item><title>x</title><pubDate>Mon, 09 Nov 2026 05:00:00 GMT</pubDate><source url="https://www.philstar.com">Philstar</source></item>')[0].sourceUrl, 'https://www.philstar.com');
+assert.deepEqual(news.parseAnnouncementText(
+  'In separate advisories, Petron, Seaoil and Shell said they will roll back prices per liter of gasoline by P3.00, diesel by P2.60, and kerosene by P1.60. The adjustments will take effect at 6 a.m. on Tuesday, November 24, 2026.',
+  '2026-11-24',
+), { gasoline: -3, diesel: -2.6, kerosene: -1.6 });
+assert.deepEqual(news.parseAnnouncementText(
+  'PUMP prices dropped on Tuesday. The prices of diesel are down by P2.60 per liter, gasoline by P3 per liter, and kerosene by P1.60 per liter.',
+  '2026-11-24',
+), { gasoline: -3, diesel: -2.6, kerosene: -1.6 });
+assert.deepEqual(news.parseAnnouncementText(
+  'Motorists will see another round of fuel price rollbacks on Tuesday, November 24, with gasoline prices dropping by P3 per liter, diesel by P2.60, and kerosene by P1.60.',
+  '2026-11-24',
+), { gasoline: -3, diesel: -2.6, kerosene: -1.6 });
+assert.equal(news.parseAnnouncementText(
+  'Motorists may see rollbacks of gasoline by P3 to P4 per liter and diesel by P2.60 effective Tuesday, November 24, 2026.',
+  '2026-11-24',
+), null);
+assert.equal(news.parseAnnouncementText(
+  'The price of gasoline may drop P3 per liter and diesel may drop P2.60 per liter starting Tuesday, November 24, 2026.',
+  '2026-11-24',
+), null);
+assert.equal(news.parseAnnouncementText(
+  'Gasoline will drop P3 per liter and diesel will drop P2.60 per liter effective Tuesday, November 17, 2026.',
+  '2026-11-24',
+), null);
+assert.equal(news.parseAnnouncementText(
+  'Officials estimate that gasoline could be down P3 per liter and diesel could be down P2.60 per liter effective Tuesday.',
+  '2026-11-24',
+), null);
+assert.deepEqual(news.parseAnnouncementText(
+  'In separate advisories, Petron Corp., Seaoil Philippines Corp. and Shell Pilipinas Corp. said they will roll back prices per liter of gasoline by P3.00, diesel by P2.60, and kerosene by P1.60. The adjustments will take effect at 6 a.m. on Tuesday, November 24.',
+  '2026-11-24',
+), { gasoline: -3, diesel: -2.6, kerosene: -1.6 });
+assert.deepEqual(news.parseAnnouncementText(
+  'The Department of Energy announced the following changes on Sunday, November 22: Diesel - down P2.60 per liter; Gasoline - down P3 per liter; Kerosene - down P1.60 per liter. The new price adjustments will take effect Tuesday, November 24.',
+  '2026-11-24',
+), { gasoline: -3, diesel: -2.6, kerosene: -1.6 });
+assert.deepEqual(news.parseAnnouncementText(
+  'PUMP prices dropped on Tuesday for the third straight week. The prices of diesel are down by P2.60 per liter, gasoline by P3 per liter, and kerosene by P1.60 per liter.',
+  '2026-11-24',
+), { gasoline: -3, diesel: -2.6, kerosene: -1.6 });
+assert.deepEqual(news.parseAnnouncementText(
+  'Motorists will see another round of fuel price rollbacks on Tuesday, with gasoline prices dropping by P3 per liter, diesel by P2.60, and kerosene by P1.60.',
+  '2026-11-24',
+), { gasoline: -3, diesel: -2.6, kerosene: -1.6 });
+assert.equal(news.supportedPublisher('https://www.gmanetwork.com/news/money/companies/1010465/story'), 'gmanetwork.com');
+assert.equal(news.supportedPublisher('https://business.inquirer.net/622578/diesel-gasoline-prices-down-anew'), 'inquirer.net');
+assert.equal(news.supportedPublisher('https://www.manilatimes.net/2026/11/24/news/national/fuel/story'), 'manilatimes.net');
+assert.equal(news.supportedPublisher('https://www.philstar.com/headlines/2026/11/24/story'), 'philstar.com');
+assert.equal(news.supportedPublisher('https://news.google.com/rss/articles/opaque'), null);
+assert.equal(news.supportedPublisher('javascript:alert(1)'), null);
+assert.equal(await news.resolveArticleUrl('https://news.google.com/rss/articles/opaque', async () => new Response(''), 'gmanetwork.com'), null);
+assert.equal(await news.resolveArticleUrl('javascript:alert(1)', async () => new Response(''), 'gmanetwork.com'), null);
+assert.equal(await news.resolveArticleUrl(
+  'https://www.gmanetwork.com/news/money/story',
+  async (url, init) => {
+    assert.equal(init.redirect, 'manual');
+    return new Response('', { status: 200, headers: { 'content-type': 'text/html' } });
+  },
+  'gmanetwork.com',
+), 'https://www.gmanetwork.com/news/money/story');
+assert.equal(await news.resolveArticleUrl(
+  'https://www.gmanetwork.com/news/money/story',
+  async () => new Response('', { status: 403 }),
+  'gmanetwork.com',
+), null);
+const gmaFeed = `<rss><channel><item><title>Gasoline pump prices down P3.00 Tuesday</title><link>https://www.gmanetwork.com/news/money/story</link><pubDate>Mon, 23 Nov 2026 04:24:31 GMT</pubDate><description>Fuel update</description></item></channel></rss>`;
+const philstarFeed = `<rss><channel><item><title>Gasoline diesel kerosene rollbacks</title><link>https://www.philstar.com/headlines/story</link><pubDate>Tue, 24 Nov 2026 01:00:00 GMT</pubDate><description>Fuel update</description></item></channel></rss>`;
+const articleFeedResult = news.parsePublisherFeed(gmaFeed, 'gmanetwork.com');
+assert.equal(articleFeedResult[0].sourceUrl, 'https://www.gmanetwork.com/news/money/story');
+assert.equal(articleFeedResult[0].publisher, 'gmanetwork.com');
+const discovered = await news.fetchAnnouncementArticles({
+  today: '2026-11-24',
+  fetchImpl: async (url, init) => {
+    if (url === news.ARTICLE_FEEDS.find((x) => x.publisher === 'inquirer.net').url) return new Response(`<rss><channel><item><title>Fuel prices down anew</title><link>https://business.inquirer.net/622578/diesel-gasoline-prices-down-anew</link><pubDate>Tue, 24 Nov 2026 02:15:00 GMT</pubDate><description>Motorists will enjoy another round of fuel price rollbacks on Tuesday. Gasoline and diesel prices will decrease by P3 and P2.60 per liter, respectively. Kerosene prices will also be reduced by P1.60.</description></item></channel></rss>`);
+    throw new Error(`Unexpected fixture request: ${url}`);
+  },
+});
+assert.equal(discovered.items.length, 1);
+assert.deepEqual(discovered.problems, []);
+const articleItem = (publisher, values, date = '2026-11-24') => ({
+  publisher,
+  sourceUrl: `https://${publisher}/article`,
+  link: `https://${publisher}/article`,
+  title: 'Pump price adjustment',
+  published: `${date}T04:00:00Z`,
+  date,
+  values,
+});
+const articleActuals = news.announcementsFromArticles([
+  articleItem('gmanetwork.com', { gasoline: -3, diesel: -2.6, kerosene: -1.6 }),
+  articleItem('philstar.com', { gasoline: -3, diesel: -2.6, kerosene: -1.6 }),
+], '2026-11-24');
+assert.equal(articleActuals['2026-11-24'].gasoline, -3);
+assert.equal(articleActuals['2026-11-24'].diesel, -2.6);
+assert.equal(articleActuals['2026-11-24'].kerosene, -1.6);
+assert.equal(articleActuals['2026-11-24'].provisional, true);
+assert.equal(articleActuals['2026-11-24'].items.length, 2);
+assert.deepEqual(news.announcementsFromArticles([
+  articleItem('gmanetwork.com', { gasoline: -3 }),
+  articleItem('gmanetwork.com', { gasoline: -3 }),
+], '2026-11-24'), {});
+assert.deepEqual(news.announcementsFromArticles([
+  articleItem('inquirer.net', { gasoline: -3, diesel: -2.6, kerosene: -1.6 }),
+], '2026-11-24'), {});
+const conflictProblems = [];
+assert.equal(news.announcementsFromArticles([
+  articleItem('gmanetwork.com', { gasoline: -3 }),
+  articleItem('philstar.com', { gasoline: -4 }),
+], '2026-11-24', conflictProblems)['2026-11-24'], undefined);
+assert.match(conflictProblems[0], /2026-11-24 gasoline.*conflict/i);
 
 assert.equal(typeof doe.parseBenchmarks, 'function', 'DOE benchmarks must be parsed separately from peso actuals');
 const report = `As of 03 November 2026

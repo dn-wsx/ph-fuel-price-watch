@@ -49,4 +49,15 @@ elements = await render({
 assert.match(elements['#live'].innerHTML, /n=1/);
 assert.match(elements['#live'].innerHTML, /Bias/);
 assert.match(elements['#live'].innerHTML, /Coverage/);
+elements = await render({
+  ...base,
+  latestActuals: { date: '2026-11-17', missing: ['diesel', 'kerosene'], complete: false },
+});
+assert.match(elements['#actualsStatus'].innerHTML, /November 17/);
+assert.match(elements['#actualsStatus'].innerHTML, /Diesel.*Kerosene/);
+elements = await render({
+  ...base,
+  latestActuals: { date: '2026-11-17', missing: [], complete: true },
+});
+assert.doesNotMatch(elements['#actualsStatus'].innerHTML, /still pending/i);
 console.log('Reader presentation tests passed');

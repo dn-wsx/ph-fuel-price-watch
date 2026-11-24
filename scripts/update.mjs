@@ -1,10 +1,10 @@
 // Fetches free market data, computes the forecast, writes JSON into /data.
 import fs from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
-import { CONFIG, FUELS, rootOf, frontContract, windows, manilaToday, addDays, r2, fuelChange, seriesFor, avgChange, calibrate, forecast, confidence, partialSd, basisOf } from './model.mjs';
+import { CONFIG, FUELS, rootOf, frontContract, windows, manilaToday, latestEffectiveTuesday, addDays, r2, fuelChange, seriesFor, avgChange, calibrate, forecast, confidence, partialSd, basisOf } from './model.mjs';
 import { yahoo, usdphp, opinet } from './market.mjs';
 import { recordFromDoe, recordFromNotices, benchmarkChecks } from './doe.mjs';
-import { estimatesFromNews, announcementsFromNews, fetchNews, ANNOUNCEMENTS_URL } from './news.mjs';
+import { estimatesFromNews, announcementsFromNews, fetchNews, ANNOUNCEMENTS_URL, fetchAnnouncementArticles, announcementsFromArticles } from './news.mjs';
 import { mergeActual, sourceFor, confirmed } from './actuals.mjs';
 import { appendRecord, observePublication, publishedTrack, walkForward } from './records.mjs';
 import { readUrl } from './http.mjs';
@@ -90,6 +90,19 @@ export async function runUpdate({ dataDir = new URL('../data/', import.meta.url)
     }
   } catch (e) {
     actualsProblems.push(`News announcements could not be read (${e.message}).`);
+    console.warn(actualsProblems.at(-1));
+  }
+
+  try {
+    const articleDiscovery = await fetchAnnouncementArticles({ today, fetchImpl, signal });
+    actualsProblems.push(...articleDiscovery.problems);
+    const articleAnnouncements = announcementsFromArticles(articleDiscovery.items, today, actualsProblems);
+    for (const [date, entry] of Object.entries(articleAnnouncements)) {
+      const have = actuals[date] ?? {};
+      actuals[date] = mergeActual(have, entry, { kind: 'news', source: entry.source, items: entry.items, provisional: true });
+    }
+  } catch (e) {
+    actualsProblems.push(`News article announcements could not be read (${e.message}).`);
     console.warn(actualsProblems.at(-1));
   }
 
@@ -184,6 +197,14 @@ export async function runUpdate({ dataDir = new URL('../data/', import.meta.url)
     sourceUrl: actuals[date].sourceUrl ?? null,
     items: actuals[date].items ?? [],
   }));
+  const latestTuesday = latestEffectiveTuesday(today);
+  const latestEntry = actuals[latestTuesday] ?? {};
+  const missingActuals = FUELS.filter((fuel) => !Number.isFinite(latestEntry[fuel]));
+  const latestActuals = {
+    date: latestTuesday,
+    missing: missingActuals,
+    complete: missingActuals.length === 0,
+  };
 
   // How far the model alone (scale 1, no published estimate) was from the actual over the weeks that can be rebuilt.
   const accuracy = Object.fromEntries(FUELS.map((fuel) => {
@@ -202,6 +223,7 @@ export async function runUpdate({ dataDir = new URL('../data/', import.meta.url)
     walkForward: Object.fromEntries(FUELS.map((f) => [f, walkForward(pairsFor[f])])),
     errors, actualsNote, actualsProblems, newsNote,
     benchmark: { checkedAt: timestamp, checks: benchmarkChecks(benchmarks, S) },
+    latestActuals,
     publicationTiming: { observations: Object.values(market.opinetSeen ?? {}).filter((s) => s.after && Date.parse(s.by) > Date.parse(s.after)).length, schedule: 'Retained until several weeks of publication observations are available.' },
     news: news ? { updatedAt: newsCache.updatedAt, items: news.items } : null,
     market: {

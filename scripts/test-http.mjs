@@ -34,6 +34,12 @@ calls = 0;
 await assert.rejects(net.readUrl('https://example.test', { ...options, format: 'json', fetchImpl: async () => { calls++; return new Response('{ bad'); } }), SyntaxError);
 assert.equal(calls, 1);
 calls = 0;
+await assert.rejects(net.readUrl('https://example.test', { ...options, format: 'text', maxBytes: 10, fetchImpl: async () => { calls++; return new Response('12345678901'); } }), /exceeded 10 bytes/i);
+assert.equal(calls, 1);
+calls = 0;
+await assert.rejects(net.readUrl('https://example.test', { ...options, format: 'text', maxBytes: 10, fetchImpl: async () => { calls++; return new Response('ok', { headers: { 'content-length': '11' } }); } }), /exceeded 10 bytes/i);
+assert.equal(calls, 1);
+calls = 0;
 assert.equal((await net.readUrl('https://example.test', { ...options, fetchImpl: async () => {
   if (++calls < 3) throw new TypeError('fetch failed');
   return new Response('done');

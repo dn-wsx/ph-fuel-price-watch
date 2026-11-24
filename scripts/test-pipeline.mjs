@@ -38,6 +38,7 @@ const fetchImpl = async (url) => {
   else if (url.endsWith('.pdf')) body = Object.values(reports).find((r) => url.includes(encodeURIComponent(r.name)))?.text ?? fixture.notice;
   else if (url.includes('price-adjustments')) body = '<a href="https://doe.gov.ph/notice.pdf">notice</a>';
   else if (url === ANNOUNCEMENTS_URL) body = xml(fixture.announcement, 'gmanetwork.com') + xml(fixture.announcement, 'philstar.com');
+  else if (url.includes('business.inquirer.net/feed')) body = `<rss><channel><item><title>Fuel adjustments effective Tuesday</title><link>https://business.inquirer.net/622578/diesel-gasoline-prices-down-anew</link><pubDate>Mon, 10 Nov 2026 04:00:00 GMT</pubDate><description>Gasoline down P4.70, diesel down P6.40, and kerosene down P6.90 effective Tuesday</description></item></channel></rss>`;
   else if (url.startsWith('https://news.google.com/rss/')) body = xml('Gasoline may fall P4.50 next week', 'gmanetwork.com', 'Tue, 10 Nov 2026 04:00:00 GMT') + xml('Gasoline may fall P4.50 next week', 'philstar.com', 'Tue, 10 Nov 2026 04:00:00 GMT');
   else throw new Error(`Unexpected fixture request: ${url}`);
   return { ok: true, text: async () => body, arrayBuffer: async () => Buffer.from(body) };
@@ -71,6 +72,8 @@ try {
   assert.equal(output.liveTrack.weeks, 0);
   assert.equal(output.accuracy.gasoline.weeks, 1);
   assert.equal(output.publicationTiming.observations, 0);
+  assert.equal(output.latestActuals.complete, true);
+  assert.deepEqual(output.latestActuals.missing, []);
   publicPayload = output;
 
   reports['2026-11-10'] = { name: 'Oil Monitor 10 November 2026', text: fixture.promotion };

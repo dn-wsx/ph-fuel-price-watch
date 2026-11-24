@@ -35,6 +35,13 @@ export function barDate(ts, tz = 'America/New_York') {
 }
 export const addDays = (iso, n) => new Date(Date.parse(iso) + n * DAY).toISOString().slice(0, 10);
 export const manilaToday = (now = Date.now()) => new Date(now + 8 * 3600e3).toISOString().slice(0, 10);
+
+export function latestEffectiveTuesday(today) {
+  const weekday = new Date(today + 'T00:00:00Z').getUTCDay();
+  if (weekday === 2) return today;
+  const daysSinceTuesday = (weekday - 2 + 7) % 7;
+  return addDays(today, -daysSinceTuesday);
+}
 const mean = (a) => a.reduce((s, x) => s + x, 0) / a.length;
 const inRange = (d, [a, b]) => d >= a && d <= b;
 export const r2 = (x) => Math.round(x * 100) / 100;

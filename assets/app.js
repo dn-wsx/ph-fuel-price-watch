@@ -121,7 +121,11 @@ function render(d) {
 
   const acc = Object.entries(d.accuracy ?? {}).filter(([, a]) => a.weeks);
   $('#accuracy').textContent = acc.length ? `Rebuilt from finished data, against confirmed actuals: ${acc.map(([k, a]) => `${NAMES[k].toLowerCase()} ${php(a.mae, true)} average miss across ${a.weeks} weeks (worst ${php(a.worst, true)})`).join('; ')} per liter. This is retrospective, not live forecast accuracy.` : '';
-  $('#actualsStatus').innerHTML = d.actualsProblems?.length ? `<details><summary>Actual-adjustment source notes</summary><ul>${d.actualsProblems.map((p) => `<li>${esc(p)}</li>`).join('')}</ul></details>` : '';
+  const pending = d.latestActuals?.complete ? [] : d.latestActuals?.missing ?? [];
+  const pendingNote = pending.length
+    ? `<p class="note"><strong>Actual pending:</strong> ${fmtDate(d.latestActuals.date)} — ${pending.map((fuel) => esc(NAMES[fuel])).join(', ')} ${pending.length === 1 ? 'is' : 'are'} still awaiting a confirmed or corroborated adjustment.</p>`
+    : '';
+  $('#actualsStatus').innerHTML = `${pendingNote}${d.actualsProblems?.length ? `<details><summary>Actual-adjustment source notes</summary><ul>${d.actualsProblems.map((p) => `<li>${esc(p)}</li>`).join('')}</ul></details>` : ''}`;
 
   const rows = d.history ?? [];
   $('#history').innerHTML = rows.length ? historyTable(rows) : '<tbody><tr><td>No actual adjustments yet. They are read from the DOE\'s weekly Oil Monitor automatically.</td></tr></tbody>';
