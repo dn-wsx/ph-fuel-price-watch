@@ -1,7 +1,7 @@
 {
   "sample": false,
   "model": 2,
-  "generatedAt": "2026-11-24T05:59:25.989Z",
+  "generatedAt": "2026-11-24T09:19:40.860Z",
   "asOf": "2026-11-24",
   "target": "2026-12-01",
   "window": {
@@ -1013,7 +1013,7 @@
   "actualsProblems": [],
   "newsNote": "",
   "benchmark": {
-    "checkedAt": "2026-11-24T05:59:25.989Z",
+    "checkedAt": "2026-11-24T09:19:40.860Z",
     "checks": [
       {
         "date": "2026-11-10",
@@ -1246,6 +1246,11 @@
         "status": "unavailable"
       }
     ]
+  },
+  "latestActuals": {
+    "date": "2026-11-24",
+    "missing": [],
+    "complete": true
   },
   "publicationTiming": {
     "observations": 9,
