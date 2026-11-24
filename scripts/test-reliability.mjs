@@ -181,4 +181,19 @@ assert.equal(doe.benchmarkChecks({ '2026-11-03': { source: 'https://doe.gov.ph/r
 assert.deepEqual(healthProblems({ fuels: { gasoline: {} }, benchmark: { checks: [{ date: '2026-11-03', status: 'mismatch' }] } }), []);
 assert.deepEqual(healthProblems({ fuels: { gasoline: {} }, benchmark: { checks: [{ date: '2026-11-03', status: 'matched' }, { date: '2026-10-27', status: 'report-window-mismatch' }] } }), []);
 
+assert.equal(news.newsCrosscheckStatus('2026-11-24', { estimates: {} }, null).status, 'pending');
+assert.equal(news.newsCrosscheckStatus('2026-11-24', { estimates: { '2026-11-24': { gasoline: -3, items: [] } } }, null).status, 'current');
+assert.equal(news.newsCrosscheckStatus('2026-11-24', { estimates: { '2026-11-17': { gasoline: -1.5, items: [] } } }, null).status, 'stale');
+assert.equal(news.newsCrosscheckStatus('2026-11-24', { estimates: {} }, 'News headlines could not be read').status, 'unavailable');
+assert.equal(news.newsCrosscheckStatus('2026-11-24', null, null).status, 'unavailable');
+
+assert.deepEqual(news.mergeNewsItems([
+  { title: 'One', source: 'GMA Network', link: 'https://gma.example/a', published: '2026-11-12T04:00:00Z' },
+  { title: 'Duplicate', source: 'GMA Network', link: 'https://gma.example/a', published: '2026-11-12T04:00:00Z' },
+  { title: 'Two', source: 'Philstar.com', link: 'https://philstar.example/b', published: '2026-11-12T05:00:00Z' },
+]), [
+  { title: 'Two', source: 'Philstar.com', link: 'https://philstar.example/b', published: '2026-11-12T05:00:00Z' },
+  { title: 'One', source: 'GMA Network', link: 'https://gma.example/a', published: '2026-11-12T04:00:00Z' },
+]);
+
 console.log('Announcement and benchmark tests passed');

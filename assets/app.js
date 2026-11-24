@@ -113,8 +113,18 @@ function render(d) {
   $('#benchmark').innerHTML = benchmarkTable(d.benchmark?.checks);
 
   const src = [];
-  if (d.news?.items?.length) src.push(`<li><strong>Headlines that agree on an estimate:</strong><ul>${d.news.items.slice(0, 5).map((i) => `<li>${safeUrl(i.link) ? `<a href="${safeUrl(i.link)}" rel="noopener">${esc(i.title)}</a>` : esc(i.title)} <span class="muted">${esc(i.source)} · ${fmtDate(i.published.slice(0, 10), { month: 'short', day: 'numeric' })}</span></li>`).join('')}</ul></li>`);
-  if (!d.news) src.push('<li>No estimate in the news for this Tuesday yet. Outlets usually publish one from Thursday.</li>');
+  const newsStatus = d.newsStatus;
+  if (newsStatus?.status === 'current' && d.news?.items?.length) {
+    src.push(`<li><strong>Headlines that agree on an estimate:</strong><ul>${d.news.items.slice(0, 5).map((i) => `<li>${safeUrl(i.link) ? `<a href="${safeUrl(i.link)}" rel="noopener">${esc(i.title)}</a>` : esc(i.title)} <span class="muted">${esc(i.source)} · ${fmtDate(i.published.slice(0, 10), { month: 'short', day: 'numeric' })}</span></li>`).join('')}</ul></li>`);
+  } else if (newsStatus?.status === 'pending') {
+    src.push(`<li><strong>News estimate pending.</strong> No usable estimate has been published for ${fmtDate(newsStatus.target)} yet. Outlets usually publish one from Thursday.</li>`);
+  } else if (newsStatus?.status === 'stale') {
+    src.push(`<li><strong>News estimate stale.</strong> Only the ${fmtDate(newsStatus.staleTarget)} estimate is cached for this cross-check.<ul>${(newsStatus.items ?? []).slice(0, 5).map((i) => `<li>${safeUrl(i.link) ? `<a href="${safeUrl(i.link)}" rel="noopener">${esc(i.title)}</a>` : esc(i.title)} <span class="muted">${esc(i.source)} · ${fmtDate(i.published.slice(0, 10), { month: 'short', day: 'numeric' })}</span></li>`).join('')}</ul></li>`);
+  } else if (newsStatus?.status === 'unavailable') {
+    src.push(`<li><strong>News estimate unavailable.</strong> ${esc(newsStatus.error || 'The news sources could not be read right now.')}</li>`);
+  } else if (!d.newsStatus) {
+    src.push('<li><strong>News estimate pending.</strong> No usable estimate is available for this Tuesday yet.</li>');
+  }
   if (d.newsNote) src.push(`<li>${esc(d.newsNote)}</li>`);
   if (d.errors?.length) src.push(`<li><details><summary>Data refresh notes (cached prices may be in use)</summary><ul>${d.errors.map((e) => `<li>${esc(e)}</li>`).join('')}</ul></details></li>`);
   $('#sources').innerHTML = `<ul>${src.join('')}</ul>`;

@@ -4,7 +4,7 @@ import { pathToFileURL } from 'node:url';
 import { CONFIG, FUELS, rootOf, frontContract, windows, manilaToday, latestEffectiveTuesday, addDays, r2, fuelChange, seriesFor, avgChange, calibrate, forecast, confidence, partialSd, basisOf } from './model.mjs';
 import { yahoo, usdphp, opinet } from './market.mjs';
 import { recordFromDoe, recordFromNotices, benchmarkChecks } from './doe.mjs';
-import { estimatesFromNews, announcementsFromNews, fetchNews, ANNOUNCEMENTS_URL, fetchAnnouncementArticles, announcementsFromArticles } from './news.mjs';
+import { estimatesFromNews, announcementsFromNews, fetchNews, ANNOUNCEMENTS_URL, fetchAnnouncementArticles, announcementsFromArticles, newsCrosscheckStatus } from './news.mjs';
 import { mergeActual, sourceFor, confirmed } from './actuals.mjs';
 import { appendRecord, observePublication, publishedTrack, walkForward } from './records.mjs';
 import { readUrl } from './http.mjs';
@@ -133,13 +133,19 @@ export async function runUpdate({ dataDir = new URL('../data/', import.meta.url)
   // 2. Estimates published in the news. They come from the same Singapore prices, so they are shown beside the number as a
   //    cross-check and never change it (on Friday of the 10 Nov 2026 week the model said -12.2 for gasoline, the news -13).
   let newsNote = '';
+  let newsRefreshError = null;
   try {
     const found = estimatesFromNews(await fetchNews(fetchImpl, undefined, signal));
     newsCache.estimates = Object.fromEntries(Object.entries({ ...newsCache.estimates, ...found }).sort().slice(-4));
     newsCache.updatedAt = timestamp;
-  } catch (e) { newsNote = `News headlines could not be read (${e.message}).`; console.warn(newsNote); }
+  } catch (e) {
+    newsNote = `News headlines could not be read (${e.message}).`;
+    newsRefreshError = newsNote;
+    console.warn(newsNote);
+  }
   await write('news.json', newsCache);
-  const news = newsCache.estimates[win.target];
+  const newsStatus = newsCrosscheckStatus(win.target, newsCache, newsRefreshError);
+  const news = newsStatus.status === 'current' ? newsStatus.estimate : null;
 
   // 3. Calibration pairs: what a source says for a COMPLETE week against the actual, for every week with a known actual.
   //    Each source is fitted on its own history, so the US-futures fallback gets its own (wider) error and scale.
@@ -225,7 +231,8 @@ export async function runUpdate({ dataDir = new URL('../data/', import.meta.url)
     benchmark: { checkedAt: timestamp, checks: benchmarkChecks(benchmarks, S) },
     latestActuals,
     publicationTiming: { observations: Object.values(market.opinetSeen ?? {}).filter((s) => s.after && Date.parse(s.by) > Date.parse(s.after)).length, schedule: 'Retained until several weeks of publication observations are available.' },
-    news: news ? { updatedAt: newsCache.updatedAt, items: news.items } : null,
+    newsStatus,
+    news: newsStatus.status === 'current' ? { updatedAt: newsCache.updatedAt, items: newsStatus.items } : null,
     market: {
       mogas: { label: 'Singapore gasoline RON 92 (gasoline)', unit: 'USD/bbl', ...trend('MOPS92') },
       gasoil: { label: 'Singapore gasoil 0.001%S (diesel)', unit: 'USD/bbl', ...trend('MOPSD') },

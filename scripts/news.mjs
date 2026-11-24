@@ -32,6 +32,12 @@ export function parseRss(xml) {
 
 const manilaDate = (iso) => new Date(Date.parse(iso) + 8 * 3600e3).toISOString().slice(0, 10);
 
+export function newsEstimateTarget(publishedIso) {
+  if (!Number.isFinite(Date.parse(publishedIso))) return null;
+  const published = manilaDate(publishedIso);
+  return windows(published).target;
+}
+
 function stripArticleHtml(text = '') {
   return decode(text
     .replace(/<script[\s\S]*?<\/script>/gi, ' ')
@@ -142,10 +148,11 @@ function agreed(values, tol = 1.5) {
 // Group headlines by the Tuesday they forecast, newest first. Returns { 'YYYY-MM-DD': { gasoline?, diesel?, kerosene?, items } }.
 export function estimatesFromNews(items) {
   const byTarget = {};
-  for (const it of [...items].sort((a, b) => (a.published < b.published ? 1 : -1))) {
+  for (const it of mergeNewsItems(items)) {
     const est = parseEstimate(it.title, it.published);
     if (!est) continue;
-    const target = windows(manilaDate(it.published)).target;
+    const target = newsEstimateTarget(it.published);
+    if (!target) continue;
     (byTarget[target] ??= []).push({ ...it, est });
   }
   const out = {};
@@ -158,6 +165,37 @@ export function estimatesFromNews(items) {
     if (Object.keys(entry).length) out[target] = { ...entry, items: rows.slice(0, 8).map(({ title, source, published, link }) => ({ title, source, published, link })) };
   }
   return out;
+}
+
+export function newsCrosscheckStatus(target, cache, refreshError = null) {
+  if (refreshError) return { target, status: 'unavailable', estimate: null, items: [], error: refreshError };
+  if (!cache?.estimates) return { target, status: 'unavailable', estimate: null, items: [], error: null };
+  const current = cache.estimates[target];
+  if (current) {
+    const estimate = Object.fromEntries(Object.entries(current).filter(([key]) => key !== 'items'));
+    return { target, status: 'current', estimate, items: current.items ?? [], error: null };
+  }
+  const older = Object.keys(cache.estimates)
+    .filter((date) => date < target)
+    .sort()
+    .reverse()
+    .find((date) => cache.estimates[date]);
+  if (older) {
+    const cached = cache.estimates[older];
+    const estimate = Object.fromEntries(Object.entries(cached).filter(([key]) => key !== 'items'));
+    return { target, status: 'stale', estimate, items: cached.items ?? [], staleTarget: older, error: null };
+  }
+  return { target, status: 'pending', estimate: null, items: [], error: null };
+}
+
+export function mergeNewsItems(items = []) {
+  const byLink = new Map();
+  for (const item of items) {
+    if (!item?.link) continue;
+    const current = byLink.get(item.link);
+    if (!current || Date.parse(item.published) > Date.parse(current.published)) byLink.set(item.link, item);
+  }
+  return [...byLink.values()].sort((a, b) => (Date.parse(b.published) - Date.parse(a.published)));
 }
 
 const PUBLISHERS = ['gmanetwork.com', 'philstar.com', 'inquirer.net', 'abs-cbn.com', 'abs-cbnnews.com', 'mb.com.ph', 'pna.gov.ph', 'manilatimes.net', 'tribune.net.ph'];

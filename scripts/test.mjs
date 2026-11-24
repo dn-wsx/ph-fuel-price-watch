@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { CONFIG, addDays, windows, rawChange, calibrate, forecast, confidence, barDate, frontContract, spansRoll, seriesFor, fuelChange, partialSd, basisOf, liveTrack, latestEffectiveTuesday } from './model.mjs';
 import { listReports, parseYtd, recordFromDoe, parseNotice, recordFromNotices } from './doe.mjs';
 import { settledBars, intradayClose, latestSettleDate, parseOpinet } from './market.mjs';
-import { parseRss, parseEstimate, estimatesFromNews } from './news.mjs';
+import { parseRss, parseEstimate, estimatesFromNews, newsEstimateTarget } from './news.mjs';
 import { healthProblems } from './health.mjs';
 
 // Window logic: a Tuesday looks ahead to the following Tuesday.
@@ -236,7 +236,8 @@ assert.equal(fc('Gasoline rebound erases rollback gains - Daily Tribune', '2026-
 const rss = `<?xml version="1.0"?><rss><channel><item><title><![CDATA[Gasoline may plunge by P14/L &amp; more - ABS-CBN]]></title><link>https://x.example/a</link><pubDate>Sat, 07 Nov 2026 04:14:00 GMT</pubDate><source url="https://abs-cbn.com">ABS-CBN</source></item><item><title>No date here</title></item></channel></rss>`;
 assert.deepEqual(parseRss(rss), [{ title: 'Gasoline may plunge by P14/L & more', source: 'ABS-CBN', sourceUrl: 'https://abs-cbn.com', published: '2026-11-07T04:14:00.000Z', link: 'https://x.example/a' }]);
 
-const item = (title, published) => ({ title, published, source: 'x', link: 'l' });
+let fixtureLink = 0;
+const item = (title, published) => ({ title, published, source: 'x', link: `https://example.test/news/${++fixtureLink}` });
 const news = estimatesFromNews([
   item('OIL PRICE WATCH: Gasoline may plunge by P14/L next week - ABS-CBN', '2026-11-07T04:14:00Z'),
   item('Pump price rollback: P13 for gas, P4 for diesel - Philstar.com', '2026-11-06T16:00:00Z'),
@@ -249,6 +250,10 @@ assert.deepEqual(Object.keys(news), ['2026-11-10']);
 assert.equal(news['2026-11-10'].gasoline, -13.25); // median of the agreeing headlines
 assert.equal(news['2026-11-10'].diesel, undefined); // a single headline is not enough
 assert.ok(news['2026-11-10'].items.length >= 4);
+assert.equal(newsEstimateTarget('2026-11-09T04:14:00Z'), '2026-11-10');
+assert.equal(newsEstimateTarget('2026-11-10T04:14:00Z'), '2026-11-17');
+assert.equal(newsEstimateTarget('2026-11-12T08:14:00Z'), '2026-11-17');
+assert.equal(newsEstimateTarget('2026-11-13T08:14:00Z'), '2026-11-17');
 
 
 // ---- Singapore (Platts) product prices from Korea's Opinet (daily, USD/bbl, published the day after) ----

@@ -39,7 +39,7 @@ const fetchImpl = async (url) => {
   else if (url.includes('price-adjustments')) body = '<a href="https://doe.gov.ph/notice.pdf">notice</a>';
   else if (url === ANNOUNCEMENTS_URL) body = xml(fixture.announcement, 'gmanetwork.com') + xml(fixture.announcement, 'philstar.com');
   else if (url.includes('business.inquirer.net/feed')) body = `<rss><channel><item><title>Fuel adjustments effective Tuesday</title><link>https://business.inquirer.net/622578/diesel-gasoline-prices-down-anew</link><pubDate>Mon, 10 Nov 2026 04:00:00 GMT</pubDate><description>Gasoline down P4.70, diesel down P6.40, and kerosene down P6.90 effective Tuesday</description></item></channel></rss>`;
-  else if (url.startsWith('https://news.google.com/rss/')) body = xml('Gasoline may fall P4.50 next week', 'gmanetwork.com', 'Tue, 10 Nov 2026 04:00:00 GMT') + xml('Gasoline may fall P4.50 next week', 'philstar.com', 'Tue, 10 Nov 2026 04:00:00 GMT');
+  else if (url.startsWith('https://news.google.com/rss/')) body = xml('Pump price rollback: P4.50 for gasoline next week', 'gmanetwork.com', 'Wed, 11 Nov 2026 04:00:00 GMT') + xml('Pump price rollback: P4.50 for gasoline next week', 'philstar.com', 'Wed, 11 Nov 2026 04:00:00 GMT');
   else throw new Error(`Unexpected fixture request: ${url}`);
   return { ok: true, text: async () => body, arrayBuffer: async () => Buffer.from(body) };
 };
@@ -74,6 +74,16 @@ try {
   assert.equal(output.publicationTiming.observations, 0);
   assert.equal(output.latestActuals.complete, true);
   assert.deepEqual(output.latestActuals.missing, []);
+  assert.equal(output.newsStatus.status, 'current');
+  assert.equal(output.newsStatus.target, '2026-11-17');
+  const independentModel = structuredClone({ fuels: output.fuels, accuracy: output.accuracy, walkForward: output.walkForward });
+  await save('news.json', { estimates: { '2026-11-17': { gasoline: -20, diesel: 20, kerosene: -20, items: [{ title: 'Conflicting news fixture', source: 'Fixture', published: fixture.now, link: 'https://example.test/news' }] } }, updatedAt: fixture.now });
+  await runUpdate(options);
+  const conflictingNewsOutput = await read('forecast.json');
+  assert.deepEqual({ fuels: conflictingNewsOutput.fuels, accuracy: conflictingNewsOutput.accuracy, walkForward: conflictingNewsOutput.walkForward }, independentModel);
+  output = conflictingNewsOutput;
+  await runUpdate(options);
+  output = await read('forecast.json');
   publicPayload = output;
 
   reports['2026-11-10'] = { name: 'Oil Monitor 10 November 2026', text: fixture.promotion };

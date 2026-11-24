@@ -60,4 +60,27 @@ elements = await render({
   latestActuals: { date: '2026-11-17', missing: [], complete: true },
 });
 assert.doesNotMatch(elements['#actualsStatus'].innerHTML, /still pending/i);
+elements = await render({
+  ...base,
+  newsStatus: { target: '2026-11-17', status: 'pending', estimate: null, items: [] },
+});
+assert.match(elements['#sources'].innerHTML, /pending/i);
+elements = await render({
+  ...base,
+  newsStatus: { target: '2026-11-17', status: 'stale', staleTarget: '2026-11-10', estimate: { gasoline: -4.5 }, items: [{ title: 'Older estimate', source: 'GMA Network', published: '2026-11-07T04:14:00Z', link: 'https://www.gmanetwork.com/fuel' }] },
+});
+assert.match(elements['#sources'].innerHTML, /stale/i);
+assert.match(elements['#sources'].innerHTML, /Older estimate/);
+elements = await render({
+  ...base,
+  newsStatus: { target: '2026-11-17', status: 'unavailable', estimate: null, items: [], error: 'News headlines could not be read' },
+});
+assert.match(elements['#sources'].innerHTML, /unavailable/i);
+elements = await render({
+  ...base,
+  newsStatus: { target: '2026-11-17', status: 'current', estimate: { gasoline: -4.5 }, items: [{ title: 'Current estimate', source: 'Philstar.com', published: '2026-11-12T04:14:00Z', link: 'https://www.philstar.com/fuel' }] },
+  news: { updatedAt: '2026-11-12T05:00:00Z', items: [{ title: 'Current estimate', source: 'Philstar.com', published: '2026-11-12T04:14:00Z', link: 'https://www.philstar.com/fuel' }] },
+});
+assert.match(elements['#sources'].innerHTML, /Headlines that agree/);
+assert.match(elements['#sources'].innerHTML, /Current estimate/);
 console.log('Reader presentation tests passed');
