@@ -345,5 +345,28 @@
     "diesel": -3.8,
     "kerosene": -5.8,
     "source": "Manual override"
+  },
+  "2026-11-24": {
+    "fuelSources": {
+      "gasoline": {
+        "kind": "manual",
+        "source": "Manual override",
+        "provisional": false
+      },
+      "diesel": {
+        "kind": "manual",
+        "source": "Manual override",
+        "provisional": false
+      },
+      "kerosene": {
+        "kind": "manual",
+        "source": "Manual override",
+        "provisional": false
+      }
+    },
+    "gasoline": -3,
+    "diesel": -2.6,
+    "kerosene": -1.6,
+    "source": "Manual override"
   }
 }
