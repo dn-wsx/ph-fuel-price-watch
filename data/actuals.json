@@ -8,23 +8,23 @@
       "gasoline": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2025%20August%202026.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2025%20August%202026.pdf?prefix=dev%2Fmedia-11",
         "provisional": false
       },
       "diesel": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2025%20August%202026.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2025%20August%202026.pdf?prefix=dev%2Fmedia-11",
         "provisional": false
       },
       "kerosene": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2025%20August%202026.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2025%20August%202026.pdf?prefix=dev%2Fmedia-11",
         "provisional": false
       }
     },
-    "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2025%20August%202026.pdf?prefix=dev%2Fmedia"
+    "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2025%20August%202026.pdf?prefix=dev%2Fmedia-11"
   },
   "2026-09-01": {
     "gasoline": -0.3,
@@ -35,23 +35,23 @@
       "gasoline": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2001%20September%202026-1.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2001%20September%202026-1.pdf?prefix=dev%2Fmedia-10",
         "provisional": false
       },
       "diesel": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2001%20September%202026-1.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2001%20September%202026-1.pdf?prefix=dev%2Fmedia-10",
         "provisional": false
       },
       "kerosene": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2001%20September%202026-1.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2001%20September%202026-1.pdf?prefix=dev%2Fmedia-10",
         "provisional": false
       }
     },
-    "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2001%20September%202026-1.pdf?prefix=dev%2Fmedia"
+    "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2001%20September%202026-1.pdf?prefix=dev%2Fmedia-10"
   },
   "2026-09-08": {
     "gasoline": 4.7,
@@ -62,23 +62,23 @@
       "gasoline": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2008%20September%202026.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2008%20September%202026.pdf?prefix=dev%2Fmedia-9",
         "provisional": false
       },
       "diesel": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2008%20September%202026.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2008%20September%202026.pdf?prefix=dev%2Fmedia-9",
         "provisional": false
       },
       "kerosene": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2008%20September%202026.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2008%20September%202026.pdf?prefix=dev%2Fmedia-9",
         "provisional": false
       }
     },
-    "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2008%20September%202026.pdf?prefix=dev%2Fmedia"
+    "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2008%20September%202026.pdf?prefix=dev%2Fmedia-9"
   },
   "2026-09-15": {
     "gasoline": 5.7,
@@ -89,23 +89,23 @@
       "gasoline": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2015%20September%202026.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2015%20September%202026.pdf?prefix=dev%2Fmedia-8",
         "provisional": false
       },
       "diesel": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2015%20September%202026.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2015%20September%202026.pdf?prefix=dev%2Fmedia-8",
         "provisional": false
       },
       "kerosene": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2015%20September%202026.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2015%20September%202026.pdf?prefix=dev%2Fmedia-8",
         "provisional": false
       }
     },
-    "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2015%20September%202026.pdf?prefix=dev%2Fmedia"
+    "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2015%20September%202026.pdf?prefix=dev%2Fmedia-8"
   },
   "2026-09-22": {
     "gasoline": 4.88,
@@ -116,23 +116,23 @@
       "gasoline": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2022%20September.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2022%20September.pdf?prefix=dev%2Fmedia-7",
         "provisional": false
       },
       "diesel": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2022%20September.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2022%20September.pdf?prefix=dev%2Fmedia-7",
         "provisional": false
       },
       "kerosene": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2022%20September.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2022%20September.pdf?prefix=dev%2Fmedia-7",
         "provisional": false
       }
     },
-    "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2022%20September.pdf?prefix=dev%2Fmedia"
+    "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2022%20September.pdf?prefix=dev%2Fmedia-7"
   },
   "2026-09-29": {
     "gasoline": -0.24,
@@ -143,23 +143,23 @@
       "gasoline": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2029%20September.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2029%20September.pdf?prefix=dev%2Fmedia-6",
         "provisional": false
       },
       "diesel": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2029%20September.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2029%20September.pdf?prefix=dev%2Fmedia-6",
         "provisional": false
       },
       "kerosene": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2029%20September.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2029%20September.pdf?prefix=dev%2Fmedia-6",
         "provisional": false
       }
     },
-    "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2029%20September.pdf?prefix=dev%2Fmedia"
+    "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2029%20September.pdf?prefix=dev%2Fmedia-6"
   },
   "2026-10-06": {
     "gasoline": 1.93,
@@ -170,23 +170,23 @@
       "gasoline": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2006%20October.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2006%20October.pdf?prefix=dev%2Fmedia-5",
         "provisional": false
       },
       "diesel": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2006%20October.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2006%20October.pdf?prefix=dev%2Fmedia-5",
         "provisional": false
       },
       "kerosene": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2006%20October.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2006%20October.pdf?prefix=dev%2Fmedia-5",
         "provisional": false
       }
     },
-    "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2006%20October.pdf?prefix=dev%2Fmedia"
+    "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2006%20October.pdf?prefix=dev%2Fmedia-5"
   },
   "2026-10-13": {
     "gasoline": 1.56,
@@ -197,23 +197,23 @@
       "gasoline": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2013%20October.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2013%20October.pdf?prefix=dev%2Fmedia-4",
         "provisional": false
       },
       "diesel": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2013%20October.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2013%20October.pdf?prefix=dev%2Fmedia-4",
         "provisional": false
       },
       "kerosene": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2013%20October.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2013%20October.pdf?prefix=dev%2Fmedia-4",
         "provisional": false
       }
     },
-    "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2013%20October.pdf?prefix=dev%2Fmedia"
+    "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2013%20October.pdf?prefix=dev%2Fmedia-4"
   },
   "2026-10-20": {
     "gasoline": -4.3,
@@ -224,23 +224,23 @@
       "gasoline": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2020%20October.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2020%20October.pdf?prefix=dev%2Fmedia-3",
         "provisional": false
       },
       "diesel": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2020%20October.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2020%20October.pdf?prefix=dev%2Fmedia-3",
         "provisional": false
       },
       "kerosene": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2020%20October.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2020%20October.pdf?prefix=dev%2Fmedia-3",
         "provisional": false
       }
     },
-    "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2020%20October.pdf?prefix=dev%2Fmedia"
+    "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2020%20October.pdf?prefix=dev%2Fmedia-3"
   },
   "2026-10-27": {
     "gasoline": -0.3,
@@ -251,23 +251,23 @@
       "gasoline": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2027%20October.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2027%20October.pdf?prefix=dev%2Fmedia-2",
         "provisional": false
       },
       "diesel": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2027%20October.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2027%20October.pdf?prefix=dev%2Fmedia-2",
         "provisional": false
       },
       "kerosene": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2027%20October.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2027%20October.pdf?prefix=dev%2Fmedia-2",
         "provisional": false
       }
     },
-    "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2027%20October.pdf?prefix=dev%2Fmedia"
+    "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2027%20October.pdf?prefix=dev%2Fmedia-2"
   },
   "2026-11-03": {
     "gasoline": 3.5,
@@ -278,23 +278,23 @@
       "gasoline": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2003%20November.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2003%20November.pdf?prefix=dev%2Fmedia-1",
         "provisional": false
       },
       "diesel": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2003%20November.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2003%20November.pdf?prefix=dev%2Fmedia-1",
         "provisional": false
       },
       "kerosene": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2003%20November.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2003%20November.pdf?prefix=dev%2Fmedia-1",
         "provisional": false
       }
     },
-    "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2003%20November.pdf?prefix=dev%2Fmedia"
+    "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2003%20November.pdf?prefix=dev%2Fmedia-1"
   },
   "2026-11-10": {
     "gasoline": -16.8,
@@ -305,23 +305,23 @@
       "gasoline": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2010%20November.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2010%20November.pdf?prefix=dev%2Fmedia-0",
         "provisional": false
       },
       "diesel": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2010%20November.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2010%20November.pdf?prefix=dev%2Fmedia-0",
         "provisional": false
       },
       "kerosene": {
         "kind": "official",
         "source": "DOE Oil Monitor (year-to-date difference)",
-        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2010%20November.pdf?prefix=dev%2Fmedia",
+        "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2010%20November.pdf?prefix=dev%2Fmedia-0",
         "provisional": false
       }
     },
-    "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2010%20November.pdf?prefix=dev%2Fmedia"
+    "sourceUrl": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2010%20November.pdf?prefix=dev%2Fmedia-0"
   },
   "2026-11-17": {
     "fuelSources": {
