@@ -1,7 +1,7 @@
 {
   "sample": false,
   "model": 2,
-  "generatedAt": "2026-11-27T03:30:38.190Z",
+  "generatedAt": "2026-11-27T04:14:16.579Z",
   "asOf": "2026-11-27",
   "target": "2026-12-01",
   "window": {
@@ -1013,7 +1013,7 @@
   "actualsProblems": [],
   "newsNote": "",
   "benchmark": {
-    "checkedAt": "2026-11-27T03:30:38.190Z",
+    "checkedAt": "2026-11-27T04:14:16.579Z",
     "checks": [
       {
         "date": "2026-11-10",
