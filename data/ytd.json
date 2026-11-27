@@ -76,5 +76,17 @@
     "gasoline": 55.25,
     "diesel": 60.53,
     "kerosene": 57.66
+  },
+  "2026-11-24": {
+    "n": 47,
+    "gasoline": 50.75,
+    "diesel": 54.13,
+    "kerosene": 50.26
+  },
+  "2026-11-17": {
+    "n": 46,
+    "gasoline": 53.75,
+    "diesel": 56.73,
+    "kerosene": 51.86
   }
 }

@@ -1,7 +1,7 @@
 {
   "sample": false,
   "model": 2,
-  "generatedAt": "2026-11-27T04:14:16.579Z",
+  "generatedAt": "2026-11-27T08:31:15.397Z",
   "asOf": "2026-11-27",
   "target": "2026-12-01",
   "window": {
@@ -32,7 +32,8 @@
       "proxy": "MOPS92",
       "daysOfData": 4,
       "calibrationWeeks": 14,
-      "scale": 1.017
+      "scale": 1.017,
+      "news": -3.12
     },
     "diesel": {
       "raw": -4.01,
@@ -1013,8 +1014,50 @@
   "actualsProblems": [],
   "newsNote": "",
   "benchmark": {
-    "checkedAt": "2026-11-27T04:14:16.579Z",
+    "checkedAt": "2026-11-27T08:31:15.397Z",
     "checks": [
+      {
+        "date": "2026-11-24",
+        "source": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2024%20November.pdf?prefix=dev%2Fmedia",
+        "current": [
+          "2026-11-16",
+          "2026-11-20"
+        ],
+        "previous": [
+          "2026-11-09",
+          "2026-11-13"
+        ],
+        "tolerance": 0.15,
+        "fuels": {
+          "diesel": {
+            "doe": -1,
+            "opinet": -7.52,
+            "difference": -6.52
+          }
+        },
+        "status": "mismatch"
+      },
+      {
+        "date": "2026-11-17",
+        "source": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2017%20November.pdf?prefix=dev%2Fmedia",
+        "current": [
+          "2026-11-09",
+          "2026-11-13"
+        ],
+        "previous": [
+          "2026-11-02",
+          "2026-11-06"
+        ],
+        "tolerance": 0.15,
+        "fuels": {
+          "diesel": {
+            "doe": -9.8,
+            "opinet": -11.47,
+            "difference": -1.67
+          }
+        },
+        "status": "mismatch"
+      },
       {
         "date": "2026-11-10",
         "source": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2010%20November.pdf?prefix=dev%2Fmedia",
@@ -1214,36 +1257,6 @@
         "tolerance": 0.15,
         "fuels": {},
         "status": "unavailable"
-      },
-      {
-        "date": "2026-09-01",
-        "source": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2001%20September%202026-1.pdf?prefix=dev%2Fmedia",
-        "current": [
-          "2026-08-24",
-          "2026-08-28"
-        ],
-        "previous": [
-          "2026-08-17",
-          "2026-08-21"
-        ],
-        "tolerance": 0.15,
-        "fuels": {},
-        "status": "unavailable"
-      },
-      {
-        "date": "2026-08-25",
-        "source": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%20As%20of%2025%20August%202026.pdf?prefix=dev%2Fmedia",
-        "current": [
-          "2026-08-17",
-          "2026-08-21"
-        ],
-        "previous": [
-          "2026-08-10",
-          "2026-08-14"
-        ],
-        "tolerance": 0.15,
-        "fuels": {},
-        "status": "unavailable"
       }
     ]
   },
@@ -1258,35 +1271,55 @@
   },
   "newsStatus": {
     "target": "2026-12-01",
-    "status": "stale",
+    "status": "current",
     "estimate": {
-      "gasoline": -2.45,
-      "diesel": -2.77
+      "gasoline": -3.12
     },
     "items": [
       {
-        "title": "Up to P3/liter diesel, P2.90/liter gasoline rollback seen next week",
-        "source": "GMA Network",
-        "published": "2026-11-21T05:09:48.000Z",
-        "link": "https://news.google.com/rss/articles/CBMixgFBVV95cUxQTGM3YVg2T3VUb0taa184TXhTU0VGZ3RLY2pOMkw5MzdxZEFIVEtHZENFZG1nSkdrSkRZU3AzSFdhaFprN2RTZGJmRUlMRGowa3VGY21DdEZjZ2x5U3ZmLTItZlJ4dHBMdjBjTWpvb2MwZWxsSUlrOENJOFRmRWlmSnZuQ2xUZE5QYWh6MV83N1B4V3EtazVJbVR2eWJmVnduSzlibmN5V3BWY01OVjBsRi00RnpQX2NDWVVDYlpBTHZSSGJIblHSAcsBQVVfeXFMTzJHR1MwQkJuZW1Da2NPQVkwVW5uaHozTkpIc0pWN3pOejYxQXFwMjYteFdyUXQzMy1OTEhJY1h6d09KZVBWR3ZHWUpXbnVqcW94TnhyeVB3aXFCRk5ZYlV4SURQTkRZYjlHdWNOSFd3U3gyMGM4RmpWQVFEQWlONTAwN1U5Tm1laTF4RU5DWi1zbzNOby05WHdNVTdhNmdHOGdrNDFiRVJNbnZGRE9BeHhNYnJkTVpNWV9sTTlOVHlGeHRoekpoNWRETnc?oc=5"
-      },
-      {
-        "title": "Philippine Pump Prices Set for Third Straight Rollback, Diesel Down Up to P2.55 a Liter",
-        "source": "BigGo Finance",
-        "published": "2026-11-20T23:55:00.000Z",
-        "link": "https://news.google.com/rss/articles/CBMidkFVX3lxTE1CMjF3bUdLVVRlT3ZHRHg1WmxwTGozRG5YR1RWRU81dllDYzdnLXJfUkF3a2FCc3B2MlNiV3c3T3p6Zm5sQWs5ZjlaN2J6SXhWbW9LeUxhOWlKSWM0cHZ6NTF0TjhCSnNJVEtqOFczYmFQcVRuTnc?oc=5"
-      },
-      {
-        "title": "Oil Price Rollback November 24, 2026 — Diesel, Gasoline Prices May Go Down by Over ₱2 Per Liter Next Week",
+        "title": "Oil Price Rollback December 1, 2026 — Diesel, Gasoline May Drop P3 to P3.50 Per Liter Next Week",
         "source": "PhilNews",
-        "published": "2026-11-20T03:29:53.000Z",
-        "link": "https://news.google.com/rss/articles/CBMidkFVX3lxTFBpUVVES1p3RDNVNmdzemlYQjEtTzQzUHk0VXFvQ0JRb3ZKcjM5R01feDF4VXVFQllsOE5BMnJWaS1LZlJzaTV5aW1DVS1wZWJlQ0l4Nkc0cW1oUDUyRmtPZ2pncm1lT0lsS2VSOE40M05TSjJxeFE?oc=5"
+        "published": "2026-11-27T04:03:27.000Z",
+        "link": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxOUXdFUWtZeDBpd0lpUG9ldmFMQVZuWlAzalhSZldaSzFRTklQVE5LUkk5WW43RWsxTXR5OWs1MjdzVnlGdXBwQldoTjlMOEtYWDhoQXRuUTRuaS1DQkFMWFFMVFgtMnJ5REhldi1RSlhPaUZhdlcwZ3RmdnNCRUF5ZWFyZWh3T3JWUF9ibzVmV0Z1RmZna3dYRWxYbzBNU21iMGlTZG8tQkdaZGc4cmsxTm1iMFltSmNlQ0RHTWlkTVg?oc=5"
+      },
+      {
+        "title": "Gasoline, diesel rollback of up to P3.50/liter seen next week",
+        "source": "GMA Network",
+        "published": "2026-11-27T02:30:02.000Z",
+        "link": "https://news.google.com/rss/articles/CBMivgFBVV95cUxOUDRyZW5VblFnMXBjel9UaVg2VFRIMjBScUxrbzZDS3RIS0hEb0FQYUJxLS1qdXNTV2RsV25pYmxQa1ZLejZCNjVGM0xHQjRWdk5KemxXMUlYem9JaEdqbXZiWElOa1lKZWZwV0pJWlVScElLTFZIcW1aNGNuS20tN0FPb2ZoQU5Nc0IzZndmS2VaaEFQcFQ2RXhoTXh2M3RRU1hKSXlvRDItT0ROWXNZNHVESktrQTlsQXZjT3Vn0gHDAUFVX3lxTE5Lb2dTeloyLVNXSXJnS0tyLWFqRDNvUUtoUnB5VnpTNWhEWFh2dWxqNUpTekowTXFpbE5jU1VVR1VjX2Y4QWhXNDAyYjRxX2l4QmYwQVpCTjEtQnNWYzd1WnI3WnJXcHJ5clV5YldlMkV2SU5qTG90Yy1ub096c1g4d0dVS3Vrb05IamJQeDdGdEN1Rm52UWNucTJ1YkdhMGhsUnUzTjFuelJOUTNXcldQeTR6cFYyaExYeUYwdlUzblVjOA?oc=5"
+      },
+      {
+        "title": "Diesel, gasoline prices to drop by P3/liter next week",
+        "source": "Inquirer.net",
+        "published": "2026-11-27T02:01:00.000Z",
+        "link": "https://news.google.com/rss/articles/CBMikwFBVV95cUxNNUw0ZVlTTnZTTzIta0U5Y3M0Umc5MmRya0NYZl9FQW92dU5id1Bic0NFMVZrT1N5WHFSYjlnT0lmSElhSlQwU3BCQm5oSWJBWkZnNlVEY1VEVlQ2QVFfQURJakczOElFQjdZa080WWxzUFF5TEFINXE2YWl1SU11UF9IT2FGQnhvTzlBd0FzcF81ZjjSAZgBQVVfeXFMTloyWlA5NTF5dnJXLTBDbXhSbVFfRWk5MlRhNjVDVWlCYkJQNFpGbjZqam43SUpKV3BMcXhudU9paUE2YUhoX1phblU1SUswYVVqLV9TWlJPZ1RZTmQzbnVBUVItaEpBZlJmUTVNemZxR2l5QV9QME4zaEVyczU2UTNiN1JnOEtSQmFkNkdQVVgxdGg1WjlmQUQ?oc=5"
       }
     ],
-    "staleTarget": "2026-11-24",
     "error": null
   },
-  "news": null,
+  "news": {
+    "updatedAt": "2026-11-27T08:31:15.397Z",
+    "items": [
+      {
+        "title": "Oil Price Rollback December 1, 2026 — Diesel, Gasoline May Drop P3 to P3.50 Per Liter Next Week",
+        "source": "PhilNews",
+        "published": "2026-11-27T04:03:27.000Z",
+        "link": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxOUXdFUWtZeDBpd0lpUG9ldmFMQVZuWlAzalhSZldaSzFRTklQVE5LUkk5WW43RWsxTXR5OWs1MjdzVnlGdXBwQldoTjlMOEtYWDhoQXRuUTRuaS1DQkFMWFFMVFgtMnJ5REhldi1RSlhPaUZhdlcwZ3RmdnNCRUF5ZWFyZWh3T3JWUF9ibzVmV0Z1RmZna3dYRWxYbzBNU21iMGlTZG8tQkdaZGc4cmsxTm1iMFltSmNlQ0RHTWlkTVg?oc=5"
+      },
+      {
+        "title": "Gasoline, diesel rollback of up to P3.50/liter seen next week",
+        "source": "GMA Network",
+        "published": "2026-11-27T02:30:02.000Z",
+        "link": "https://news.google.com/rss/articles/CBMivgFBVV95cUxOUDRyZW5VblFnMXBjel9UaVg2VFRIMjBScUxrbzZDS3RIS0hEb0FQYUJxLS1qdXNTV2RsV25pYmxQa1ZLejZCNjVGM0xHQjRWdk5KemxXMUlYem9JaEdqbXZiWElOa1lKZWZwV0pJWlVScElLTFZIcW1aNGNuS20tN0FPb2ZoQU5Nc0IzZndmS2VaaEFQcFQ2RXhoTXh2M3RRU1hKSXlvRDItT0ROWXNZNHVESktrQTlsQXZjT3Vn0gHDAUFVX3lxTE5Lb2dTeloyLVNXSXJnS0tyLWFqRDNvUUtoUnB5VnpTNWhEWFh2dWxqNUpTekowTXFpbE5jU1VVR1VjX2Y4QWhXNDAyYjRxX2l4QmYwQVpCTjEtQnNWYzd1WnI3WnJXcHJ5clV5YldlMkV2SU5qTG90Yy1ub096c1g4d0dVS3Vrb05IamJQeDdGdEN1Rm52UWNucTJ1YkdhMGhsUnUzTjFuelJOUTNXcldQeTR6cFYyaExYeUYwdlUzblVjOA?oc=5"
+      },
+      {
+        "title": "Diesel, gasoline prices to drop by P3/liter next week",
+        "source": "Inquirer.net",
+        "published": "2026-11-27T02:01:00.000Z",
+        "link": "https://news.google.com/rss/articles/CBMikwFBVV95cUxNNUw0ZVlTTnZTTzIta0U5Y3M0Umc5MmRya0NYZl9FQW92dU5id1Bic0NFMVZrT1N5WHFSYjlnT0lmSElhSlQwU3BCQm5oSWJBWkZnNlVEY1VEVlQ2QVFfQURJakczOElFQjdZa080WWxzUFF5TEFINXE2YWl1SU11UF9IT2FGQnhvTzlBd0FzcF81ZjjSAZgBQVVfeXFMTloyWlA5NTF5dnJXLTBDbXhSbVFfRWk5MlRhNjVDVWlCYkJQNFpGbjZqam43SUpKV3BMcXhudU9paUE2YUhoX1phblU1SUswYVVqLV9TWlJPZ1RZTmQzbnVBUVItaEpBZlJmUTVNemZxR2l5QV9QME4zaEVyczU2UTNiN1JnOEtSQmFkNkdQVVgxdGg1WjlmQUQ?oc=5"
+      }
+    ]
+  },
   "market": {
     "mogas": {
       "label": "Singapore gasoline RON 92 (gasoline)",

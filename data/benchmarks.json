@@ -145,5 +145,29 @@
     "source": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2010%20November.pdf?prefix=dev%2Fmedia",
     "sha256": "b480bd57737a98ae5b3feade99ecbe350ad0944d6ce8c843774650a5d2e793d8",
     "checkedOn": "2026-11-27"
+  },
+  "2026-11-24": {
+    "current": [
+      "2026-11-16",
+      "2026-11-20"
+    ],
+    "changes": {
+      "diesel": -1
+    },
+    "source": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2024%20November.pdf?prefix=dev%2Fmedia",
+    "sha256": "9d718cc6a04d3ace96b23b7f6d41d68a6b01b05f9b4239a91b06f9966a8b4ace",
+    "checkedOn": "2026-11-27"
+  },
+  "2026-11-17": {
+    "current": [
+      "2026-11-09",
+      "2026-11-13"
+    ],
+    "changes": {
+      "diesel": -9.8
+    },
+    "source": "https://d24qbtp4vooyzi.cloudfront.net/api/media/file/Oil%20Monitor%2017%20November.pdf?prefix=dev%2Fmedia",
+    "sha256": "65f575bc070430b694db16d362d55bf72a6866bfbf8b06b558c32ba682fd9c45",
+    "checkedOn": "2026-11-27"
   }
 }
