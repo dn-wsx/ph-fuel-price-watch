@@ -1,8 +1,8 @@
 {
   "sample": false,
   "model": 2,
-  "generatedAt": "2026-11-27T08:31:15.397Z",
-  "asOf": "2026-11-27",
+  "generatedAt": "2026-11-28T03:53:53.174Z",
+  "asOf": "2026-11-28",
   "target": "2026-12-01",
   "window": {
     "current": [
@@ -14,50 +14,51 @@
       "2026-11-20"
     ]
   },
-  "confidence": "medium",
+  "confidence": "high",
   "rollWarning": false,
   "rollAdjusted": false,
   "singaporeData": true,
   "basis": "singapore",
-  "singaporeThrough": "2026-11-26",
+  "singaporeThrough": "2026-11-27",
   "fuels": {
     "gasoline": {
-      "raw": -3.16,
-      "value": -3.22,
-      "low": -4.83,
-      "high": -1.6,
+      "raw": -2.96,
+      "value": -3.01,
+      "low": -4.59,
+      "high": -1.43,
       "direction": "decrease",
       "withinError": false,
       "source": "singapore",
       "proxy": "MOPS92",
-      "daysOfData": 4,
+      "daysOfData": 5,
       "calibrationWeeks": 14,
       "scale": 1.017,
-      "news": -3.12
+      "news": -3.25
     },
     "diesel": {
-      "raw": -4.01,
-      "value": -3.96,
-      "low": -5.11,
-      "high": -2.81,
+      "raw": -3.72,
+      "value": -3.67,
+      "low": -4.71,
+      "high": -2.63,
       "direction": "decrease",
       "withinError": false,
       "source": "singapore",
       "proxy": "MOPSD",
-      "daysOfData": 4,
+      "daysOfData": 5,
       "calibrationWeeks": 14,
-      "scale": 0.987
+      "scale": 0.987,
+      "news": -3.5
     },
     "kerosene": {
-      "raw": -3.82,
-      "value": -3.79,
-      "low": -4.71,
-      "high": -2.87,
+      "raw": -3.57,
+      "value": -3.55,
+      "low": -4.34,
+      "high": -2.75,
       "direction": "decrease",
       "withinError": false,
       "source": "singapore",
       "proxy": "MOPSK",
-      "daysOfData": 4,
+      "daysOfData": 5,
       "calibrationWeeks": 14,
       "scale": 0.992
     }
@@ -1014,7 +1015,7 @@
   "actualsProblems": [],
   "newsNote": "",
   "benchmark": {
-    "checkedAt": "2026-11-27T08:31:15.397Z",
+    "checkedAt": "2026-11-28T03:53:53.174Z",
     "checks": [
       {
         "date": "2026-11-24",
@@ -1266,16 +1267,29 @@
     "complete": true
   },
   "publicationTiming": {
-    "observations": 12,
+    "observations": 13,
     "schedule": "Retained until several weeks of publication observations are available."
   },
   "newsStatus": {
     "target": "2026-12-01",
     "status": "current",
     "estimate": {
-      "gasoline": -3.12
+      "gasoline": -3.25,
+      "diesel": -3.5
     },
     "items": [
+      {
+        "title": "P3/liter rollback seen for diesel, gasoline",
+        "source": "Cebu Daily News",
+        "published": "2026-11-27T22:27:00.000Z",
+        "link": "https://news.google.com/rss/articles/CBMijAFBVV95cUxOUXJ3bHl5a0Q1dXA3T3VRQUNoTEVLVHdBZmFyMnl0Z2ZobXdQSjl4eU5zSXpYQWg4XzNua2V0YW9rT2pqU2ZwNEdxd1JFTkEtLUJHWmFBWUJHczJDUXlha1BoSnZReGJlb0tRbi11YVJyUFN4V3dRWDBveUxDZ3NmR3Z2WThsX0tpamZfZ9IBkgFBVV95cUxQYklHOENqbzFQaExzY01Fd2JUSnBEZE5laEctUXI0TUYzc0NpRjBhSzdSSm1xYzQ1dGprZVlUTFJoeVFXTVJqdHVrcE9WMmRkMGlFN05nNmYwbFhyd1hoQzdEdkd5WW5jYXpRTmNDSHRORGZWcG9FSkhBOUNjWmlucVFfUDJCQVBRWWhLdTJ0b3B4dw?oc=5"
+      },
+      {
+        "title": "Gasoline, diesel rollback of up to P3.50 seen next week",
+        "source": "Bilyonaryo Business",
+        "published": "2026-11-27T07:55:22.000Z",
+        "link": "https://news.google.com/rss/articles/CBMikAFBVV95cUxOVGhwSEtaTnRodkFQTmJrVllFeUU2UTBRRmIxTkx5dnc5MnZMck1hZUhKalZjdmxiT0pSSW10SzNMZXZtMnB0cFJaN3AzVTdOYms2RmliUmE4UzVpN1J1cHJ6UU1HcVNCcUFGSGJndmRPc3BacFJmSDRsQ0hFZVktOGYxX19COG55WTZwU21aQ3k?oc=5"
+      },
       {
         "title": "Oil Price Rollback December 1, 2026 — Diesel, Gasoline May Drop P3 to P3.50 Per Liter Next Week",
         "source": "PhilNews",
@@ -1293,13 +1307,31 @@
         "source": "Inquirer.net",
         "published": "2026-11-27T02:01:00.000Z",
         "link": "https://news.google.com/rss/articles/CBMikwFBVV95cUxNNUw0ZVlTTnZTTzIta0U5Y3M0Umc5MmRya0NYZl9FQW92dU5id1Bic0NFMVZrT1N5WHFSYjlnT0lmSElhSlQwU3BCQm5oSWJBWkZnNlVEY1VEVlQ2QVFfQURJakczOElFQjdZa080WWxzUFF5TEFINXE2YWl1SU11UF9IT2FGQnhvTzlBd0FzcF81ZjjSAZgBQVVfeXFMTloyWlA5NTF5dnJXLTBDbXhSbVFfRWk5MlRhNjVDVWlCYkJQNFpGbjZqam43SUpKV3BMcXhudU9paUE2YUhoX1phblU1SUswYVVqLV9TWlJPZ1RZTmQzbnVBUVItaEpBZlJmUTVNemZxR2l5QV9QME4zaEVyczU2UTNiN1JnOEtSQmFkNkdQVVgxdGg1WjlmQUQ?oc=5"
+      },
+      {
+        "title": "AT LEAST P3/LITER GAS, DIESEL CUTS SEEN NEXT WEEK Another round of fuel price rollbacks is expected next week, with diesel and gasoline prices likely to go down by P3 to P3.50 per liter. This comes as oil prices remained relatively low amid expectati",
+        "source": "Facebook",
+        "published": "2026-11-27T01:18:26.000Z",
+        "link": "https://news.google.com/rss/articles/CBMi3AFBVV95cUxQbU51SnVzOFYyRUh1NGpfSFp2UlJiM0ZpanZWbm9hUUN6dU1lbEFwOGN2MC1DVEx6RmtEMHRveXF1ck1ZMkdkcVJVZk13Y216MThpTEZJb3VMWV95U1lYVWdLX2FiZjU0Tkk1ZExXeF9BNHotZTVDbFZKcU9HYWV6WTJkR20xeW83RGg3TWhvcWtHdWJVVUtHTDF4OEM4ZWhzbG1hSlZTUkh3bTRaSnBzN1FXVkE5T2NCejRUSnZjQlVmQUcwSTk5SzdnV2xvOFRENEVLUVRQMnJ3Q1Fj?oc=5"
       }
     ],
     "error": null
   },
   "news": {
-    "updatedAt": "2026-11-27T08:31:15.397Z",
+    "updatedAt": "2026-11-28T03:53:53.174Z",
     "items": [
+      {
+        "title": "P3/liter rollback seen for diesel, gasoline",
+        "source": "Cebu Daily News",
+        "published": "2026-11-27T22:27:00.000Z",
+        "link": "https://news.google.com/rss/articles/CBMijAFBVV95cUxOUXJ3bHl5a0Q1dXA3T3VRQUNoTEVLVHdBZmFyMnl0Z2ZobXdQSjl4eU5zSXpYQWg4XzNua2V0YW9rT2pqU2ZwNEdxd1JFTkEtLUJHWmFBWUJHczJDUXlha1BoSnZReGJlb0tRbi11YVJyUFN4V3dRWDBveUxDZ3NmR3Z2WThsX0tpamZfZ9IBkgFBVV95cUxQYklHOENqbzFQaExzY01Fd2JUSnBEZE5laEctUXI0TUYzc0NpRjBhSzdSSm1xYzQ1dGprZVlUTFJoeVFXTVJqdHVrcE9WMmRkMGlFN05nNmYwbFhyd1hoQzdEdkd5WW5jYXpRTmNDSHRORGZWcG9FSkhBOUNjWmlucVFfUDJCQVBRWWhLdTJ0b3B4dw?oc=5"
+      },
+      {
+        "title": "Gasoline, diesel rollback of up to P3.50 seen next week",
+        "source": "Bilyonaryo Business",
+        "published": "2026-11-27T07:55:22.000Z",
+        "link": "https://news.google.com/rss/articles/CBMikAFBVV95cUxOVGhwSEtaTnRodkFQTmJrVllFeUU2UTBRRmIxTkx5dnc5MnZMck1hZUhKalZjdmxiT0pSSW10SzNMZXZtMnB0cFJaN3AzVTdOYms2RmliUmE4UzVpN1J1cHJ6UU1HcVNCcUFGSGJndmRPc3BacFJmSDRsQ0hFZVktOGYxX19COG55WTZwU21aQ3k?oc=5"
+      },
       {
         "title": "Oil Price Rollback December 1, 2026 — Diesel, Gasoline May Drop P3 to P3.50 Per Liter Next Week",
         "source": "PhilNews",
@@ -1317,6 +1349,12 @@
         "source": "Inquirer.net",
         "published": "2026-11-27T02:01:00.000Z",
         "link": "https://news.google.com/rss/articles/CBMikwFBVV95cUxNNUw0ZVlTTnZTTzIta0U5Y3M0Umc5MmRya0NYZl9FQW92dU5id1Bic0NFMVZrT1N5WHFSYjlnT0lmSElhSlQwU3BCQm5oSWJBWkZnNlVEY1VEVlQ2QVFfQURJakczOElFQjdZa080WWxzUFF5TEFINXE2YWl1SU11UF9IT2FGQnhvTzlBd0FzcF81ZjjSAZgBQVVfeXFMTloyWlA5NTF5dnJXLTBDbXhSbVFfRWk5MlRhNjVDVWlCYkJQNFpGbjZqam43SUpKV3BMcXhudU9paUE2YUhoX1phblU1SUswYVVqLV9TWlJPZ1RZTmQzbnVBUVItaEpBZlJmUTVNemZxR2l5QV9QME4zaEVyczU2UTNiN1JnOEtSQmFkNkdQVVgxdGg1WjlmQUQ?oc=5"
+      },
+      {
+        "title": "AT LEAST P3/LITER GAS, DIESEL CUTS SEEN NEXT WEEK Another round of fuel price rollbacks is expected next week, with diesel and gasoline prices likely to go down by P3 to P3.50 per liter. This comes as oil prices remained relatively low amid expectati",
+        "source": "Facebook",
+        "published": "2026-11-27T01:18:26.000Z",
+        "link": "https://news.google.com/rss/articles/CBMi3AFBVV95cUxQbU51SnVzOFYyRUh1NGpfSFp2UlJiM0ZpanZWbm9hUUN6dU1lbEFwOGN2MC1DVEx6RmtEMHRveXF1ck1ZMkdkcVJVZk13Y216MThpTEZJb3VMWV95U1lYVWdLX2FiZjU0Tkk1ZExXeF9BNHotZTVDbFZKcU9HYWV6WTJkR20xeW83RGg3TWhvcWtHdWJVVUtHTDF4OEM4ZWhzbG1hSlZTUkh3bTRaSnBzN1FXVkE5T2NCejRUSnZjQlVmQUcwSTk5SzdnV2xvOFRENEVLUVRQMnJ3Q1Fj?oc=5"
       }
     ]
   },
@@ -1324,58 +1362,58 @@
     "mogas": {
       "label": "Singapore gasoline RON 92 (gasoline)",
       "unit": "USD/bbl",
-      "pct": -7.09,
-      "last": 88.54,
-      "lastDate": "2026-11-26",
-      "through": "2026-11-26"
+      "pct": -6.82,
+      "last": 90.78,
+      "lastDate": "2026-11-27",
+      "through": "2026-11-27"
     },
     "gasoil": {
       "label": "Singapore gasoil 0.001%S (diesel)",
       "unit": "USD/bbl",
-      "pct": -6.23,
-      "last": 135.82,
-      "lastDate": "2026-11-26",
-      "through": "2026-11-26"
+      "pct": -5.71,
+      "last": 139.09,
+      "lastDate": "2026-11-27",
+      "through": "2026-11-27"
     },
     "jet": {
       "label": "Singapore kerosene (kerosene)",
       "unit": "USD/bbl",
-      "pct": -5.85,
-      "last": 134.4,
-      "lastDate": "2026-11-26",
-      "through": "2026-11-26"
+      "pct": -5.53,
+      "last": 137.11,
+      "lastDate": "2026-11-27",
+      "through": "2026-11-27"
     },
     "brent": {
       "label": "Brent crude (context)",
       "unit": "USD/bbl",
-      "pct": -0.67,
-      "last": 94.61,
-      "lastDate": "2026-11-25",
-      "through": "2026-11-25"
+      "pct": -0.93,
+      "last": 90.84,
+      "lastDate": "2026-11-27",
+      "through": "2026-11-27"
     },
     "gasoline": {
       "label": "US RBOB gasoline futures (fallback only)",
       "unit": "USD/gal",
-      "pct": -3.05,
-      "last": 2.4423,
-      "lastDate": "2026-11-25",
-      "through": "2026-11-25"
+      "pct": -2.96,
+      "last": 2.443,
+      "lastDate": "2026-11-27",
+      "through": "2026-11-27"
     },
     "diesel": {
       "label": "US ULSD futures (fallback only)",
       "unit": "USD/gal",
-      "pct": -7.36,
-      "last": 3.7025,
-      "lastDate": "2026-11-25",
-      "through": "2026-11-25"
+      "pct": -7.52,
+      "last": 3.6752,
+      "lastDate": "2026-11-27",
+      "through": "2026-11-27"
     },
     "fx": {
       "label": "USD/PHP",
       "unit": "PHP",
       "pct": -0.02,
-      "last": 63.722,
-      "lastDate": "2026-11-26",
-      "through": "2026-11-26"
+      "last": 63.729,
+      "lastDate": "2026-11-27",
+      "through": "2026-11-27"
     }
   }
 }

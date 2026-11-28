@@ -59,8 +59,21 @@
       ]
     },
     "2026-12-01": {
-      "gasoline": -3.12,
+      "gasoline": -3.25,
+      "diesel": -3.5,
       "items": [
+        {
+          "title": "P3/liter rollback seen for diesel, gasoline",
+          "source": "Cebu Daily News",
+          "published": "2026-11-27T22:27:00.000Z",
+          "link": "https://news.google.com/rss/articles/CBMijAFBVV95cUxOUXJ3bHl5a0Q1dXA3T3VRQUNoTEVLVHdBZmFyMnl0Z2ZobXdQSjl4eU5zSXpYQWg4XzNua2V0YW9rT2pqU2ZwNEdxd1JFTkEtLUJHWmFBWUJHczJDUXlha1BoSnZReGJlb0tRbi11YVJyUFN4V3dRWDBveUxDZ3NmR3Z2WThsX0tpamZfZ9IBkgFBVV95cUxQYklHOENqbzFQaExzY01Fd2JUSnBEZE5laEctUXI0TUYzc0NpRjBhSzdSSm1xYzQ1dGprZVlUTFJoeVFXTVJqdHVrcE9WMmRkMGlFN05nNmYwbFhyd1hoQzdEdkd5WW5jYXpRTmNDSHRORGZWcG9FSkhBOUNjWmlucVFfUDJCQVBRWWhLdTJ0b3B4dw?oc=5"
+        },
+        {
+          "title": "Gasoline, diesel rollback of up to P3.50 seen next week",
+          "source": "Bilyonaryo Business",
+          "published": "2026-11-27T07:55:22.000Z",
+          "link": "https://news.google.com/rss/articles/CBMikAFBVV95cUxOVGhwSEtaTnRodkFQTmJrVllFeUU2UTBRRmIxTkx5dnc5MnZMck1hZUhKalZjdmxiT0pSSW10SzNMZXZtMnB0cFJaN3AzVTdOYms2RmliUmE4UzVpN1J1cHJ6UU1HcVNCcUFGSGJndmRPc3BacFJmSDRsQ0hFZVktOGYxX19COG55WTZwU21aQ3k?oc=5"
+        },
         {
           "title": "Oil Price Rollback December 1, 2026 — Diesel, Gasoline May Drop P3 to P3.50 Per Liter Next Week",
           "source": "PhilNews",
@@ -78,9 +91,15 @@
           "source": "Inquirer.net",
           "published": "2026-11-27T02:01:00.000Z",
           "link": "https://news.google.com/rss/articles/CBMikwFBVV95cUxNNUw0ZVlTTnZTTzIta0U5Y3M0Umc5MmRya0NYZl9FQW92dU5id1Bic0NFMVZrT1N5WHFSYjlnT0lmSElhSlQwU3BCQm5oSWJBWkZnNlVEY1VEVlQ2QVFfQURJakczOElFQjdZa080WWxzUFF5TEFINXE2YWl1SU11UF9IT2FGQnhvTzlBd0FzcF81ZjjSAZgBQVVfeXFMTloyWlA5NTF5dnJXLTBDbXhSbVFfRWk5MlRhNjVDVWlCYkJQNFpGbjZqam43SUpKV3BMcXhudU9paUE2YUhoX1phblU1SUswYVVqLV9TWlJPZ1RZTmQzbnVBUVItaEpBZlJmUTVNemZxR2l5QV9QME4zaEVyczU2UTNiN1JnOEtSQmFkNkdQVVgxdGg1WjlmQUQ?oc=5"
+        },
+        {
+          "title": "AT LEAST P3/LITER GAS, DIESEL CUTS SEEN NEXT WEEK Another round of fuel price rollbacks is expected next week, with diesel and gasoline prices likely to go down by P3 to P3.50 per liter. This comes as oil prices remained relatively low amid expectati",
+          "source": "Facebook",
+          "published": "2026-11-27T01:18:26.000Z",
+          "link": "https://news.google.com/rss/articles/CBMi3AFBVV95cUxQbU51SnVzOFYyRUh1NGpfSFp2UlJiM0ZpanZWbm9hUUN6dU1lbEFwOGN2MC1DVEx6RmtEMHRveXF1ck1ZMkdkcVJVZk13Y216MThpTEZJb3VMWV95U1lYVWdLX2FiZjU0Tkk1ZExXeF9BNHotZTVDbFZKcU9HYWV6WTJkR20xeW83RGg3TWhvcWtHdWJVVUtHTDF4OEM4ZWhzbG1hSlZTUkh3bTRaSnBzN1FXVkE5T2NCejRUSnZjQlVmQUcwSTk5SzdnV2xvOFRENEVLUVRQMnJ3Q1Fj?oc=5"
         }
       ]
     }
   },
-  "updatedAt": "2026-11-27T08:31:15.397Z"
+  "updatedAt": "2026-11-28T03:53:53.174Z"
 }
