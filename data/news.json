@@ -60,8 +60,14 @@
     },
     "2026-12-01": {
       "gasoline": -3.25,
-      "diesel": -3.5,
+      "diesel": -3.25,
       "items": [
+        {
+          "title": "Up to P3/liter diesel, gasoline rollback expected next week",
+          "source": "GMA Network",
+          "published": "2026-11-28T06:59:43.000Z",
+          "link": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxOTmN2bDhYT0sxQzBfSEpHa3NaX29FTWFlTkxJRUdNcWNEMFAydDZBZlNhOWNlM251ZEdnOG9YWUZ4dlZkQjQ1NHF0ZWY5ZDRUd3lCQ1hFYjZIRDBUYllQS1lLQUhONzRlVmNFUHdYQkN3eFlQSEtWVENqN1FTd0tJXzJCUHIzYmRRd05UcGVwaXNsdFU1RUV0bHhIZENFT281ellieEZoSkMyT3ZwMzl1QVlnZlZrZGFGUmZj0gHAAUFVX3lxTE1tVFdHUll0NTdhTUMtOW5lemgyTGNtZFlaZEtoN2s4X1VMZkMyR1ZyMS1oYkV1M0pCNlRKaXNrOThLTG1oc29uWHBjaUxFSWhKWTI0UGJjS1BWcHYtMmRLUk5jTFVFSnBWU3hSdmJ4MGlNS1p3dGlNOFFFdjZIQmxRa3hENjUzMFRFZkpkYmhzd0xXRW1LYXZSbDA1ajB0UEhhZTktb01BUldvSU9nZmhMQVFFaDdaZ09CclZQbHJiNQ?oc=5"
+        },
         {
           "title": "P3/liter rollback seen for diesel, gasoline",
           "source": "Cebu Daily News",
@@ -101,5 +107,5 @@
       ]
     }
   },
-  "updatedAt": "2026-11-28T03:53:53.174Z"
+  "updatedAt": "2026-11-28T07:48:06.453Z"
 }
